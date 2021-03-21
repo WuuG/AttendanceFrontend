@@ -106,8 +106,8 @@ export default new Router({
         },
         {
             path: '/login',
-            component: () => import(/* webpackChunkName: "login" */ 'pages/login/Login.vue'),
-            meta: { title: '登录' }
+            component: () => import(/* webpackChunkName: "login" */ 'pages/passport/login/Login.vue'),
+            meta: { title: '登录' },
         },
         {
             path: '*',

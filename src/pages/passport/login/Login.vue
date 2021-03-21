@@ -33,8 +33,6 @@
                                     <el-button type="primary" @click="submitForm('loginByUser')"> 登录 </el-button>
                                 </div>
                             </el-form-item>
-
-                            <p class="login-tips">Tips : 用户名和密码随便填。</p>
                         </el-form>
                     </el-tab-pane>
                     <el-tab-pane label="手机号登录" name="second">
@@ -61,7 +59,7 @@
                             <el-form-item>
                                 <div class="login-opsions">
                                     <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
-                                    <el-link :underline="false" icon="el-icon-question ">忘记密码</el-link>
+                                    <el-link :underline="false" icon="el-icon-question ">无法验证</el-link>
                                 </div>
                             </el-form-item>
                             <el-form-item>
@@ -69,10 +67,10 @@
                                     <el-button type="primary" @click="submitForm('loginByPhone')">登录</el-button>
                                 </div>
                             </el-form-item>
-                            <p class="login-tips">Tips : 用户名和密码随便填。</p>
                         </el-form>
                     </el-tab-pane>
                 </el-tabs>
+                <el-link class="a-signup" :underline="false">注册账户</el-link>
             </div>
         </div>
     </div>
