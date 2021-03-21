@@ -68,17 +68,8 @@
   margin-right: 12%;
 }
 
-.el-tabs .el-tabs__header {
-  padding: 0;
-  position: relative;
-  margin: 10px 77px 0;
-}
 .el-tabs__content {
   height: 270px;
-}
-.login-opsions [class*=" el-icon-"],
-[class^="el-icon-"] {
-  float: right;
 }
 .login-opsions .el-link.el-link--default {
   float: right;

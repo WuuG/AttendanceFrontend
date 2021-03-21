@@ -78,4 +78,11 @@
 
 <script src="./login.js"></script>
 
-<style src="./login.css"></style>
+<style scoped src="./login.css"></style>
+<style >
+.ms-login .el-tabs .el-tabs__header {
+    padding: 0;
+    position: relative;
+    margin: 10px 77px 0 !important;
+}
+</style>
