@@ -20,10 +20,16 @@ const i18n = new VueI18n({
     messages
 });
 
-//使用钩子函数对路由进行权限跳转
+//钩子函数，路由守卫，在每个页面进入时，进行权限的判断 每次都要判断是不是有点不合理
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
+    //修改每次路由跳转前，要去页面的title值。
+    document.title = `${to.meta.title} | 到云后台管理系统`;
+
     const role = localStorage.getItem('ms_username');
+    // const role = 'admin'
+    console.log(role);
+    console.log(!role);
+    //判断是否有role，没有的话进入登陆页。
     if (!role && to.path !== '/login') {
         next('/login');
     } else if (to.meta.permission) {
@@ -32,6 +38,7 @@ router.beforeEach((to, from, next) => {
     } else {
         // 简单的判断IE10及以下不进入富文本编辑器，该组件不兼容
         if (navigator.userAgent.indexOf('MSIE') > -1 && to.path === '/editor') {
+            //这是elment的messagebox弹框。
             Vue.prototype.$alert('vue-quill-editor组件不兼容IE10及以下浏览器，请使用更高版本的浏览器查看', '浏览器不兼容通知', {
                 confirmButtonText: '确定'
             });

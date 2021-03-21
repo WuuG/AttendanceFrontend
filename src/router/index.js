@@ -106,12 +106,14 @@ export default new Router({
         },
         {
             path: '/login',
-            component: () => import(/* webpackChunkName: "login" */ '../components/page/Login.vue'),
+            component: () => import(/* webpackChunkName: "login" */ 'pages/login/Login.vue'),
             meta: { title: '登录' }
         },
         {
             path: '*',
             redirect: '/404'
         }
-    ]
+    ],
+    //切换为history模式
+    mode:"history"
 });
