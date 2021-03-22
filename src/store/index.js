@@ -11,7 +11,6 @@ const store = new Vuex.Store({
   },
   mutations: {
     addAccount(state, account) {
-      console.log(account);
       state.userInfo = account;
     },
     deleteAccount(state) {

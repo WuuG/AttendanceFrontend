@@ -59,14 +59,16 @@ export default {
     methods: {
         //登录按钮提交功能
         submitForm(formName) {
-            console.log(this.code);
             const userInfo = this.userInfo  // 这里需要先获取this的数据，在进入elment的表单验证后，this指针变动就无法找到这个组件中的数据啦。
+
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$message({
                         message: '登陆成功，欢迎您！',
                         type: 'success'
                     });
+                    sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); //序列化
+                    console.log(sessionStorage.getItem('userInfo'));
                     this.$store.commit('addAccount', { userName: userInfo.userName, phoneNumber: userInfo.phoneNumber })
                     this.$router.replace('/dashboard')
                 } else {

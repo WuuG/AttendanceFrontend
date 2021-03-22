@@ -66,7 +66,7 @@ export default {
     handleCommand(command) {
       if (command == 'loginout') {
         this.$store.commit('deleteAccount');
-        localStorage.removeItem('ms_username');
+        sessionStorage.removeItem('userInfo');
         this.$router.push('/passport/login');
       }
     },
