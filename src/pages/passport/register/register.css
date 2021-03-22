@@ -1,0 +1,77 @@
+.register-mask {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 798px;
+  height: 532px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+}
+
+
+.register-bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 750px;
+  background-color: #fff;
+  border-radius: 10px;
+  border: 1px solid #dadce0;
+}
+.register-content {
+  padding: 48px 50px 36px;
+  width: 400px;
+  height: 400px;
+}
+.register-content h2 {
+  font-weight: 400;
+}
+.register-content .small-logo {
+  width: 120px;
+  margin-bottom: 10px;
+}
+.register-content .small-logo img {
+  width: 100%;
+  height: 100%;
+}
+.register-form-content {
+  margin-top: 30px;
+  width: 300px;
+}
+.two-password {
+  position: relative;
+  margin-bottom: 20px;
+}
+.register-form-content .half-input {
+  width: 48%;
+}
+.register-form-content .right-input {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.code-input {
+  width: 56%;
+}
+.code-button {
+  float: right;
+  width: 40%;
+  margin-top: 1px;
+}
+.register-button {
+  margin-top: 30px;
+}
+.register-button button {
+  float: right;
+  width: 30%;
+}
+.register-bg .right-content {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 244px;
+  color: #ccc;
+}

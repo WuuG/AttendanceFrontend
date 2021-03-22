@@ -28,11 +28,16 @@ router.beforeEach((to, from, next) => {
     let isLogin = router.app.$options.store.state.userInfo;
     // console.log(this.$store.state);//这里还挺有趣的，因为beforeEach 所以此时store还没有挂载，所以会出错。
     // console.log(router.app.$options.store.state.userInfo); // 在挂载前可以这样获取。
-    if (!isLogin && to.path != '/passport/login') {
+    console.log(from.path);
+    if (!isLogin && to.path != '/passport/login' && to.path != '/passport/register') {
+        console.log(11);
         next('/passport/login')
     } else {
-        next()
+        next();
     }
+
+
+
 
     // const role = localStorage.getItem('ms_username');
     // 判断是否有role，没有的话进入登陆页。

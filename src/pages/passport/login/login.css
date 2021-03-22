@@ -6,9 +6,40 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.2);
 }
+.login-mask {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 397px;
+  height: 480px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.login-content {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  border-radius: 5px;
+  background: #fff;
+  overflow: hidden;
+}
 
-
-
+.passport-title {
+  margin: 22px 0 20px;
+  width: 100%;
+  line-height: 50px;
+  text-align: center;
+  font-size: 20px;
+  color: black;
+  border-bottom: 1px solid #ddd;
+}
+.passport-title img {
+  width: 60%;
+  vertical-align: top;
+}
 .ms-content {
   padding: 30px 30px;
 }
@@ -34,6 +65,7 @@
 .code-button {
   float: right;
   width: 30%;
+  margin-top: 1px;
 }
 .a-signup {
   float: right;
@@ -41,16 +73,18 @@
   margin-right: 12%;
 }
 
+/* 
 .el-tabs__content {
   height: 270px;
-}
+} */
+/* 为什么elment-ui的样式 只有这个可以修改？ */
 .login-opsions .el-link.el-link--default {
   float: right;
   margin-right: 10px;
 }
-.el-input__icon {
+/* .el-input__icon {
   font-size: 20px;
-}
-.el-input--prefix .el-input__inner {
+} */
+/* .el-input--prefix .el-input__inner {
   padding-left: 40px;
-}
+} */

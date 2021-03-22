@@ -77,7 +77,9 @@ export default {
             });
         },
         //点击网站logo进行页面刷新
-
+        reload() {
+            this.$router.go(0);
+        },
         //验证码倒计时
         countdown(num) {
             this.countNum = num;
