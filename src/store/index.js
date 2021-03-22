@@ -15,7 +15,7 @@ const store = new Vuex.Store({
       state.userInfo = account;
     },
     deleteAccount(state) {
-      delete state.userInfo.account
+      delete state.userInfo
     }
   }
 
