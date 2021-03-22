@@ -41,12 +41,12 @@ export default {
         countNum: 0,
         code: '',
         userInfo: {
-            username: '',
+            userName: '',
             password: '',
             phoneNumber: ''
         },
         rules: {
-            username: [{ required: true, trigger: 'blur', validator: validateUserName }],
+            userName: [{ required: true, trigger: 'blur', validator: validateUserName }],
             password: [{ required: true, trigger: 'blur', validator:validatePassword }],
             phoneNumber: [{ required: true, trigger: 'blur', validator: validatePhone }],
             code: [{ required: true, message: '请输入六位验证码', trigger: 'blur' }]
@@ -56,7 +56,7 @@ export default {
     };
 },
 methods: {
-    //提交功能
+    //登录按钮提交功能
     submitForm(formName) {
         console.log(this.$refs[formName].validate);
         this.$refs[formName].validate((valid) => {
@@ -65,6 +65,7 @@ methods: {
                     message : '登陆成功，欢迎您！',
                     type: 'success'
                 });
+                this.$store.commit('addAccount',{userName:this.userName,phoneNumber:this.phoneNumber})
                 this.$router.replace('./')
             } else {
                 console.log('error submit!!');
@@ -90,6 +91,9 @@ methods: {
                 clearInterval(timer1);
             }
         }, 1000);
+    },
+    toRegister() {
+        this.$router.replace('/passport/register')
     }
 }
 };

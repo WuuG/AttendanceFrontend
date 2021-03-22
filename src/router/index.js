@@ -104,10 +104,26 @@ export default new Router({
                 }
             ]
         },
+        // {
+        //     path: '/login',
+        //     component: () => import(/* webpackChunkName: "login" */ 'pages/passport/login/Login.vue'),
+        //     meta: { title: '登录' },
+        // },
         {
-            path: '/login',
-            component: () => import(/* webpackChunkName: "login" */ 'pages/passport/login/Login.vue'),
-            meta: { title: '登录' },
+            path: '/passport',
+            component: () => import('pages/passport/Passport.vue'),
+            meta:{title:'passport'},
+            children: [
+                {
+                    path: 'register',
+                    component: () => import('pages/passport/register/Register.vue'),
+                },
+                {
+                    path: 'login',
+                    component: () => import('pages/passport/login/Login.vue'),
+                },
+            ]
+
         },
         {
             path: '*',
@@ -115,5 +131,5 @@ export default new Router({
         }
     ],
     //切换为history模式
-    mode:"history"
+    // mode:"history"
 });

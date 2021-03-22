@@ -1,77 +1,75 @@
 <template>
-    <div class="login-wrap">
-        <div class="login-bg">
-            <div class="ms-login">
-                <div class="ms-title" @click="reload">
-                    <img src="~img/logo-1.png" alt="" />
-                </div>
-                <el-tabs v-model="activeName">
-                    <el-tab-pane label="账户密码登录" name="first">
-                        <el-form :model="userInfo" :rules="rules" ref="loginByUser" label-width="0px" class="ms-content">
-                            <el-form-item prop="username">
-                                <el-input v-model="userInfo.username" placeholder="请输入用户名" prefix-icon="el-icon-user"> </el-input>
-                            </el-form-item>
-                            <el-form-item prop="password">
-                                <el-input
-                                    type="password"
-                                    placeholder="请输入密码"
-                                    v-model="userInfo.password"
-                                    @keyup.enter.native="submitForm()"
-                                    prefix-icon="el-icon-lock"
-                                    show-password
-                                >
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <div class="login-opsions">
-                                    <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
-                                    <el-link :underline="false" icon="el-icon-question ">忘记密码</el-link>
-                                </div>
-                            </el-form-item>
-                            <el-form-item>
-                                <div class="login-btn">
-                                    <el-button type="primary" @click="submitForm('loginByUser')"> 登录 </el-button>
-                                </div>
-                            </el-form-item>
-                        </el-form>
-                    </el-tab-pane>
-                    <el-tab-pane label="手机号登录" name="second">
-                        <el-form :model="userInfo" :rules="rules" ref="loginByPhone" label-width="0px" class="ms-content">
-                            <!-- 这里进行表单验证prop所传入的名字，需要与v-model所绑定的属性名字相同 -->
-                            <el-form-item prop="phoneNumber">
-                                <el-input v-model="userInfo.phoneNumber" placeholder="请输入手机号" prefix-icon="el-icon-phone"> </el-input>
-                            </el-form-item>
-                            <el-form-item prop="code">
-                                <el-input
-                                    class="code-input"
-                                    type="text"
-                                    placeholder="请输入验证码"
-                                    v-model="code"
-                                    @keyup.enter.native="submitForm()"
-                                    prefix-icon="el-icon-lock"
-                                >
-                                </el-input>
-                                <el-button @click="countdown(60)" :disabled="countNum !== 0" class="code-button">
-                                    {{ countNum !== 0 ? countNum + 's后重试' : '验证' }}
-                                </el-button>
-                            </el-form-item>
-
-                            <el-form-item>
-                                <div class="login-opsions">
-                                    <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
-                                    <el-link :underline="false" icon="el-icon-question ">无法验证</el-link>
-                                </div>
-                            </el-form-item>
-                            <el-form-item>
-                                <div class="login-btn">
-                                    <el-button type="primary" @click="submitForm('loginByPhone')">登录</el-button>
-                                </div>
-                            </el-form-item>
-                        </el-form>
-                    </el-tab-pane>
-                </el-tabs>
-                <el-link class="a-signup" :underline="false">注册账户</el-link>
+    <div class="login-bg">
+        <div class="ms-login">
+            <div class="ms-title" @click="reload">
+                <img src="~img/logo-1.png" alt="" />
             </div>
+            <el-tabs v-model="activeName">
+                <el-tab-pane label="账户密码登录" name="first">
+                    <el-form :model="userInfo" :rules="rules" ref="loginByUser" label-width="0px" class="ms-content">
+                        <el-form-item prop="userName">
+                            <el-input v-model="userInfo.userName" placeholder="请输入用户名" prefix-icon="el-icon-user"> </el-input>
+                        </el-form-item>
+                        <el-form-item prop="password">
+                            <el-input
+                                type="password"
+                                placeholder="请输入密码"
+                                v-model="userInfo.password"
+                                @keyup.enter.native="submitForm()"
+                                prefix-icon="el-icon-lock"
+                                show-password
+                            >
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <div class="login-opsions">
+                                <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
+                                <el-link :underline="false" icon="el-icon-question ">忘记密码</el-link>
+                            </div>
+                        </el-form-item>
+                        <el-form-item>
+                            <div class="login-btn">
+                                <el-button type="primary" @click="submitForm('loginByUser')"> 登录 </el-button>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane label="手机号登录" name="second">
+                    <el-form :model="userInfo" :rules="rules" ref="loginByPhone" label-width="0px" class="ms-content">
+                        <!-- 这里进行表单验证prop所传入的名字，需要与v-model所绑定的属性名字相同 -->
+                        <el-form-item prop="phoneNumber">
+                            <el-input v-model="userInfo.phoneNumber" placeholder="请输入手机号" prefix-icon="el-icon-phone"> </el-input>
+                        </el-form-item>
+                        <el-form-item prop="code">
+                            <el-input
+                                class="code-input"
+                                type="text"
+                                placeholder="请输入验证码"
+                                v-model="code"
+                                @keyup.enter.native="submitForm()"
+                                prefix-icon="el-icon-lock"
+                            >
+                            </el-input>
+                            <el-button @click="countdown(60)" :disabled="countNum !== 0" class="code-button">
+                                {{ countNum !== 0 ? countNum + 's后重试' : '验证' }}
+                            </el-button>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <div class="login-opsions">
+                                <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
+                                <el-link :underline="false" icon="el-icon-question ">无法验证</el-link>
+                            </div>
+                        </el-form-item>
+                        <el-form-item>
+                            <div class="login-btn">
+                                <el-button type="primary" @click="submitForm('loginByPhone')">登录</el-button>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+            </el-tabs>
+            <el-link class="a-signup" :underline="false" @click="toRegister">注册账户</el-link>
         </div>
     </div>
 </template>
