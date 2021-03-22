@@ -40,16 +40,16 @@ export default {
         return {
             countNum: 0,
             userInfo: {
-                userName: '',
+                name: '',
                 password: '',
-                phoneNumber: '',
+                number: '',
                 code: '',
 
             },
             rules: {
-                userName: [{ required: true, trigger: 'blur', validator: validateUserName }],
+                name: [{ required: true, trigger: 'blur', validator: validateUserName }],
                 password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-                phoneNumber: [{ required: true, trigger: 'blur', validator: validatePhone }],
+                number: [{ required: true, trigger: 'blur', validator: validatePhone }],
                 code: [{ required: true, message: '请输入六位验证码', trigger: 'blur' }]
             },
             activeName: 'first',

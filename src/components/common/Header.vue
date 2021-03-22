@@ -48,14 +48,19 @@ export default {
     return {
       collapse: false,
       fullscreen: false,
-      name: 'WuuG',
+      defaultName: '这是默认名字，若看到就是bug',
       message: 2
     };
   },
   computed: {
     username() {
-      let username = localStorage.getItem('ms_username');
-      return username ? username : this.name;
+      if (this.$store.state.userInfo.name) {
+        return this.$store.state.userInfo.name;
+      } else if (this.$store.state.userInfo.number) {
+        return this.$store.state.userInfo.number;
+      } else {
+        return this.defaultName;
+      }
     }
   },
   methods: {

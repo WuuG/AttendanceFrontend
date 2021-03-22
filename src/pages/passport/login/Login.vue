@@ -7,8 +7,8 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="账户密码登录" name="first">
           <el-form :model="userInfo" :rules="rules" ref="loginByUser" label-width="0px" class="ms-content">
-            <el-form-item prop="userName">
-              <el-input v-model="userInfo.userName" placeholder="请输入用户名" prefix-icon="el-icon-user"> </el-input>
+            <el-form-item prop="name">
+              <el-input v-model="userInfo.name" placeholder="请输入用户名" prefix-icon="el-icon-user"> </el-input>
             </el-form-item>
             <el-form-item prop="password">
               <el-input
@@ -37,8 +37,8 @@
         <el-tab-pane label="手机号登录" name="second">
           <el-form :model="userInfo" :rules="rules" ref="loginByPhone" label-width="0px" class="ms-content">
             <!-- 这里进行表单验证prop所传入的名字，需要与v-model所绑定的属性名字相同 -->
-            <el-form-item prop="phoneNumber">
-              <el-input v-model="userInfo.phoneNumber" placeholder="请输入手机号" prefix-icon="el-icon-phone"> </el-input>
+            <el-form-item prop="number">
+              <el-input v-model="userInfo.number" placeholder="请输入手机号" prefix-icon="el-icon-phone"> </el-input>
             </el-form-item>
             <el-form-item prop="code">
               <el-input
