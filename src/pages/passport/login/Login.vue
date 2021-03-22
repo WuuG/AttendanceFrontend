@@ -15,7 +15,7 @@
                 type="password"
                 placeholder="请输入密码"
                 v-model="userInfo.password"
-                @keyup.enter.native="submitForm()"
+                @keyup.enter.native="submitForm('loginByUser')"
                 prefix-icon="el-icon-lock"
                 show-password
               >
@@ -46,7 +46,7 @@
                 type="text"
                 placeholder="请输入验证码"
                 v-model="userInfo.code"
-                @keyup.enter.native="submitForm()"
+                @keyup.enter.native="submitForm('loginByPhone')"
                 prefix-icon="el-icon-lock"
               >
               </el-input>

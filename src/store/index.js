@@ -3,19 +3,21 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+
+let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 const store = new Vuex.Store({
   state: {
-    userInfo: {
-    },
-
+    userInfo,
   },
   mutations: {
-    addAccount(state, account) {
-      state.userInfo = account;
+    updateUserInfo(state, account) {
+      userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+      console.log('这里在vuex中，通过对userInfo的赋值，修改了userInfo');
+      state.userInfo = userInfo;
     },
-    deleteAccount(state) {
-      delete state.userInfo
-    }
+    // deleteAccount(state) {
+    //   delete state.userInfo
+    // }
   }
 
 });

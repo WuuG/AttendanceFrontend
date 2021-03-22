@@ -68,8 +68,7 @@ export default {
                         type: 'success'
                     });
                     sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); //序列化
-                    console.log(sessionStorage.getItem('userInfo'));
-                    this.$store.commit('addAccount', { userName: userInfo.userName, phoneNumber: userInfo.phoneNumber })
+                    this.$store.commit('updateUserInfo')
                     this.$router.replace('/dashboard')
                 } else {
                     console.log('error submit!!');
