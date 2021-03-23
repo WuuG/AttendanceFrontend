@@ -25,7 +25,7 @@
               <el-form-item>
                 <div class="login-opsions">
                   <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
-                  <el-link :underline="false" icon="el-icon-question ">忘记密码</el-link>
+                  <el-link :underline="false" icon="el-icon-question" @click="forgetPassword">忘记密码</el-link>
                 </div>
               </el-form-item>
               <el-form-item>
@@ -59,7 +59,7 @@
               <el-form-item>
                 <div class="login-opsions">
                   <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
-                  <el-link :underline="false" icon="el-icon-question ">无法验证</el-link>
+                  <el-link :underline="false" icon="el-icon-question " @click="unVertify">无法验证</el-link>
                 </div>
               </el-form-item>
               <el-form-item>

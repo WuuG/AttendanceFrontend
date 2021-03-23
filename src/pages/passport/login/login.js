@@ -53,7 +53,7 @@ export default {
                 code: [{ required: true, message: '请输入六位验证码', trigger: 'blur' }]
             },
             activeName: 'first',
-            autoLogin: false
+            autoLogin: false,
         };
     },
     methods: {
@@ -97,6 +97,22 @@ export default {
         },
         toRegister() {
             this.$router.replace('/passport/register')
+        },
+        //忘记密码。跳出弹窗，提示使用手机验证码登录
+        forgetPassword() {
+            this.$message({
+                message: '请使用手机登录，并在个人设置修改密码！',
+                type: 'warning',
+                showClose: true,
+            })
+        },
+        //无法使用手机验证，请联系管理员。
+        unVertify() {
+            this.$message({
+                message: '无法使用手机验证，请联系管理员。(tel:+86-15032332240)',
+                type: 'warning',
+                showClose: true,
+            })
         }
     }
 };
