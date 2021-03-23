@@ -33,7 +33,12 @@
             {{ username }}
             <i class="el-icon-caret-bottom"></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
+
+          <el-dropdown-menu>
+            <el-dropdown-item>
+              <el-link :underline="false" href="https://github.com/WuuG/fzu-engineering-practice" target="_blank">仓库地址</el-link>
+            </el-dropdown-item>
+
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -59,6 +64,7 @@ export default {
       } else if (this.$store.state.userInfo.number) {
         return this.$store.state.userInfo.number;
       } else {
+        console.log('主页面的用户名消失，采用默认用户名');
         return this.defaultName;
       }
     }

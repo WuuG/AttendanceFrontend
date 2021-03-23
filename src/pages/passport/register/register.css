@@ -42,8 +42,9 @@
 }
 .two-password {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
+
 .register-form-content .half-input {
   width: 48%;
 }
@@ -51,6 +52,9 @@
   position: absolute;
   top: 0px;
   right: 0px;
+}
+.register-form-content .show-password {
+  margin-top: 10px;
 }
 .code-input {
   width: 56%;

@@ -120,10 +120,14 @@ export default new Router({
                 {
                     path: 'register',
                     component: () => import('pages/passport/register/Register.vue'),
+                    meta: { title: '注册' },
+
                 },
                 {
                     path: 'login',
                     component: () => import('pages/passport/login/Login.vue'),
+                    meta: { title: '登录' },
+
                 },
             ]
 

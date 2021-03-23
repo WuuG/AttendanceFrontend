@@ -12,12 +12,14 @@
           </el-form-item>
           <div class="two-password">
             <el-form-item prop="password" class="half-input">
-              <el-input v-model="registerInfo.password" placeholder="请输入密码" prefix-icon="el-icon-user"></el-input>
+              <el-input v-model="registerInfo.password" placeholder="请输入密码" :type="passwordType" prefix-icon="el-icon-user">
+              </el-input>
             </el-form-item>
             <el-form-item prop="rePassword" class="half-input right-input">
-              <el-input v-model="registerInfo.rePassword" placeholder="请输入确认密码" prefix-icon="el-icon-user"></el-input>
+              <el-input v-model="registerInfo.rePassword" placeholder="请输入确认密码" :type="passwordType" prefix-icon="el-icon-user">
+              </el-input>
             </el-form-item>
-            <el-checkbox>显示密码</el-checkbox>
+            <el-checkbox class="show-password" @change="modifyPassword">显示密码</el-checkbox>
           </div>
           <el-form-item prop="phone">
             <el-input v-model="registerInfo.phone" placeholder="请输入手机号" prefix-icon="el-icon-user"></el-input>
@@ -36,7 +38,7 @@
       </div>
       <div class="right-content">
         <img src="~assets/logo.png" alt="" />
-        <p>感谢vue-elment提供的技术支持</p>
+        <p>感谢vue-element提供的技术支持</p>
       </div>
     </div>
   </div>
@@ -45,9 +47,16 @@
 <script>
 export default {
   data() {
+    const checkPassword = (rule, value, callback) => {
+      if (value != this.registerInfo.password) {
+        return callback(new Error('两次密码不一致，请重新输入'));
+      }
+    };
     return {
       //用于判断是否显示密码
       isShow: true,
+      //密码input类型的切换
+      passwordType: 'password',
       countNum: 0,
       registerInfo: {
         name: '',
@@ -57,17 +66,47 @@ export default {
         code: ''
       },
       rules: {
-        name: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-        rePassword: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入手机号', trigger: 'blur' }]
+        name: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { pattern: /^[A-Za-z_@.]{6,10}$/, message: '6-10位之间的字母、下划线、@、.，不能以数字开头', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { pattern: /^[\w_-]{6,16}$/, message: '6-16位之间，不可输入特殊符号。', trigger: 'blur' }
+        ],
+        rePassword: [
+          { required: true, message: '请输入确认密码', trigger: 'blur' },
+          { pattern: /^[\w_-]{6,16}$/, message: '密码在6-16位之间，请不要输入特殊符号。', trigger: 'blur' },
+          { validator: checkPassword, trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { pattern: /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/, message: '请输入正确的手机哈', trigger: 'blur' }
+        ],
+        code: [{ required: true, message: '请输入6为验证码', trigger: 'blur' }]
       }
     };
   },
   methods: {
     toLogin() {
       this.$router.replace('/passport/login');
+    },
+    modifyPassword() {
+      this.passwordType = this.passwordType == 'password' ? 'text' : 'password';
+    },
+    countdown(num) {
+      this.countNum = num;
+      if (typeof num != 'number') {
+        console.log('请输入数字');
+        return;
+      }
+      this.countNum;
+      const timer1 = setInterval(() => {
+        this.countNum--;
+        if (this.countNum == 0) {
+          clearInterval(timer1);
+        }
+      }, 1000);
     }
   }
 };

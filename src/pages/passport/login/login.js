@@ -5,8 +5,8 @@ export default {
         const validateUserName = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('用户名不可为空'));
-            } else if (!/^[a-zA-Z0-9_-]{4,16}$/.test(value)) {
-                return callback(new Error('用户名在4-16位之间（字母，数字，下划线，减号）'));
+            } else if (!/^[A-Za-z_@.][A-Za-z_@.0-9]{5,9}$/.test(value)) {
+                return callback(new Error('6-10位之间的字母、下划线、@、.，不能以数字开头'));
             } else {
                 callback();
             }
