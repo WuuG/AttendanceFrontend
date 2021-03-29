@@ -56,6 +56,12 @@
 .register-form-content .show-password {
   margin-top: 10px;
 }
+.select {
+  height: 100px;
+  width: 100px;
+  padding: 0px;
+}
+
 .code-input {
   width: 56%;
 }

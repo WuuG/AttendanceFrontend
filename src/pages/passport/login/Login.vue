@@ -52,7 +52,7 @@
                 >
                 </el-input>
                 <el-button @click="countdown(60)" :disabled="countNum !== 0" class="code-button">
-                  {{ countNum !== 0 ? countNum + 's后重试' : '验证' }}
+                  {{ countNum !== 0 ? countNum + 's后重试' : '获取验证码' }}
                 </el-button>
               </el-form-item>
 

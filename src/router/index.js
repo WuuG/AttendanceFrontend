@@ -98,13 +98,17 @@ export default new Router({
                     meta: { title: '403' }
                 },
                 {
-                    path: '/donate',
-                    component: () => import(/* webpackChunkName: "donate" */ '../components/page/Donate.vue'),
-                    meta: { title: '支持作者' }
+                    path: 'info',
+                    name: 'courseInfo',
+                    component: () => import('../pages/course/CourseInfo.vue'),
+                    meta: { title: '课程信息' }
                 },
                 {
-                    path: '/course',
-                }
+                    path: 'studentInfo',
+                    name: 'StudentInfo',
+                    component: () => import('../pages/course/StudentInfo.vue'),
+                    meta: { title: '学生信息' }
+                },
             ]
         },
         // {
