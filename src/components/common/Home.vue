@@ -51,6 +51,7 @@ export default {
 </script>
 <style scoped>
 .content {
+  position: relative;
   width: 100%;
   height: 100%;
 }
