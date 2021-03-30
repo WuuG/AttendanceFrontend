@@ -22,13 +22,7 @@
             <el-checkbox class="show-password" @change="modifyPassword">显示密码</el-checkbox>
           </div>
           <el-form-item prop="phone">
-            <el-input v-model="registerInfo.phone" placeholder="请输入手机号" prefix-icon="el-icon-user">
-              <el-select v-model="select" slot="prepend" placeholder="+86" class="select">
-                <el-option label="1" value="1"></el-option>
-                <el-option label="2" value="2"></el-option>
-                <el-option label="3" value="3"></el-option>
-              </el-select>
-            </el-input>
+            <el-input v-model="registerInfo.phone" placeholder="请输入手机号" prefix-icon="el-icon-user"> </el-input>
           </el-form-item>
           <el-form-item prop="code">
             <el-input v-model="registerInfo.code" placeholder="请输入验证码" prefix-icon="el-icon-user" class="code-input"></el-input>
