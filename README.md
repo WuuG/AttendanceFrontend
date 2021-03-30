@@ -5,3 +5,5 @@ fzu engineering practice
 >https://github.com/lin-xin/vue-manage-system
 #### 列表页
 https://github.com/WuuG/AttendanceFrontend/blob/main/src/pages/course/CourseInfo.vue
+#### 编辑页
+https://github.com/WuuG/AttendanceFrontend/blob/main/src/components/common/Editor.vue
