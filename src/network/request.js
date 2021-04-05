@@ -6,5 +6,14 @@ export function request(config, method) {
     timeout: 5000,
     method: method,
   })
+
+  instance.interceptors.request.use(config => {
+    console.log(config, '拦截发送请求的config');
+    return config
+  }, err => {
+    console.log(err);
+    return Promise.reject();
+  })
+
   return instance(config)
 }
