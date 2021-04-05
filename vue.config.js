@@ -15,6 +15,7 @@ module.exports = {
         config.resolve.alias.set('pages', resolve('./src/pages'))
             .set('assets', resolve('./src/assets'))
             .set('img', resolve('./src/assets/img'))
+            .set('network', resolve('./src/network'))
         // //set第一个参数：设置的别名，第二个参数：设置的路径
     }
     // devServer: {

@@ -1,3 +1,5 @@
+import { authLogin } from "network/passport"
+
 export default {
     data: function () {
         //这里是elment当中进行表单验证的写法，特别有意思
@@ -5,8 +7,8 @@ export default {
         const validateUserName = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('用户名不可为空'));
-            } else if (!/^[A-Za-z_@.][A-Za-z_@.0-9]{5,9}$/.test(value)) {
-                return callback(new Error('6-10位之间的字母、下划线、@、.，不能以数字开头'));
+            } else if (!/^[a-zA-Z0-9_-]{4,16}$/.test(value)) {
+                return callback(new Error('4到16位（字母，数字，下划线，减号）'));
             } else {
                 callback();
             }
@@ -44,7 +46,6 @@ export default {
                 password: '',
                 number: '',
                 code: '',
-
             },
             rules: {
                 name: [{ required: true, trigger: 'blur', validator: validateUserName }],
@@ -60,21 +61,29 @@ export default {
         //登录按钮提交功能
         submitForm(formName) {
             const userInfo = this.userInfo  // 这里需要先获取this的数据，在进入elment的表单验证后，this指针变动就无法找到这个组件中的数据啦。
-
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$message({
-                        message: '登陆成功，欢迎您！',
-                        type: 'success'
-                    });
-                    sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); //序列化
-                    this.$store.commit('updateUserInfo')
-                    this.$router.replace('/dashboard')
+                    console.log(userInfo.name, userInfo.password);
+                    authLogin(userInfo.name, userInfo.password).then(res => {
+                        console.log(res);
+                        this.$message({
+                            message: '登陆成功，欢迎您！',
+                            type: 'success'
+                        });
+                        sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); //序列化
+                        this.$store.commit('updateUserInfo')
+                        this.$router.replace('/dashboard')
+                        return true
+                    }).catch(err => {
+                        console.log(err);
+                        this.$message.error('账户名或者密码错误!!')
+                    })
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
             });
+
         },
         //点击网站logo进行页面刷新
         reload() {

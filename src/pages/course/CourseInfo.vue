@@ -119,8 +119,11 @@ export default {
     Editor
   },
   methods: {
-    handleDelete(index) {
-      console.log(index);
+    handleDelete(index, row) {
+      console.log(index, row);
+    },
+    handleEdit() {
+      this.editorShow = true;
     },
     showEditor() {
       this.editorShow = true;
@@ -130,9 +133,6 @@ export default {
     },
     handleCurrentChange(res) {
       console.log(res);
-    },
-    handleEdit() {
-      this.editorShow = true;
     }
   }
 };
