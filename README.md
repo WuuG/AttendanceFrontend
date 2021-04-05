@@ -7,3 +7,5 @@ fzu engineering practice
 https://github.com/WuuG/AttendanceFrontend/blob/main/src/pages/course/CourseInfo.vue
 #### 编辑页
 https://github.com/WuuG/AttendanceFrontend/blob/main/src/components/common/Editor.vue
+#### HTTP拦截器源文件
+https://github.com/WuuG/AttendanceFrontend/blob/dev/src/network/request.js
