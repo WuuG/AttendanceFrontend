@@ -12,7 +12,7 @@ const store = new Vuex.Store({
   mutations: {
     updateUserInfo(state, account) {
       userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-      console.log('这里在vuex中，通过对userInfo的赋值，修改了userInfo');
+      // console.log('这里在vuex中，通过对userInfo的赋值，修改了userInfo');
       state.userInfo = userInfo;
     },
     // deleteAccount(state) {
