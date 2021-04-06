@@ -64,7 +64,6 @@ export default {
       } else if (this.$store.state.userInfo.number) {
         return this.$store.state.userInfo.number;
       } else {
-        console.log('主页面的用户名消失，采用默认用户名');
         return this.defaultName;
       }
     }
@@ -73,7 +72,7 @@ export default {
     // 用户名下拉菜单选择事件
     handleCommand(command) {
       if (command == 'loginout') {
-        localStorage.removeItem('userInfo');
+        localStorage.removeItem('toKen');
         this.$store.commit('updateUserInfo', {});
         this.$router.push('/passport/login');
       }

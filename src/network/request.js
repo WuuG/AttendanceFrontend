@@ -11,34 +11,37 @@ export function request(config, method) {
     const toKen = localStorage.getItem('toKen')
     if (toKen) {
       config.headers.Authorization = 'Bearer' + toKen
-      console.log(toKen);
+      // console.log(config);
     }
     return config
   })
 
   instance.interceptors.response.use(response => {
-    console.log(response.data);
+    // console.log(response.data);
     return response.data
   }, err => {
-    console.log(err.response);
-    switch (err.response.status) {
-      case 400:
-        console.log('Bad Request');
-        break;
-      case 401:
-        console.log('Unauthorized');
-        break;
-      case 403:
-        console.log('Forbidden');
-        break;
-      case 500:
-        console.log('Internal Server Error');
-        break;
-      default:
-        console.log(err);
-        break;
+    // console.log(err);
+    if (err.response != undefined) {
+      switch (err.response.status) {
+        case 400:
+          console.log('Bad Request');
+          break;
+        case 401:
+          console.log('Unauthorized');
+          break;
+        case 403:
+          console.log('Forbidden');
+          break;
+        case 500:
+          console.log('Internal Server Error');
+          break;
+        default:
+          console.log(err);
+          break;
+      }
     }
-    return Promise.reject(err.response.data);
+    return err.response ? Promise.reject(err.response.data) : Promise.reject('服务器无法访问');
+    // return Promise.reject(err.response.data);
   })
 
 

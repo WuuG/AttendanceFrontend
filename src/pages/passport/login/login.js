@@ -63,9 +63,7 @@ export default {
             const userInfo = this.userInfo  // 这里需要先获取this的数据，在进入elment的表单验证后，this指针变动就无法找到这个组件中的数据啦。
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    console.log(userInfo.name, userInfo.password);
                     authLogin(userInfo.name, userInfo.password).then(res => {
-                        console.log(res);
                         this.$message({
                             message: '登陆成功，欢迎您！',
                             type: 'success'
@@ -80,6 +78,7 @@ export default {
                         console.log(err);
                         this.$message.error(err.message)
                     })
+
                 } else {
                     console.log('error submit!!');
                     return false;

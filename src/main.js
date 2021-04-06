@@ -28,9 +28,13 @@ router.beforeEach((to, from, next) => {
     let isLogin = localStorage.getItem('toKen');
     // console.log(this.$store.state);//这里还挺有趣的，因为beforeEach 所以此时store还没有挂载，所以会出错。
     // console.log(router.app.$options.store.state.userInfo); // 在挂载前可以这样获取。
-    console.log(!isLogin);
-    if (!isLogin && to.path != '/passport/login' && to.path != '/passport/register') {
-        next('/passport/login')
+    // console.log(!isLogin);
+    if (!isLogin) {
+        if (to.path != '/passport/login' && to.path != '/passport/register') {
+            next('/passport/login')
+        } else {
+            next()
+        }
     } else {
         next();
     }

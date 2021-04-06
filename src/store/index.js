@@ -1,14 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { getUserInfo } from "network/userInfo"
 
 Vue.use(Vuex);
 
 let toKen = localStorage.getItem('toKen');
 // let userInfo = toKen ? atob(toKen.split('.')[1]) : '';
-
+let userInfo = getUserInfo(1);
 const store = new Vuex.Store({
   state: {
-    userInfo: {},
+    userInfo,
   },
   mutations: {
     updateUserInfo(state, account) {
