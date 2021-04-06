@@ -73,8 +73,8 @@ export default {
     // 用户名下拉菜单选择事件
     handleCommand(command) {
       if (command == 'loginout') {
-        sessionStorage.removeItem('userInfo');
-        this.$store.commit('updateUserInfo');
+        localStorage.removeItem('userInfo');
+        this.$store.commit('updateUserInfo', {});
         this.$router.push('/passport/login');
       }
     },

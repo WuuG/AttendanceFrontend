@@ -25,9 +25,10 @@ const i18n = new VueI18n({
 router.beforeEach((to, from, next) => {
     //修改每次路由跳转前，要去页面的title值。
     document.title = `${to.meta.title} | 到云后台管理系统`;
-    let isLogin = router.app.$options.store.state.userInfo;
+    let isLogin = localStorage.getItem('toKen');
     // console.log(this.$store.state);//这里还挺有趣的，因为beforeEach 所以此时store还没有挂载，所以会出错。
     // console.log(router.app.$options.store.state.userInfo); // 在挂载前可以这样获取。
+    console.log(!isLogin);
     if (!isLogin && to.path != '/passport/login' && to.path != '/passport/register') {
         next('/passport/login')
     } else {

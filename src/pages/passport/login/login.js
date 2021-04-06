@@ -70,13 +70,15 @@ export default {
                             message: '登陆成功，欢迎您！',
                             type: 'success'
                         });
-                        sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); //序列化
-                        this.$store.commit('updateUserInfo')
+                        if (res.data) {
+                            window.localStorage.setItem('toKen', res.data);
+                        }
+                        this.$store.commit('updateUserInfo', userInfo)
                         this.$router.replace('/dashboard')
                         return true
                     }).catch(err => {
                         console.log(err);
-                        this.$message.error('账户名或者密码错误!!')
+                        this.$message.error(err.message)
                     })
                 } else {
                     console.log('error submit!!');

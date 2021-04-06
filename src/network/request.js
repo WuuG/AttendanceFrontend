@@ -8,12 +8,41 @@ export function request(config, method) {
   })
 
   instance.interceptors.request.use(config => {
-    console.log(config, '拦截发送请求的config');
+    const toKen = localStorage.getItem('toKen')
+    if (toKen) {
+      config.headers.Authorization = 'Bearer' + toKen
+      console.log(toKen);
+    }
     return config
-  }, err => {
-    console.log(err);
-    return Promise.reject();
   })
+
+  instance.interceptors.response.use(response => {
+    console.log(response.data);
+    return response.data
+  }, err => {
+    console.log(err.response);
+    switch (err.response.status) {
+      case 400:
+        console.log('Bad Request');
+        break;
+      case 401:
+        console.log('Unauthorized');
+        break;
+      case 403:
+        console.log('Forbidden');
+        break;
+      case 500:
+        console.log('Internal Server Error');
+        break;
+      default:
+        console.log(err);
+        break;
+    }
+    return Promise.reject(err.response.data);
+  })
+
+
+
 
   return instance(config)
 }

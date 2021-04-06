@@ -3,17 +3,17 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+let toKen = localStorage.getItem('toKen');
+// let userInfo = toKen ? atob(toKen.split('.')[1]) : '';
 
-let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 const store = new Vuex.Store({
   state: {
-    userInfo,
+    userInfo: {},
   },
   mutations: {
     updateUserInfo(state, account) {
-      userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
       // console.log('这里在vuex中，通过对userInfo的赋值，修改了userInfo');
-      state.userInfo = userInfo;
+      state.userInfo = account;
     },
     // deleteAccount(state) {
     //   delete state.userInfo
