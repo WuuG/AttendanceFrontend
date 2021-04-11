@@ -38,7 +38,7 @@
             <el-dropdown-item>
               <el-link :underline="false" href="https://github.com/WuuG/fzu-engineering-practice" target="_blank">仓库地址</el-link>
             </el-dropdown-item>
-
+            <el-dropdown-item divided command="modifyMyInfo">修改个人信息</el-dropdown-item>
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -75,6 +75,8 @@ export default {
         localStorage.removeItem('toKen');
         this.$store.commit('updateUserInfo', {});
         this.$router.push('/passport/login');
+      } else if (command == 'modifyMyInfo') {
+        this.$router.push('MyInfo');
       }
     },
     // 侧边栏折叠

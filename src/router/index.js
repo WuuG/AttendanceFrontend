@@ -109,6 +109,12 @@ export default new Router({
                     component: () => import('../pages/course/StudentInfo.vue'),
                     meta: { title: '学生信息' }
                 },
+                {
+                    path: 'myInfo',
+                    name: 'myInfo',
+                    component: () => import('../pages/MyInfo.vue'),
+                    meta: { title: '我的信息' }
+                },
             ]
         },
         // {
