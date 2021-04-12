@@ -4,6 +4,7 @@
     <el-breadcrumb separator="/" class="crumbs">
       <el-breadcrumb-item><i class="el-icon-s-tools"></i>系统设置 </el-breadcrumb-item>
       <el-breadcrumb-item>数据字典</el-breadcrumb-item>
+      <el-breadcrumb-item>数据子项</el-breadcrumb-item>
     </el-breadcrumb>
     <el-main class="data-dic-content">
       <el-row type="flex" :gutter="20" justify="space-between">

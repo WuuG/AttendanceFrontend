@@ -6,7 +6,7 @@
     </el-breadcrumb>
     <el-main class="data-dic-content">
       <el-row type="flex" :gutter="20" justify="space-between">
-        <el-col :span="9" :xs="20" :md="9" :lg="5">
+        <el-col :span="9" :xs="20" :md="9" :lg="10">
           <el-button @click="addNewDic">新增</el-button>
           <el-button>修改</el-button>
           <el-button>删除</el-button>
