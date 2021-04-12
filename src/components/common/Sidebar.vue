@@ -16,7 +16,8 @@
           <el-submenu :index="item.index" :key="item.index">
             <template slot="title">
               <i :class="item.icon"></i>
-              <span slot="title">{{ item.title }}</span>
+              <!-- 这里删除了 slot="title" 因为看上去没有用 -->
+              <span>{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs">
               <!-- 二级标签 -->
@@ -34,7 +35,7 @@
         <template v-else>
           <el-menu-item :index="item.index" :key="item.index">
             <i :class="item.icon"></i>
-            <span slot="title">{{ item.title }}</span>
+            <span>{{ item.title }}</span>
           </el-menu-item>
         </template>
       </template>
@@ -69,11 +70,11 @@ export default {
             }
           ]
         },
-        {
-          icon: 'el-icon-lx-cascades',
-          index: 'table',
-          title: '基础表格'
-        },
+        // {
+        //   icon: 'el-icon-lx-cascades',
+        //   index: 'table',
+        //   title: '基础表格'
+        // },
         // {
         //   icon: 'el-icon-lx-cascades',
         //   index: 'table',
@@ -84,11 +85,21 @@ export default {
         //   index: 'table',
         //   title: '菜单管理'
         // },
-        // {
-        //   icon: 'el-icon-lx-cascades',
-        //   index: 'table',
-        //   title: '系统参数'
-        // },
+        {
+          icon: 'el-icon-lx-cascades',
+          index: '2',
+          title: '数据字典与参数',
+          subs: [
+            {
+              index: 'systemParams',
+              title: '系统参数'
+            },
+            {
+              index: 'dataDictionary',
+              title: '数据字典'
+            }
+          ]
+        },
         {
           icon: 'el-icon-lx-copy',
           index: 'tabs',
@@ -177,7 +188,7 @@ export default {
     }
   },
   created() {
-    // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+    // 通过 Event Bus 进行组件间通信，来折叠侧边栏 通信总线啦
     bus.$on('collapse', (msg) => {
       this.collapse = msg;
       bus.$emit('collapse-content', msg);

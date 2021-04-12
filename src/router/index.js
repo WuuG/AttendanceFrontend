@@ -98,13 +98,13 @@ export default new Router({
                     meta: { title: '403' }
                 },
                 {
-                    path: 'info',
+                    path: '/info',
                     name: 'courseInfo',
                     component: () => import('../pages/course/CourseInfo.vue'),
                     meta: { title: '课程信息' }
                 },
                 {
-                    path: 'studentInfo',
+                    path: '/studentInfo',
                     name: 'StudentInfo',
                     component: () => import('../pages/course/StudentInfo.vue'),
                     meta: { title: '学生信息' }
@@ -114,6 +114,18 @@ export default new Router({
                     name: 'myInfo',
                     component: () => import('../pages/MyInfo.vue'),
                     meta: { title: '我的信息' }
+                },
+                {
+                    path: 'dataDictionary',
+                    name: 'dataDictionary',
+                    component: () => import('pages/params/DataDictionary.vue'),
+                    meta: { title: '数据字典' }
+                },
+                {
+                    path: 'systemParams',
+                    name: 'systemParams',
+                    component: () => import('pages/params/SystemParams.vue'),
+                    meta: { title: '系统参数' }
                 },
             ]
         },

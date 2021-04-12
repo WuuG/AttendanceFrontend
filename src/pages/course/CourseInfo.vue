@@ -2,7 +2,8 @@
   <div>
     <div class="crumbs">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 课程信息 </el-breadcrumb-item>
+        <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 课程管理 </el-breadcrumb-item>
+        <el-breadcrumb-item><i class="el-icon-lx-cascades"></i>课程管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <el-container class="course-info-box">
