@@ -50,6 +50,9 @@ export default {
 };
 </script>
 <style scoped>
+.wrapper {
+  min-width: 400px;
+}
 .content {
   position: relative;
   width: 100%;

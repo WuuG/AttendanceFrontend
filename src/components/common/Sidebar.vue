@@ -86,9 +86,9 @@ export default {
         //   title: '菜单管理'
         // },
         {
-          icon: 'el-icon-lx-cascades',
+          icon: 'el-icon-s-tools',
           index: '2',
-          title: '数据字典与参数',
+          title: '系统管理',
           subs: [
             {
               index: 'systemParams',

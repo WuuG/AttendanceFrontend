@@ -118,8 +118,14 @@ export default new Router({
                 {
                     path: 'dataDictionary',
                     name: 'dataDictionary',
-                    component: () => import('pages/params/DataDictionary.vue'),
+                    component: () => import('pages/params/dataDic/DataDictionary.vue'),
                     meta: { title: '数据字典' }
+                },
+                {
+                    path: 'dicChildData',
+                    name: 'dicChildData',
+                    component: () => import('pages/params/dataDic/DicChildData.vue'),
+                    meta: { title: '数据列表' }
                 },
                 {
                     path: 'systemParams',

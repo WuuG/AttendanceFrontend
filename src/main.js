@@ -5,6 +5,8 @@ import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
 import store from './store/index'
 import { messages } from './components/common/i18n';
+
+import 'element-ui/lib/theme-chalk/display.css';
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import './assets/css/theme-green/index.css'; // 浅绿色主题
 import './assets/css/icon.css';
