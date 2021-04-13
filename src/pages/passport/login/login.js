@@ -63,36 +63,34 @@ export default {
             const userInfo = this.userInfo  // 这里需要先获取this的数据，在进入elment的表单验证后，this指针变动就无法找到这个组件中的数据啦。
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    // auidthLogin(userInfo.name, userInfo.password).then(res => {
-                    //         this.$message({ message: '登陆成功，欢迎您！',
-                    //             type: 'success'
-                    //         });
-                    //         if (res.data) {
-                    //             window.localStorage.setItem('toKen', res.data);
-                    //         }
-                    //         this.$store.commit('updateUserInfo', userInfo)
-                    //         this.$router.replace('/dashboard')
-                    //         return true
-                    //     }).catch(err => {
-                    //         console.log(err);
-                    //         this.$message.error(err.message)
-                    //     })
+                    authLogin(userInfo.name, userInfo.password).then(res => {
+                        this.$message({
+                            message: '登陆成功，欢迎您！',
+                            type: 'success'
+                        });
+                        if (res.data) {
+                            window.localStorage.setItem('toKen', res.data.token);
+                            window.localStorage.setItem('uid', res.data.uid);
+                        }
+                        this.$store.commit('updateUserInfo', userInfo)
+                        this.$router.replace('/dashboard')
+                        return true
+                    }).catch(err => {
+                        console.log(err);
+                        this.$message.error(err.message)
+                    })
 
-                    // } else {
-                    //     console.log('error submit!!');
-                    //     return false;
-                    // }
-                    this.$message({
-                        message: '登陆成功，欢迎您！',
-                        type: 'success'
-                    });
-                    this.$store.commit('updateUserInfo', userInfo)
-                    this.$router.replace('/dashboard')
-                    return true
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
+                //     this.$store.commit('updateUserInfo', userInfo)
+                //     this.$router.replace('/dashboard')
+                //     return true
+                // } else {
+                //     console.log('error submit!!');
+                //     return false;
+                // }
             });
 
         },

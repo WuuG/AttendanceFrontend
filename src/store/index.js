@@ -6,7 +6,7 @@ Vue.use(Vuex);
 
 let toKen = localStorage.getItem('toKen');
 // let userInfo = toKen ? atob(toKen.split('.')[1]) : '';
-let userInfo = getUserInfo();
+let userInfo = undefined;
 const store = new Vuex.Store({
   state: {
     userInfo,

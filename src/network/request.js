@@ -9,6 +9,7 @@ export function request(config, method) {
 
   instance.interceptors.request.use(config => {
     const toKen = localStorage.getItem('toKen')
+    console.log(config);
     if (toKen) {
       config.headers.Authorization = 'Bearer' + toKen
       // console.log(config);

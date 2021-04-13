@@ -73,6 +73,7 @@ export default {
     handleCommand(command) {
       if (command == 'loginout') {
         localStorage.removeItem('toKen');
+        localStorage.removeItem('uid');
         this.$store.commit('updateUserInfo', {});
         this.$router.push('/passport/login');
       } else if (command == 'modifyMyInfo') {

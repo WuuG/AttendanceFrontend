@@ -4,11 +4,10 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 798px;
-  height: 532px;
+  height: 603px;
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 20px;
 }
-
 
 .register-bg {
   position: fixed;
@@ -23,7 +22,7 @@
 .register-content {
   padding: 48px 50px 36px;
   width: 400px;
-  height: 400px;
+  height: 470px;
 }
 .register-content h2 {
   font-weight: 400;

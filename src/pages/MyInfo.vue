@@ -9,6 +9,8 @@
       <el-col :span="15" :xs="12" class="my-info-content">
         <el-form :model="userInfo" label-width="100px" class="my-info-form" :rules="myInfoRules" ref="userInfo">
           <!-- <el-form-item v-for="(item, index) in showInfo" :key="item.id" :label="index">
+.select {
+}
         <el-input v-model="userInfo[index]"> </el-input>
       </el-form-item> -->
           <el-row type="flex" justify="center">

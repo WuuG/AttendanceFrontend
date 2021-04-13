@@ -30,9 +30,13 @@
               {{ countNum !== 0 ? countNum + 's后重试' : '获取验证码' }}
             </el-button>
           </el-form-item>
+          <el-select v-model="registerInfo.role" placeholder="请选择身份">
+            <el-option v-for="item in roles" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+
           <el-form-item class="register-button">
             <el-button type="text" style="float: left" @click="toLogin">登录到现有账号</el-button>
-            <el-button type="primary">注册</el-button>
+            <el-button type="primary" @click="signup('registerInfo')">注册</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -45,12 +49,14 @@
 </template>
 
 <script>
+import { authLogin, signup, SignupInfo } from 'network/passport';
 export default {
   data() {
     const checkPassword = (rule, value, callback) => {
       if (value != this.registerInfo.password) {
-        return callback(new Error('两次密码不一致，请重新输入'));
+        return callback(new Error('密码不一致，请重新输入'));
       }
+      return callback();
     };
     return {
       select: '',
@@ -59,17 +65,29 @@ export default {
       //密码input类型的切换
       passwordType: 'password',
       countNum: 0,
+      roles: [
+        { label: '教师', value: 'teacher' },
+        { label: '管理员', value: 'admin' }
+      ],
+      //注册表单数据
       registerInfo: {
         name: '',
         password: '',
         rePassword: '',
         phone: '',
-        code: ''
+        code: '',
+        role: '',
+        realName: '',
+        email: ''
       },
       rules: {
         name: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { pattern: /^[A-Za-z_@.]{6,10}$/, message: '6-10位之间的字母、下划线、@、.，不能以数字开头', trigger: 'blur' }
+          {
+            pattern: /^([\u4e00-\u9fa5]{2,4})|([A-Za-z0-9_]{4,16})|([a-zA-Z0-9_\u4e00-\u9fa5]{3,16})$/,
+            message: '4-16位字母,数字,汉字,下划线',
+            trigger: 'blur'
+          }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -84,7 +102,7 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { pattern: /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/, message: '请输入正确的手机哈', trigger: 'blur' }
         ],
-        code: [{ required: true, message: '请输入6为验证码', trigger: 'blur' }]
+        code: [{ required: true, message: '请输入6位验证码', trigger: 'blur' }]
       }
     };
   },
@@ -92,6 +110,54 @@ export default {
     toLogin() {
       this.$router.replace('/passport/login');
     },
+    signup(formName) {
+      console.log('进入注册');
+      const signupInfo = new SignupInfo(this.registerInfo);
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          signup(signupInfo)
+            .then((res) => {
+              console.log(res);
+              if (res.status == 400) {
+                this.$message({
+                  message: res.message,
+                  type: 'error'
+                });
+              } else {
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                });
+                authLogin(signupInfo.loginName, signupInfo.password)
+                  .then((res) => {
+                    if (res.data) {
+                      window.localStorage.setItem('toKen', res.data.token);
+                      window.localStorage.setItem('uid', res.data.uid);
+                    }
+                    this.$store.commit('updateUserInfo', signupInfo.loginName);
+                    this.$router.replace('/dashboard');
+                    return true;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    this.$message.error(err.message);
+                  });
+              }
+            })
+            .catch((err) => {
+              this.$message({
+                message: err.message,
+                type: 'warning'
+              });
+              console.log(err);
+            });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    //修改密码是否显示
     modifyPassword() {
       this.passwordType = this.passwordType == 'password' ? 'text' : 'password';
     },
@@ -117,6 +183,4 @@ export default {
 @import './register.css';
 </style>
 <style>
-.select {
-}
 </style>
