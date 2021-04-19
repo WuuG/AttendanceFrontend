@@ -37,6 +37,8 @@ router.beforeEach((to, from, next) => {
         } else {
             next()
         }
+    } else if (to.path == '/passport/login' || to.path == '/passport/register') {
+        next('/dashboard');
     } else {
         next();
     }

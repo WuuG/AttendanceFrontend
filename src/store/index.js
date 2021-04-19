@@ -5,8 +5,11 @@ import { getUserInfo } from "network/userInfo"
 Vue.use(Vuex);
 
 let toKen = localStorage.getItem('toKen');
-// let userInfo = toKen ? atob(toKen.split('.')[1]) : '';
-let userInfo = undefined;
+let uid = localStorage.getItem('uid')
+let userInfo = {}
+if (uid != undefined) {
+  userInfo = getUserInfo(uid)
+}
 const store = new Vuex.Store({
   state: {
     userInfo,
@@ -14,7 +17,7 @@ const store = new Vuex.Store({
   mutations: {
     updateUserInfo(state, account) {
       // console.log('这里在vuex中，通过对userInfo的赋值，修改了userInfo');
-      state.userInfo = account;
+      state.userInfo.name = account;
     },
     // deleteAccount(state) {
     //   delete state.userInfo

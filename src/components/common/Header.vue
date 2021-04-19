@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     username() {
-      if (this.$store.state.userInfo.name) {
+      if (this.$store.state.userInfo && this.$store.state.userInfo.name) {
         return this.$store.state.userInfo.name;
       } else if (this.$store.state.userInfo.number) {
         return this.$store.state.userInfo.number;

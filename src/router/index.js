@@ -9,6 +9,7 @@ export default new Router({
             path: '/',
             redirect: '/dashboard'
         },
+
         {
             path: '/',
             component: () => import(/* webpackChunkName: "home" */ '../components/common/Home.vue'),

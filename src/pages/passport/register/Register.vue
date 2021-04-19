@@ -146,7 +146,7 @@ export default {
             })
             .catch((err) => {
               this.$message({
-                message: err.message,
+                message: err,
                 type: 'warning'
               });
               console.log(err);

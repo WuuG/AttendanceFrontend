@@ -1,7 +1,10 @@
 import { request } from "./request"
 
-export function getUserInfo() {
+export function getUserInfo(uid) {
   return request({
-    url: "/users/1",
+    url: "/user/",
+    params: {
+      uid
+    }
   }, 'get')
 }

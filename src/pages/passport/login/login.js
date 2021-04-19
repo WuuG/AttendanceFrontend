@@ -72,7 +72,6 @@ export default {
                             window.localStorage.setItem('toKen', res.data.token);
                             window.localStorage.setItem('uid', res.data.uid);
                         }
-                        this.$store.commit('updateUserInfo', userInfo)
                         this.$router.replace('/dashboard')
                         return true
                     }).catch(err => {
