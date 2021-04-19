@@ -2,7 +2,7 @@ import axios from "axios"
 
 export function request(config, method) {
   const instance = axios.create({
-    baseURL: "http://attendance.keepdev.top/api",
+    baseURL: "/api",
     timeout: 5000,
     method: method,
   })

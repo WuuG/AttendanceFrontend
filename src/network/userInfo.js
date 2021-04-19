@@ -2,7 +2,7 @@ import { request } from "./request"
 
 export function getUserInfo(uid) {
   return request({
-    url: "/user/",
+    url: "/users/",
     params: {
       uid
     }

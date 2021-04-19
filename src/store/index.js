@@ -8,7 +8,11 @@ let toKen = localStorage.getItem('toKen');
 let uid = localStorage.getItem('uid')
 let userInfo = {}
 if (uid != undefined) {
-  userInfo = getUserInfo(uid)
+  userInfo = getUserInfo(uid).then(res => {
+    console.log(res);
+  }).catch(err => {
+    console.log(err);
+  })
 }
 const store = new Vuex.Store({
   state: {
