@@ -48,6 +48,7 @@
 </template>
 <script>
 import bus from '../common/bus';
+import { getUserInfo } from 'network/userInfo';
 export default {
   data() {
     return {
@@ -59,12 +60,10 @@ export default {
   },
   computed: {
     username() {
-      if (this.$store.state.userInfo && this.$store.state.userInfo.name) {
-        return this.$store.state.userInfo.name;
-      } else if (this.$store.state.userInfo.number) {
-        return this.$store.state.userInfo.number;
+      if (this.$store.state.userInfo && this.$store.state.userInfo.loginName) {
+        return this.$store.state.userInfo.loginName;
       } else {
-        return this.defaultName;
+        return this.$store.state.userInfo.loginName;
       }
     }
   },
@@ -111,12 +110,24 @@ export default {
         }
       }
       this.fullscreen = !this.fullscreen;
+    },
+    //getUserInfo
+    getUserInfo() {
+      let uid = localStorage.getItem('uid');
+      getUserInfo(uid)
+        .then((res) => {
+          this.$store.dispatch('updateUserInfo', res.data);
+        })
+        .catch((err) => console.log(err));
     }
   },
   mounted() {
     if (document.body.clientWidth < 1500) {
       this.collapseChage();
     }
+  },
+  created() {
+    this.getUserInfo();
   }
 };
 </script>

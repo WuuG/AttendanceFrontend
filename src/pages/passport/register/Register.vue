@@ -26,7 +26,7 @@
           </el-form-item>
           <el-form-item prop="code">
             <el-input v-model="registerInfo.code" placeholder="请输入验证码" prefix-icon="el-icon-user" class="code-input"></el-input>
-            <el-button @click="countdown(60)" :disabled="countNum !== 0" class="code-button">
+            <el-button @click="sendSms" :disabled="countNum !== 0" class="code-button">
               {{ countNum !== 0 ? countNum + 's后重试' : '获取验证码' }}
             </el-button>
           </el-form-item>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { authLogin, signup, SignupInfo } from 'network/passport';
+import { sendRegisterSms, authLogin, signup, SignupInfo } from 'network/passport';
 export default {
   data() {
     const checkPassword = (rule, value, callback) => {
@@ -134,7 +134,6 @@ export default {
                       window.localStorage.setItem('toKen', res.data.token);
                       window.localStorage.setItem('uid', res.data.uid);
                     }
-                    this.$store.commit('updateUserInfo', signupInfo.loginName);
                     this.$router.replace('/dashboard');
                     return true;
                   })
@@ -160,6 +159,16 @@ export default {
     //修改密码是否显示
     modifyPassword() {
       this.passwordType = this.passwordType == 'password' ? 'text' : 'password';
+    },
+    sendSms() {
+      if (!/^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/.test(this.registerInfo.phone)) {
+        this.$message({ type: 'warning', message: '请输入正确的手机号' });
+      } else {
+        this.countdown(60);
+        sendRegisterSms(this.registerInfo.phone)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      }
     },
     countdown(num) {
       this.countNum = num;

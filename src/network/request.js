@@ -11,7 +11,7 @@ export function request(config, method) {
     const toKen = localStorage.getItem('toKen')
     console.log(config);
     if (toKen) {
-      config.headers.Authorization = 'Bearer' + toKen
+      config.headers.Authorization = 'Bearer ' + toKen
       // console.log(config);
     }
     return config

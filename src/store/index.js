@@ -4,30 +4,23 @@ import { getUserInfo } from "network/userInfo"
 
 Vue.use(Vuex);
 
-let toKen = localStorage.getItem('toKen');
+
 let uid = localStorage.getItem('uid')
-let userInfo = {}
-if (uid != undefined) {
-  userInfo = getUserInfo(uid).then(res => {
-    console.log(res);
-  }).catch(err => {
-    console.log(err);
-  })
-}
+
 const store = new Vuex.Store({
   state: {
-    userInfo,
+    userInfo: {},
   },
   mutations: {
-    updateUserInfo(state, account) {
-      // console.log('这里在vuex中，通过对userInfo的赋值，修改了userInfo');
-      state.userInfo.name = account;
-    },
     // deleteAccount(state) {
     //   delete state.userInfo
-    // }
+  },
+  actions: {
+    updateUserInfo(context, userInfo) {
+      // console.log('这里在vuex中，通过对userInfo的赋值，修改了userInfo');
+      context.state.userInfo = userInfo;
+    },
   }
-
 });
 
 export default store

@@ -15,6 +15,15 @@ export function signup(signupInfo) {
     data: signupInfo,
   }, 'post')
 }
+export function sendRegisterSms(phone) {
+  return request({
+    url: '/sms',
+    data: {
+      type: 'register',
+      phone
+    }
+  }, 'post')
+}
 
 export class SignupInfo {
   constructor(registerInfo) {
