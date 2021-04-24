@@ -1,11 +1,20 @@
 import { request } from "./request"
 
-export function authLogin(account, password) {
+export function authLoginByPassword(account, password) {
   return request({
     url: "/auth/login",
     data: {
       "account": account,
       "password": password,
+    }
+  }, 'post')
+}
+export function authLoginByPhone(account, smsCode) {
+  return request({
+    url: "/auth/login",
+    data: {
+      "account": account,
+      "smsCode": smsCode
     }
   }, 'post')
 }

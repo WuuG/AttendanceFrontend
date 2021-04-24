@@ -26,7 +26,7 @@
           </el-form-item>
           <el-form-item prop="code">
             <el-input v-model="registerInfo.code" placeholder="请输入验证码" prefix-icon="el-icon-user" class="code-input"></el-input>
-            <el-button @click="sendSms" :disabled="countNum !== 0" class="code-button">
+            <el-button @click="sendSms('register', registerInfo.phone)" :disabled="countNum !== 0" class="code-button">
               {{ countNum !== 0 ? countNum + 's后重试' : '获取验证码' }}
             </el-button>
           </el-form-item>
@@ -49,7 +49,8 @@
 </template>
 
 <script>
-import { sendRegisterSms, signup, SignupInfo, accountUnique } from 'network/passport';
+import { signup, SignupInfo, accountUnique } from 'network/passport';
+import { sms } from 'components/common/mixin';
 export default {
   data() {
     const checkPassword = (rule, value, callback) => {
@@ -61,7 +62,7 @@ export default {
     const checkUserUnique = (rule, value, callback) => {
       accountUnique(value)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           return res.message == 'Account already exists.' ? callback(new Error('用户名已存在')) : callback();
         })
         .catch((err) => {
@@ -71,7 +72,7 @@ export default {
     const checkPhoneUnique = (rule, value, callback) => {
       accountUnique(value)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           return res.message == 'Account already exists.' ? callback(new Error('手机号已存在')) : callback();
         })
         .catch((err) => {
@@ -131,6 +132,7 @@ export default {
       }
     };
   },
+  mixins: [sms],
   methods: {
     toLogin() {
       this.$router.replace('/passport/login');
@@ -176,30 +178,6 @@ export default {
     //修改密码是否显示
     modifyPassword() {
       this.passwordType = this.passwordType == 'password' ? 'text' : 'password';
-    },
-    sendSms() {
-      if (!/^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/.test(this.registerInfo.phone)) {
-        this.$message({ type: 'warning', message: '请输入正确的手机号' });
-      } else {
-        this.countdown(60);
-        sendRegisterSms('register', this.registerInfo.phone)
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err));
-      }
-    },
-    countdown(num) {
-      this.countNum = num;
-      if (typeof num != 'number') {
-        console.log('请输入数字');
-        return;
-      }
-      this.countNum;
-      const timer1 = setInterval(() => {
-        this.countNum--;
-        if (this.countNum == 0) {
-          clearInterval(timer1);
-        }
-      }, 1000);
     }
   }
 };

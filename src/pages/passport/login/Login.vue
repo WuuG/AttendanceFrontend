@@ -51,11 +51,10 @@
                   prefix-icon="el-icon-lock"
                 >
                 </el-input>
-                <el-button @click="countdown(60)" :disabled="countNum !== 0" class="code-button">
+                <el-button @click="sendSms('login', userInfo.number)" :disabled="countNum !== 0" class="code-button">
                   {{ countNum !== 0 ? countNum + 's后重试' : '获取验证码' }}
                 </el-button>
               </el-form-item>
-
               <el-form-item>
                 <div class="login-opsions">
                   <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
