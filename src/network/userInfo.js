@@ -8,3 +8,9 @@ export function getUserInfo(uid) {
     // }
   }, 'get')
 }
+
+export function getUsers() {
+  return request({
+    url: '/users'
+  }, 'get')
+}

@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { sendRegisterSms, authLogin, signup, SignupInfo, vertifyCode } from 'network/passport';
+import { sendRegisterSms, signup, SignupInfo, accountUnique } from 'network/passport';
 export default {
   data() {
     const checkPassword = (rule, value, callback) => {
@@ -57,6 +57,26 @@ export default {
         return callback(new Error('密码不一致，请重新输入'));
       }
       return callback();
+    };
+    const checkUserUnique = (rule, value, callback) => {
+      accountUnique(value)
+        .then((res) => {
+          console.log(res);
+          return res.message == 'Account already exists.' ? callback(new Error('用户名已存在')) : callback();
+        })
+        .catch((err) => {
+          return callback();
+        });
+    };
+    const checkPhoneUnique = (rule, value, callback) => {
+      accountUnique(value)
+        .then((res) => {
+          console.log(res);
+          return res.message == 'Account already exists.' ? callback(new Error('手机号已存在')) : callback();
+        })
+        .catch((err) => {
+          return callback();
+        });
     };
     return {
       select: '',
@@ -87,7 +107,8 @@ export default {
             pattern: /^[a-zA-Z]([a-zA-Z0-9_]{3,19})$/,
             message: '4-20个英文、数字和下划线，不以数字和下划线开头',
             trigger: 'blur'
-          }
+          },
+          { validator: checkUserUnique, trigger: 'change' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -100,7 +121,8 @@ export default {
         ],
         phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
-          { pattern: /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/, message: '请输入正确的手机哈', trigger: 'blur' }
+          { pattern: /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/, message: '请输入正确的手机哈', trigger: 'blur' },
+          { validator: checkPhoneUnique, trigger: 'blur' }
         ],
         code: [
           { required: true, message: '请输入6位验证码', trigger: 'blur' },

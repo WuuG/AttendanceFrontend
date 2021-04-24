@@ -42,13 +42,6 @@ router.beforeEach((to, from, next) => {
     } else {
         next();
     }
-
-
-
-
-    // const role = localStorage.getItem('ms_username');
-    // 判断是否有role，没有的话进入登陆页。
-    // next()
 });
 
 new Vue({

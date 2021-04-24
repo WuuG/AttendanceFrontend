@@ -101,13 +101,24 @@ export default {
           ]
         },
         {
+          icon: 'el-icon-info',
+          title: '权限管理',
+          index: '3',
+          subs: [
+            {
+              index: 'userList',
+              title: '用户管理'
+            }
+          ]
+        },
+        {
           icon: 'el-icon-lx-copy',
           index: 'tabs',
           title: 'tab选项卡'
         },
         {
           icon: 'el-icon-lx-calendar',
-          index: '3',
+          index: '4',
           title: '表单相关',
           subs: [
             {

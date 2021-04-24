@@ -29,6 +29,13 @@ export function vertifyCode(type, phone, code) {
     url: '/sms/' + type + '/' + phone + '/' + code
   }, 'post')
 }
+export function accountUnique(account) {
+  return request({
+    url: '/account/unique/' + account,
+
+  }, 'get')
+}
+
 
 export class SignupInfo {
   constructor(registerInfo) {

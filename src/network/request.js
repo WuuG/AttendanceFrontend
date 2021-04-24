@@ -1,5 +1,17 @@
 import axios from "axios"
 
+let pending = []; //声明一个数组用于存储每个请求的取消函数和axios标识
+let cancelToken = axios.CancelToken;
+let removePending = (config) => {
+  console.log('pending', pending);
+  for (let p in pending) {
+    if (pending[p].u === config.url.split('/')[0] + '&' + config.method) {
+      //当当前请求在数组中存在时执行函数体
+      pending[p].f(); //执行取消操作
+      pending.splice(p, 1); //数组移除当前请求
+    }
+  }
+}
 export function request(config, method) {
   const instance = axios.create({
     baseURL: "/api",
@@ -10,6 +22,11 @@ export function request(config, method) {
   instance.interceptors.request.use(config => {
     const toKen = localStorage.getItem('toKen')
     console.log(config);
+    removePending(config); //在一个axios发送前执行一下取消操作
+    config.cancelToken = new cancelToken((c) => {
+      // pending存放每一次请求的标识，一般是url + 参数名 + 请求方法，当然你可以自己定义
+      pending.push({ u: config.url.split('/')[0] + '&' + config.method, f: c });//config.data为请求参数
+    });
     if (toKen) {
       config.headers.Authorization = 'Bearer ' + toKen
       // console.log(config);
@@ -26,6 +43,7 @@ export function request(config, method) {
       switch (err.response.status) {
         case 400:
           console.log('Bad Request');
+          return err.response.data;
           break;
         case 401:
           console.log('Unauthorized');

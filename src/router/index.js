@@ -134,6 +134,12 @@ export default new Router({
                     component: () => import('pages/params/SystemParams.vue'),
                     meta: { title: '系统参数' }
                 },
+                {
+                    path: 'userList',
+                    name: 'userList',
+                    component: () => import('pages/authorityManagement/UserList.vue'),
+                    meta: { title: '用户管理' }
+                },
             ]
         },
         // {
