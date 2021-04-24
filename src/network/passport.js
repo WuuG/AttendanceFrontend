@@ -15,13 +15,18 @@ export function signup(signupInfo) {
     data: signupInfo,
   }, 'post')
 }
-export function sendRegisterSms(phone) {
+export function sendRegisterSms(type, phone) {
   return request({
     url: '/sms',
     data: {
-      type: 'register',
+      type: type,
       phone
     }
+  }, 'post')
+}
+export function vertifyCode(type, phone, code) {
+  return request({
+    url: '/sms/' + type + '/' + phone + '/' + code
   }, 'post')
 }
 

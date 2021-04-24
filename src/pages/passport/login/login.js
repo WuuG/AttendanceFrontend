@@ -97,6 +97,9 @@ export default {
         reload() {
             this.$router.go(0);
         },
+        loginByPhone() {
+
+        },
         //验证码倒计时
         countdown(num) {
             this.countNum = num;

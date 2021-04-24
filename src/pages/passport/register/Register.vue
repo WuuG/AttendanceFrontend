@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { sendRegisterSms, authLogin, signup, SignupInfo } from 'network/passport';
+import { sendRegisterSms, authLogin, signup, SignupInfo, vertifyCode } from 'network/passport';
 export default {
   data() {
     const checkPassword = (rule, value, callback) => {
@@ -84,8 +84,8 @@ export default {
         name: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           {
-            pattern: /^([\u4e00-\u9fa5]{2,4})|([A-Za-z0-9_]{4,16})|([a-zA-Z0-9_\u4e00-\u9fa5]{3,16})$/,
-            message: '4-16位字母,数字,汉字,下划线',
+            pattern: /^[a-zA-Z]([a-zA-Z0-9_]{3,19})$/,
+            message: '4-20个英文、数字和下划线，不以数字和下划线开头',
             trigger: 'blur'
           }
         ],
@@ -102,7 +102,10 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { pattern: /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/, message: '请输入正确的手机哈', trigger: 'blur' }
         ],
-        code: [{ required: true, message: '请输入6位验证码', trigger: 'blur' }]
+        code: [
+          { required: true, message: '请输入6位验证码', trigger: 'blur' },
+          { pattern: /^[0-9]{4,6}$/, message: '请输入4-6位验证码', trigger: 'blur' }
+        ]
       }
     };
   },
@@ -111,13 +114,12 @@ export default {
       this.$router.replace('/passport/login');
     },
     signup(formName) {
-      console.log('进入注册');
       const signupInfo = new SignupInfo(this.registerInfo);
+      console.log(signupInfo.smsCode);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           signup(signupInfo)
             .then((res) => {
-              console.log(res);
               if (res.status == 400) {
                 this.$message({
                   message: res.message,
@@ -126,29 +128,22 @@ export default {
               } else {
                 this.$message({
                   type: 'success',
-                  message: res.message
+                  message: '注册成功，欢迎您！！'
                 });
-                authLogin(signupInfo.loginName, signupInfo.password)
-                  .then((res) => {
-                    if (res.data) {
-                      window.localStorage.setItem('toKen', res.data.token);
-                      window.localStorage.setItem('uid', res.data.uid);
-                    }
-                    this.$router.replace('/dashboard');
-                    return true;
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    this.$message.error(err.message);
-                  });
+                if (res.data) {
+                  window.localStorage.setItem('toKen', res.data.token);
+                  window.localStorage.setItem('uid', res.data.uid);
+                }
+                this.$router.replace('/dashboard');
+                return true;
               }
             })
             .catch((err) => {
+              console.log(err);
               this.$message({
-                message: err,
+                message: err.error,
                 type: 'warning'
               });
-              console.log(err);
             });
         } else {
           console.log('error submit!!');
@@ -165,7 +160,7 @@ export default {
         this.$message({ type: 'warning', message: '请输入正确的手机号' });
       } else {
         this.countdown(60);
-        sendRegisterSms(this.registerInfo.phone)
+        sendRegisterSms('register', this.registerInfo.phone)
           .then((res) => console.log(res))
           .catch((err) => console.log(err));
       }
