@@ -73,7 +73,7 @@
           <el-col :span="18">
             <el-col>
               <span>第三方登录：</span>
-              <a href="javaScript:" @click="genOAuthUrl(params.GITEE)"
+              <a href="javaScript:" @click="onOAuth(params.GITEE)"
                 ><img src="~assets/img/gitee-fill-round.svg" alt="" class="login-oAuth"
               /></a>
             </el-col>

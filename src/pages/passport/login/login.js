@@ -163,8 +163,8 @@ export default {
                 showClose: true,
             })
         },
-        //生成第三方登录的url,并进行跳转
-        genOAuthUrl(params) {
+        //点击第三方登录图标时，生成第三方登录的url,并进行跳转
+        onOAuth(params) {
             const state = randomString()
             const url = `${params.BASEURL}?client_id=${params.CLINET_ID}&redirect_uri=${params.REDIRECT_URL}&response_type=code&state=${state}`
             location.replace(url)
@@ -173,6 +173,7 @@ export default {
         getOAuthParmas() {
             let params = getCurUrlParmas();
             console.log(params);
+            history.replaceState('', '', 'http://localhost:8080/#/passport/login')
         }
 
     }
