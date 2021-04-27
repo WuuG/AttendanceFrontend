@@ -1,5 +1,4 @@
 import axios from "axios"
-import app from '../App.vue';
 import { Message } from 'element-ui';
 
 let pending = []; //声明一个数组用于存储每个请求的取消函数和axios标识
@@ -30,6 +29,7 @@ export function request(config, method) {
       // pending存放每一次请求的标识，一般是url + 参数名 + 请求方法，当然你可以自己定义
       pending.push({ u: config.url.split('/')[0] + '&' + config.method, f: c });//config.data为请求参数
     });
+    //添加headrs toKen
     if (toKen) {
       config.headers.Authorization = 'Bearer ' + toKen
       // console.log(config);

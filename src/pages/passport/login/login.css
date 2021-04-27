@@ -67,12 +67,13 @@
   width: 30%;
   margin-top: 1px;
 }
-.a-signup {
-  float: right;
-  margin-top: -10%;
-  margin-right: 12%;
-}
 
+.login-nav {
+  padding: 0 30px 10px 30px;
+}
+.login-nav .to-register {
+  text-align: right;
+}
 /* 
 .el-tabs__content {
   height: 270px;
@@ -81,6 +82,10 @@
 .login-opsions .el-link.el-link--default {
   float: right;
   margin-right: 10px;
+}
+.login-oAuth {
+  height: 20px;
+  vertical-align: top;
 }
 /* .el-input__icon {
   font-size: 20px;

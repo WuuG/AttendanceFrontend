@@ -1,23 +1,25 @@
 import { authLoginByPassword, authLoginByPhone } from "network/passport"
 import { sms } from 'components/common/mixin'
+import { randomString, getCurUrlParmas } from 'utils/utils';
+import CONST from 'utils/const'
 
 export default {
     data: function () {
         //这里是elment当中进行表单验证的写法，特别有意思
         // 用户名验证
         const validateUserName = (rule, value, callback) => {
-            const pattern = /^[a-zA-Z]([a-zA-Z0-9_]{3,19})|((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
+            const pattern = CONST.RE.ACCOUNT;
             if (!value) {
                 return callback(new Error('用户名不可为空'));
             } else if (!pattern.test(value)) {
-                return callback(new Error('4到20位（字母，数字，下划线）或者手机号'));
+                return callback(new Error('请输入正确的用户名、邮箱、手机号等'));
             } else {
                 callback();
             }
         };
         //手机号验证
         const validatePhone = (rule, value, callback) => {
-            const pattern = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
+            const pattern = CONST.RE.PHONE_NUM
             if (!value) {
                 return callback(new Error('手机号不可为空'));
             } else if (!pattern.test(value)) {
@@ -36,7 +38,7 @@ export default {
             if (!value) {
                 return callback(new Error('密码不可为空'))
             } else if (!patter.test(value)) {
-                return callback(new Error('密码在6-16位之间，请不要输入特殊符号。'))
+                return callback(new Error('仅支持字母，数字，!@#$%^&*()+{}|:"<>?,./;'))
             } else {
                 return callback();
             }
@@ -59,9 +61,16 @@ export default {
             },
             activeName: 'first',
             autoLogin: false,
+            params: CONST
         };
     },
+    //混入发送验证码
     mixins: [sms],
+    created() {
+        //第三方登录的参数获取
+        let params = getCurUrlParmas();
+        console.log(params);
+    },
     methods: {
         //登录按钮提交功能
         submitForm(formName) {
@@ -89,6 +98,7 @@ export default {
                 this.authLoginByPhone(userInfo)
             }
         },
+        //通过登录后的处理
         passAuthLogin(res) {
             if (res.status >= 300 || res.status < 200) {
                 if (res.data) {
@@ -126,6 +136,7 @@ export default {
                 this.$message.error(err.message)
             })
         },
+        //通过手机号登录
         authLoginByPhone(userInfo) {
             authLoginByPhone(userInfo.number, userInfo.code).then(res => {
                 this.passAuthLogin(res);
@@ -134,6 +145,7 @@ export default {
                 this.$message.error(err.message)
             })
         },
+        //跳转去登录
         toRegister() {
             this.$router.replace('/passport/register')
         },
@@ -153,6 +165,12 @@ export default {
                 showClose: true,
             })
         },
+        //生成第三方登录的url,并进行跳转
+        genOAuthUrl(params) {
+            const state = randomString()
+            const url = `https://gitee.com/oauth/authorize?client_id=${params.CLINET_ID}&redirect_uri=${params.REDIRECT_URL}&response_type=code&state=${state}`
+            location.replace(url)
+        }
 
     }
 };
