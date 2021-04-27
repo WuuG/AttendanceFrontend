@@ -9,8 +9,12 @@ export function getUserInfo(uid) {
   }, 'get')
 }
 
-export function getUsers() {
+export function getUsers(curPage, pageSize) {
   return request({
-    url: '/users'
+    url: '/users',
+    params: {
+      curPage,
+      pageSize
+    }
   }, 'get')
 }

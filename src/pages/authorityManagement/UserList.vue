@@ -20,12 +20,16 @@
         </el-col>
       </el-row>
       <el-row class="table">
-        <el-table :data="dicInfo" border empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
+        <el-table :data="userData" border empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
-          <el-table-column prop="id" label="字典ID"> </el-table-column>
-          <el-table-column prop="name" label="字典名称"> </el-table-column>
-          <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="createTime" label="创建时间"> </el-table-column>
+          <el-table-column prop="id" label="用户id"> </el-table-column>
+          <el-table-column prop="loginName" label="用户名"> </el-table-column>
+          <el-table-column prop="realName" label="真实姓名" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="gender" label="性别"> </el-table-column>
+          <el-table-column prop="email" label="邮箱"> </el-table-column>
+          <el-table-column prop="phone" label="手机号"> </el-table-column>
+          <el-table-column prop="academicId" label="学院ID"> </el-table-column>
+          <el-table-column prop="schoolMajorName" label="专业"> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -34,40 +38,37 @@
           </el-table-column>
         </el-table>
       </el-row>
+      <el-row>
+        <el-col>
+          <div class="pagination">
+            <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :current-page="query.pageIndex"
+              :page-size="query.pageSize"
+              :total="pageTotal"
+              @current-change="handlePageChange"
+            ></el-pagination>
+          </div>
+        </el-col>
+      </el-row>
     </el-main>
   </div>
 </template>
 
 <script>
+import { getUsers } from 'network/userInfo';
 export default {
   name: 'DataDictionary',
   data() {
     return {
       query: {
-        key: ''
+        key: '',
+        pageIndex: 1,
+        pageSize: 10
       },
-      dicInfo: [
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        }
-      ],
-      dicItem: {
-        id: 0,
-        name: '性别',
-        child: [
-          { itemKey: 0, itemValue: '男', orderValue: 0, defaultValue: 0, display: 1 },
-          { itemKey: 0, itemValue: '女', orderValue: 1, defaultValue: 0, display: 1 }
-        ]
-      },
+      pageTotal: 0,
+      userData: [],
       //判断是编辑还是新建。
       isEdit: false,
       //统一设置表单的宽度
@@ -77,12 +78,28 @@ export default {
     };
   },
   created() {
-    console.log(22);
+    this.getUsers(1, 10);
   },
   activated() {
-    console.log(11);
+    this.getUsers(1, 10);
   },
   methods: {
+    //后台接口方法
+    getUsers(curPage, pageSize) {
+      setTimeout(() => {
+        getUsers(curPage, pageSize)
+          .then((res) => {
+            console.log(res);
+            this.userData = res.data;
+            this.pageTotal = res.data.length;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 200);
+    },
+    deletUser(uid) {},
+    //前端处理逻辑
     addNewItem() {
       this.isEdit = false;
     },
@@ -103,8 +120,11 @@ export default {
     selectAll(sel) {
       console.log(sel);
     },
-    //处理子项tab之间的变化
-    childTabClick() {}
+    // 分页导航
+    handlePageChange(val) {
+      this.$set(this.query, 'pageIndex', val);
+      this.getData();
+    }
   }
 };
 </script>

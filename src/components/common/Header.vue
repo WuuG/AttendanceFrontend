@@ -63,7 +63,7 @@ export default {
       if (this.$store.state.userInfo && this.$store.state.userInfo.loginName) {
         return this.$store.state.userInfo.loginName;
       } else {
-        return this.$store.state.userInfo.loginName;
+        return this.$store.state.userInfo.phone;
       }
     }
   },
@@ -111,11 +111,12 @@ export default {
       }
       this.fullscreen = !this.fullscreen;
     },
-    //getUserInfo
+    //getUserInfo 获取用户信息
     getUserInfo() {
       let uid = localStorage.getItem('uid');
       getUserInfo(uid)
         .then((res) => {
+          console.log(res);
           this.$store.dispatch('updateUserInfo', res.data);
         })
         .catch((err) => console.log(err));
@@ -126,6 +127,7 @@ export default {
       this.collapseChage();
     }
   },
+  //header创建的时候获取用户信息。
   created() {
     this.getUserInfo();
   }

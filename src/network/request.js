@@ -1,4 +1,6 @@
 import axios from "axios"
+import app from '../App.vue';
+import { Message } from 'element-ui';
 
 let pending = []; //声明一个数组用于存储每个请求的取消函数和axios标识
 let cancelToken = axios.CancelToken;
@@ -7,6 +9,7 @@ let removePending = (config) => {
   for (let p in pending) {
     if (pending[p].u === config.url.split('/')[0] + '&' + config.method) {
       //当当前请求在数组中存在时执行函数体
+      if (config.url == '/users' && config.method == 'get') return
       pending[p].f(); //执行取消操作
       pending.splice(p, 1); //数组移除当前请求
     }
@@ -38,18 +41,19 @@ export function request(config, method) {
     // console.log(response.data);
     return response.data
   }, err => {
-    // console.log(err);
+    console.log(err);
     if (err.response != undefined) {
       switch (err.response.status) {
         case 400:
           console.log('Bad Request');
           return err.response.data;
-          break;
         case 401:
           console.log('Unauthorized');
           break;
         case 403:
           console.log('Forbidden');
+          //进行token过期处理
+          toKenExpiredHandle();
           break;
         case 500:
           console.log('Internal Server Error');
@@ -63,8 +67,17 @@ export function request(config, method) {
     // return Promise.reject(err.response.data);
   })
 
-
-
+  function toKenExpiredHandle() {
+    localStorage.removeItem('uid')
+    localStorage.removeItem('toKen')
+    location.replace('/#/passport/login')
+    Message(
+      {
+        message: '请重新登录',
+        type: 'warning'
+      }
+    )
+  }
 
   return instance(config)
 }

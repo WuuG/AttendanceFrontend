@@ -35,6 +35,20 @@
           </el-table-column>
         </el-table>
       </el-row>
+      <el-row>
+        <el-col>
+          <div class="pagination">
+            <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :current-page="query.pageIndex"
+              :page-size="query.pageSize"
+              :total="pageTotal"
+              @current-change="handlePageChange"
+            ></el-pagination>
+          </div>
+        </el-col>
+      </el-row>
     </el-main>
   </div>
 </template>
@@ -45,8 +59,11 @@ export default {
   data() {
     return {
       query: {
-        key: ''
+        key: '',
+        pageIndex: 1,
+        pageSize: 10
       },
+      pageTotal: 0,
       dicInfo: [
         {
           id: 0,
@@ -63,11 +80,7 @@ export default {
       ],
       dicItem: {
         id: 0,
-        name: '性别',
-        child: [
-          { itemKey: 0, itemValue: '男', orderValue: 0, defaultValue: 0, display: 1 },
-          { itemKey: 0, itemValue: '女', orderValue: 1, defaultValue: 0, display: 1 }
-        ]
+        name: '性别'
       },
       //判断是编辑还是新建。
       isEdit: false,
@@ -98,8 +111,11 @@ export default {
     selectAll(sel) {
       console.log(sel);
     },
-    //处理子项tab之间的变化
-    childTabClick() {}
+    // 分页导航
+    handlePageChange(val) {
+      this.$set(this.query, 'pageIndex', val);
+      this.getData();
+    }
   }
 };
 </script>
