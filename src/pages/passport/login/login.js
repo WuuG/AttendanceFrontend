@@ -12,7 +12,7 @@ export default {
             if (!value) {
                 return callback(new Error('用户名不可为空'));
             } else if (!pattern.test(value)) {
-                return callback(new Error('请输入正确的用户名、邮箱、手机号等'));
+                return callback(new Error(CONST.RE_TEXT.ACCOUNT));
             } else {
                 callback();
             }
@@ -34,11 +34,11 @@ export default {
             // 可以包含小写大母 [a-z] 和大写字母 [A-Z]
             // 可以包含数字 [0-9]
             // 可以包含下划线 [ _ ] 和减号 [ - ]
-            const patter = /^[\w_-]{6,16}$/;
+            const patter = CONST.RE.PASSWORD;
             if (!value) {
                 return callback(new Error('密码不可为空'))
             } else if (!patter.test(value)) {
-                return callback(new Error('仅支持字母，数字，!@#$%^&*()+{}|:"<>?,./;'))
+                return callback(new Error(CONST.RE_TEXT.PASSWOR))
             } else {
                 return callback();
             }
@@ -56,7 +56,7 @@ export default {
                 password: [{ required: true, trigger: 'blur', validator: validatePassword }],
                 number: [{ required: true, trigger: 'blur', validator: validatePhone }],
                 code: [{ required: true, message: '请输入4-6位验证码', trigger: 'blur' },
-                { pattern: /^[0-9]{4,6}$/, message: '请输入4-6位验证码', trigger: 'blur' }
+                { pattern: CONST.RE.SMSCODE, message: CONST.RE_TEXT.SMSCODE, trigger: 'blur' }
                 ]
             },
             activeName: 'first',
@@ -67,9 +67,7 @@ export default {
     //混入发送验证码
     mixins: [sms],
     created() {
-        //第三方登录的参数获取
-        let params = getCurUrlParmas();
-        console.log(params);
+        this.getOAuthParmas();
     },
     methods: {
         //登录按钮提交功能
@@ -168,8 +166,13 @@ export default {
         //生成第三方登录的url,并进行跳转
         genOAuthUrl(params) {
             const state = randomString()
-            const url = `https://gitee.com/oauth/authorize?client_id=${params.CLINET_ID}&redirect_uri=${params.REDIRECT_URL}&response_type=code&state=${state}`
+            const url = `${params.BASEURL}?client_id=${params.CLINET_ID}&redirect_uri=${params.REDIRECT_URL}&response_type=code&state=${state}`
             location.replace(url)
+        },
+        //第三方登录参数获取，页面创建时获取
+        getOAuthParmas() {
+            let params = getCurUrlParmas();
+            console.log(params);
         }
 
     }

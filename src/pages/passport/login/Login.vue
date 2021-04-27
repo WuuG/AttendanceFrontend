@@ -69,15 +69,16 @@
             </el-form>
           </el-tab-pane>
         </el-tabs>
-        <el-row class="login-nav" type="flex">
-          <el-col>
+        <el-row class="login-nav">
+          <el-col :span="18">
             <el-col>
+              <span>第三方登录：</span>
               <a href="javaScript:" @click="genOAuthUrl(params.GITEE)"
                 ><img src="~assets/img/gitee-fill-round.svg" alt="" class="login-oAuth"
               /></a>
             </el-col>
           </el-col>
-          <el-col class="to-register">
+          <el-col class="to-register" :span="6">
             <el-link :underline="false" @click="toRegister">注册账户</el-link>
           </el-col>
         </el-row>

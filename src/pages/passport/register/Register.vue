@@ -51,6 +51,8 @@
 <script>
 import { signup, SignupInfo, accountUnique } from 'network/passport';
 import { sms } from 'components/common/mixin';
+import CONST from 'utils/const';
+
 export default {
   data() {
     const checkPassword = (rule, value, callback) => {
@@ -105,29 +107,29 @@ export default {
         name: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           {
-            pattern: /^[a-zA-Z]([a-zA-Z0-9_]{3,19})$/,
-            message: '4-20个英文、数字和下划线，不以数字和下划线开头',
+            pattern: CONST.RE.ACCOUNT,
+            message: CONST.RE_TEXT.ACCOUNT,
             trigger: 'blur'
           },
           { validator: checkUserUnique, trigger: 'change' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { pattern: /^[\w_-]{6,16}$/, message: '6-16位之间，不可输入特殊符号。', trigger: 'blur' }
+          { pattern: CONST.RE.PASSWORD, message: CONST.RE_TEXT.PASSWORD, trigger: 'blur' }
         ],
         rePassword: [
           { required: true, message: '请输入确认密码', trigger: 'blur' },
-          { pattern: /^[\w_-]{6,16}$/, message: '密码在6-16位之间，请不要输入特殊符号。', trigger: 'blur' },
+          { pattern: CONST.RE.PASSWORD, message: CONST.RE_TEXT.PASSWORD, trigger: 'blur' },
           { validator: checkPassword, trigger: 'blur' }
         ],
         phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
-          { pattern: /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/, message: '请输入正确的手机哈', trigger: 'blur' },
+          { pattern: CONST.RE.PHONE_NUM, message: CONST.RE_TEXT.PHONE_NUM, trigger: 'blur' },
           { validator: checkPhoneUnique, trigger: 'blur' }
         ],
         code: [
           { required: true, message: '请输入6位验证码', trigger: 'blur' },
-          { pattern: /^[0-9]{4,6}$/, message: '请输入4-6位验证码', trigger: 'blur' }
+          { pattern: CONST.RE.SMSCODE, message: CONST.RE_TEXT.SMSCODE, trigger: 'blur' }
         ]
       }
     };
@@ -142,38 +144,41 @@ export default {
       console.log(signupInfo.smsCode);
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          signup(signupInfo)
-            .then((res) => {
-              if (res.status == 400) {
-                this.$message({
-                  message: res.message,
-                  type: 'error'
-                });
-              } else {
-                this.$message({
-                  type: 'success',
-                  message: '注册成功，欢迎您！！'
-                });
-                if (res.data) {
-                  window.localStorage.setItem('toKen', res.data.token);
-                  window.localStorage.setItem('uid', res.data.uid);
-                }
-                this.$router.replace('/dashboard');
-                return true;
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              this.$message({
-                message: err.error,
-                type: 'warning'
-              });
-            });
+          this.passFromValid(signupInfo);
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+    },
+    //通过表单验证时的处理
+    async passFromValid(signupInfo) {
+      try {
+        const res = await signup(signupInfo);
+        if (res.status == 400) {
+          this.$message({
+            message: res.message,
+            type: 'error'
+          });
+        } else {
+          this.$message({
+            type: 'success',
+            message: '注册成功，欢迎您！！'
+          });
+          if (res.data) {
+            window.localStorage.setItem('toKen', res.data.token);
+            window.localStorage.setItem('uid', res.data.uid);
+          }
+          this.$router.replace('/dashboard');
+          return true;
+        }
+      } catch (err) {
+        console.log(err);
+        this.$message({
+          message: err.error,
+          type: 'warning'
+        });
+      }
     },
     //修改密码是否显示
     modifyPassword() {
