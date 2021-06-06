@@ -26,11 +26,11 @@ export function randomString() {
 export function getCurUrlParmas() {
   const query = window.location.search
   const queryMap = {}
-  if (query == '') return
+  if (query == '') return null
   query.replace('?', '').split('&').forEach(kv => {
     let [key, value] = kv.split('=')
     queryMap[key] = value;
   })
+  console.log('current url：', queryMap);
   return queryMap;
-
 }

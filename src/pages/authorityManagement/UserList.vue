@@ -8,8 +8,33 @@
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :md="9" :lg="10">
           <el-button @click="addNewItem">新增</el-button>
-          <el-button>修改</el-button>
-          <el-button>删除</el-button>
+          <el-dialog title="新增用户信息" :visible.sync="newUserDialogVisibel">
+            <el-form :model="newUserForm">
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="手机号" :label-width="dialogLabelWidth">
+                    <el-input v-model="newUserForm.phone" autocomplete="off"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="用户名" :label-width="dialogLabelWidth">
+                    <el-input v-model="newUserForm.loginName" autocomplete="off"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <!-- <el-form-item label="活动区域" :label-width="formLabelWidth">
+                <el-select v-model="form.region" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item> -->
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="newUserDialogVisibel = false">取 消</el-button>
+              <el-button type="primary" @click="newUserDialogVisibel = false">确 定</el-button>
+            </div>
+          </el-dialog>
+          <el-button>批量删除</el-button>
         </el-col>
         <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
           <el-col>
@@ -22,13 +47,12 @@
       <el-row class="table">
         <el-table :data="userData" border empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
-          <el-table-column prop="id" label="用户id"> </el-table-column>
+          <el-table-column prop="phone" label="手机号"> </el-table-column>
           <el-table-column prop="loginName" label="用户名"> </el-table-column>
           <el-table-column prop="realName" label="真实姓名" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="gender" label="性别"> </el-table-column>
           <el-table-column prop="email" label="邮箱"> </el-table-column>
-          <el-table-column prop="phone" label="手机号"> </el-table-column>
-          <el-table-column prop="academicId" label="学院ID"> </el-table-column>
+          <el-table-column prop="academicId" label="学工号"> </el-table-column>
           <el-table-column prop="schoolMajorName" label="专业"> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
@@ -74,7 +98,19 @@ export default {
       //统一设置表单的宽度
       labelWidth: '80px',
       //活跃的子项
-      activeName: '0'
+      activeName: '0',
+      //新增用户的dialog显示与否
+      newUserDialogVisibel: false,
+      dialogLabelWidth: '65px',
+      newUserForm: {
+        loginName: '',
+        realName: '',
+        gender: '',
+        email: '',
+        phone: '',
+        academicId: '',
+        schoolMajorName: ''
+      }
     };
   },
   created() {
@@ -102,6 +138,7 @@ export default {
     //前端处理逻辑
     addNewItem() {
       this.isEdit = false;
+      this.newUserDialogVisibel = true;
     },
     dataSearch() {
       console.log('handle search');
