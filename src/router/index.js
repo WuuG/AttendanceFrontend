@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+const MyBaseTable = () => import('../components/context/base-table/BaseTable.vue')
+
 Vue.use(Router);
 
 export default new Router({
@@ -139,6 +141,12 @@ export default new Router({
                     name: 'userList',
                     component: () => import('pages/authorityManagement/UserList.vue'),
                     meta: { title: '用户管理' }
+                },
+                {
+                    path: 'mybasetable',
+                    name: 'mybasetable',
+                    component: MyBaseTable,
+                    meta: { title: '基础表格' }
                 },
             ]
         },

@@ -2,15 +2,14 @@
 <template emplate>
   <div>
     <el-breadcrumb separator="/" class="crumbs">
-      <el-breadcrumb-item><i class="el-icon-s-tools"></i>系统设置 </el-breadcrumb-item>
-      <el-breadcrumb-item>数据字典</el-breadcrumb-item>
+      <el-breadcrumb-item>基础表格</el-breadcrumb-item>
     </el-breadcrumb>
+
     <el-main class="data-dic-content">
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :md="9" :lg="10">
-          <el-button @click="addNewItem">新增</el-button>
-          <el-button>修改</el-button>
-          <el-button>删除</el-button>
+          <el-button @click="changeDialogVisibel">新增</el-button>
+          <el-button @click="deleteSelectedItem">删除</el-button>
         </el-col>
         <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
           <el-col>
@@ -21,7 +20,7 @@
         </el-col>
       </el-row>
       <el-row class="table">
-        <el-table :data="dicInfo" border empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
+        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="字典ID"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
@@ -35,12 +34,13 @@
           </el-table-column>
         </el-table>
       </el-row>
+
       <el-row>
         <el-col>
           <div class="pagination">
             <el-pagination
               background
-              layout="total, prev, pager, next"
+              layout="total,-> ,prev, pager, next"
               :current-page="query.pageIndex"
               :page-size="query.pageSize"
               :total="pageTotal"
@@ -49,15 +49,19 @@
           </div>
         </el-col>
       </el-row>
+
+      <input-dialog title="新增项目" :visible="addNewDialogVsible" @dialog-cancel="changeDialogVisibel"></input-dialog>
     </el-main>
   </div>
 </template>
 
 <script>
+import InputDialog from '../InputDialog.vue';
 export default {
   name: 'DataDictionary',
   data() {
     return {
+      // 表格页面pagenation的参数
       query: {
         key: '',
         pageIndex: 1,
@@ -78,22 +82,18 @@ export default {
           createTime: '2020-1-12 12:00:00'
         }
       ],
-      dicItem: {
-        id: 0,
-        name: '性别'
-      },
-      //判断是编辑还是新建。
-      isEdit: false,
       //统一设置表单的宽度
       labelWidth: '80px',
       //活跃的子项
-      activeName: '0'
+      activeName: '0',
+      // 新增按钮对应的Dialog Visible
+      addNewDialogVsible: false
     };
   },
+  components: {
+    InputDialog
+  },
   methods: {
-    addNewItem() {
-      this.isEdit = false;
-    },
     dataSearch() {
       console.log('handle search');
     },
@@ -108,13 +108,19 @@ export default {
     selection(sel) {
       console.log(sel);
     },
+    // 选择全部
     selectAll(sel) {
       console.log(sel);
     },
+    // 删除已选
+    deleteSelectedItem() {},
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
+    },
+    changeDialogVisibel() {
+      this.addNewDialogVsible = !this.addNewDialogVsible;
     }
   }
 };
