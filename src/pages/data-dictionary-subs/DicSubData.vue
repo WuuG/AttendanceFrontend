@@ -11,8 +11,7 @@
         <el-col :span="9" :xs="20" :md="9" :lg="5">
           <el-button @click="back" icon="el-icon-arrow-left" type="primary">返回</el-button>
           <el-button @click="addNewDic">新增</el-button>
-          <el-button>修改</el-button>
-          <el-button>删除</el-button>
+          <el-button>批量删除</el-button>
         </el-col>
         <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
           <el-col>

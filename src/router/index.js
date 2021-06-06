@@ -2,6 +2,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 const MyBaseTable = () => import('../components/context/base-table/BaseTable.vue')
+const DataDictionary = () => import('../pages/data-dictionary/DataDictionary.vue')
+const DataDicSub = () => import('../pages/data-dictionary-subs/DicSubData.vue')
+const SystemParams = () => import('../pages/system-params/SystemParams.vue')
 
 Vue.use(Router);
 
@@ -121,19 +124,19 @@ export default new Router({
                 {
                     path: 'dataDictionary',
                     name: 'dataDictionary',
-                    component: () => import('pages/params/dataDic/DataDictionary.vue'),
+                    component: DataDictionary,
                     meta: { title: '数据字典' }
                 },
                 {
                     path: 'dicChildData',
                     name: 'dicChildData',
-                    component: () => import('pages/params/dataDic/DicChildData.vue'),
+                    component: DataDicSub,
                     meta: { title: '数据列表' }
                 },
                 {
                     path: 'systemParams',
                     name: 'systemParams',
-                    component: () => import('pages/params/SystemParams.vue'),
+                    component: SystemParams,
                     meta: { title: '系统参数' }
                 },
                 {

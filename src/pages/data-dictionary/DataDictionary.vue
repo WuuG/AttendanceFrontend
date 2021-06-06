@@ -8,8 +8,7 @@
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :sm="12" :md="9" :lg="10">
           <el-button @click="addNewDic">新增</el-button>
-          <el-button>修改</el-button>
-          <el-button>删除</el-button>
+          <el-button>批量删除</el-button>
         </el-col>
         <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
           <el-col>
