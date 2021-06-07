@@ -50,8 +50,7 @@ export default {
     };
   },
   props: {
-    visible: Boolean,
-    datas: Object
+    visible: Boolean
   },
   methods: {
     cancel(done) {
@@ -62,5 +61,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 </style>

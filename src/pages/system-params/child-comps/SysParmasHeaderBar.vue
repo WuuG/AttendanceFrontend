@@ -2,6 +2,7 @@
   <header-bar>
     <template #left-content>
       <el-col :span="9" :xs="20" :md="9" :lg="10">
+        <el-button @click="addNewParams">新增</el-button>
         <el-button>批量删除</el-button>
       </el-col>
     </template>
@@ -31,7 +32,10 @@ export default {
     load() {
       this.$emit('load');
     },
-    dataSearch() {}
+    dataSearch() {},
+    addNewParams() {
+      this.$emit('add-new');
+    }
   }
 };
 </script>

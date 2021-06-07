@@ -6,7 +6,7 @@
       <el-breadcrumb-item>系统参数</el-breadcrumb-item>
     </el-breadcrumb>
     <el-main class="main-content">
-      <header-bar @load="reset"></header-bar>
+      <header-bar @load="reset" @add-new="addDialogVisible = true"></header-bar>
 
       <el-row class="table">
         <el-table :data="sysParams" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll" v-loading="loading">
@@ -41,8 +41,8 @@
         @dialog-cancel="editDialogVisible = false"
         :datas="activeSysParams"
         ref="editDialog"
-        :current-page.sync="query.pageIndex"
       ></edit-dialog>
+      <add-dialog :visible="addDialogVisible" @dialog-cancel="addDialogVisible = false"> </add-dialog>
     </el-main>
   </div>
 </template>
@@ -52,7 +52,7 @@ import { getdictionaries } from 'network/dictionary';
 
 import EditDialog from './child-comps/SysParamsDialog.vue';
 import HeaderBar from './child-comps/SysParmasHeaderBar.vue';
-import moduleName from '';
+import AddDialog from './child-comps/SysParamsAddDialog.vue';
 export default {
   name: 'DataDictionary',
   data() {
@@ -71,12 +71,14 @@ export default {
       formLabelWidth: '80px',
       //活跃的子项
       editDialogVisible: false,
+      addDialogVisible: false,
       loading: false
     };
   },
   components: {
     EditDialog,
-    HeaderBar
+    HeaderBar,
+    AddDialog
   },
   created() {
     this.InitLoad();
