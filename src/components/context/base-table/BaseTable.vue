@@ -5,7 +5,7 @@
       <el-breadcrumb-item>基础表格</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-main class="data-dic-content">
+    <el-main class="main-content">
       <header-bar>
         <template #left-content>
           <el-button @click="changeDialogVisibel">新增</el-button>
@@ -19,6 +19,7 @@
           <el-button>重置</el-button>
         </template>
       </header-bar>
+
       <el-row class="table">
         <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
@@ -128,11 +129,4 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.data-dic-content {
-  background-color: #fff;
-  min-width: 440px;
-  .table {
-    padding-top: 10px;
-  }
-}
 </style>

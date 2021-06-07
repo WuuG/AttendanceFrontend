@@ -174,3 +174,12 @@ a {
 .v-note-wrapper .v-note-panel {
   min-height: 500px;
 }
+
+.main-content {
+  background-color: #fff;
+  padding-bottom: 0;
+  min-width: 440px;
+}
+.main-content .table {
+  padding-top: 10px;
+}

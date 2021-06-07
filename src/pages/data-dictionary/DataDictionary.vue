@@ -4,7 +4,7 @@
       <el-breadcrumb-item><i class="el-icon-s-tools"></i>系统设置 </el-breadcrumb-item>
       <el-breadcrumb-item>数据字典</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-main class="data-dic-content">
+    <el-main class="main-content">
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :sm="12" :md="9" :lg="10">
           <el-button @click="addNewDic">新增</el-button>
@@ -131,9 +131,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.data-dic-content {
-  background-color: #fff;
-  min-width: 440px;
+.main-content {
   .search-bar {
     display: flex;
     justify-content: flex-end;
