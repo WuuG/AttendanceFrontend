@@ -116,7 +116,6 @@ export default {
       let uid = localStorage.getItem('uid');
       getUserInfo(uid)
         .then((res) => {
-          console.log(res);
           this.$store.dispatch('updateUserInfo', res.data);
         })
         .catch((err) => console.log(err));

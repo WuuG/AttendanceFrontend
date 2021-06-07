@@ -6,19 +6,19 @@
     </el-breadcrumb>
 
     <el-main class="data-dic-content">
-      <el-row type="flex" :gutter="20" justify="space-between">
-        <el-col :span="9" :xs="20" :md="9" :lg="10">
+      <header-bar>
+        <template #left-content>
           <el-button @click="changeDialogVisibel">新增</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
-        </el-col>
-        <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
+        </template>
+        <template #right-content>
           <el-col>
             <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
           </el-col>
           <el-button @click="dataSearch">搜索</el-button>
           <el-button>重置</el-button>
-        </el-col>
-      </el-row>
+        </template>
+      </header-bar>
       <el-row class="table">
         <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
@@ -57,6 +57,7 @@
 
 <script>
 import InputDialog from '../InputDialog.vue';
+import HeaderBar from '../HeadrBar.vue';
 export default {
   name: 'DataDictionary',
   data() {
@@ -91,7 +92,8 @@ export default {
     };
   },
   components: {
-    InputDialog
+    InputDialog,
+    HeaderBar
   },
   methods: {
     dataSearch() {
@@ -129,10 +131,6 @@ export default {
 .data-dic-content {
   background-color: #fff;
   min-width: 440px;
-  .search-bar {
-    display: flex;
-    justify-content: flex-end;
-  }
   .table {
     padding-top: 10px;
   }
