@@ -128,11 +128,11 @@ export default new Router({
                     meta: { title: '数据字典' }
                 },
                 {
-                    path: 'dicChildData/:userId',
+                    path: 'dicChildData',
                     name: 'dicChildData',
                     component: DataDicSub,
                     meta: { title: '数据列表' },
-                    props: true
+                    props: route => ({ userId: route.query.userId })
                 },
                 {
                     path: 'systemParams',

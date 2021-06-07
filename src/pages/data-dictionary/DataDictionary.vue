@@ -106,7 +106,12 @@ export default {
     },
     handleEdit(index, row) {
       this.isEdit = true;
-      this.$router.push('/dicChildData/' + row.id);
+      this.$router.push({
+        path: 'dicChildData',
+        query: {
+          userId:row.id
+        }
+      });
       console.log(index, row);
     },
     handleDelete(index, row) {
