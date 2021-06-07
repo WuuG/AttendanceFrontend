@@ -106,7 +106,7 @@ export default {
     },
     handleEdit(index, row) {
       this.isEdit = true;
-      this.$router.push('/dicChildData');
+      this.$router.push('/dicChildData/' + row.id);
       console.log(index, row);
     },
     handleDelete(index, row) {

@@ -22,7 +22,7 @@
         </el-col>
       </el-row>
       <el-row class="table">
-        <el-table :data="dicItem" border empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
+        <el-table :data="dicItem" border empty-text="暂时没有数据" @selection-change="selection" @select-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="数据ID"> </el-table-column>
           <el-table-column prop="itemKey" label="数据Key"> </el-table-column>
@@ -31,7 +31,7 @@
           <el-table-column prop="display" label="是否显示"> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">子项</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -88,6 +88,9 @@ export default {
       activeForm: { id: '', itemKey: null, itemValue: '', orderValue: null, defaultValue: null, display: null }
     };
   },
+  props: {
+    userId: String
+  },
   methods: {
     addNewDic() {
       this.isEdit = false;
@@ -111,6 +114,7 @@ export default {
       console.log(sel);
     },
     selectAll(sel) {
+      console.log('selecte all ', this.userId);
       console.log(sel);
     },
     //处理子项tab之间的变化
