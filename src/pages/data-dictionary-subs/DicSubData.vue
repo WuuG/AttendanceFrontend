@@ -22,6 +22,23 @@
         </el-col>
       </el-row>
       <el-row class="table">
+        <el-table :data="dicInfo" border>
+          <el-table-column type="selection" align="center"></el-table-column>
+          <el-table-column prop="id" label="字典ID"> </el-table-column>
+          <el-table-column prop="name" label="字典名称"> </el-table-column>
+          <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="createTime" label="创建时间"> </el-table-column>
+          <el-table-column label="操作" width="150" align="center">
+            <template v-slot:default="scope">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-row>
+    </el-main>
+    <el-main class="data-dic-content">
+      <el-row class="table">
         <el-table :data="dicItem" border empty-text="暂时没有数据" @selection-change="selection" @select-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="数据ID"> </el-table-column>
@@ -74,6 +91,15 @@ export default {
       query: {
         key: ''
       },
+      //
+      dicInfo: [
+        {
+          id: 0,
+          name: '性别',
+          des: '性别，用于表示男，女等。',
+          createTime: '2020-1-12 12:00:00'
+        }
+      ],
       dicItem: [
         { id: 0, itemKey: 0, itemValue: '男', orderValue: 0, defaultValue: 0, display: 1 },
         { id: 1, itemKey: 0, itemValue: '女', orderValue: 1, defaultValue: 0, display: 1 }
@@ -148,6 +174,12 @@ export default {
   }
   .table {
     padding-top: 10px;
+  }
+  &:nth-of-type(2) {
+    margin-top: 10px;
+    .table {
+      padding-top: 0;
+    }
   }
 }
 </style>
