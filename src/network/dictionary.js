@@ -1,10 +1,10 @@
 import { request } from './request';
 
-const getdictionaries = (curpage, pageSize) => {
+const getdictionaries = (curPage, pageSize) => {
   return request({
     url: '/sys-parameters',
-    data: {
-      curpage,
+    params: {
+      curPage,
       pageSize
     }
   }, 'get')

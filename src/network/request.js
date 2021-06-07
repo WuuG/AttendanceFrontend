@@ -4,11 +4,12 @@ import { Message } from 'element-ui';
 let pending = []; //声明一个数组用于存储每个请求的取消函数和axios标识
 let cancelToken = axios.CancelToken;
 let removePending = (config) => {
-  // console.log('pending', pending);
   for (let p in pending) {
-    if (pending[p].u === config.url.split('/')[0] + '&' + config.method) {
-      //当当前请求在数组中存在时执行函数体
-      if (config.url == '/users' && config.method == 'get') return
+    const curURL = config.url.split('/')[1] + '&' + config.method
+    console.log(curURL);
+    if (pending[p].u === curURL) {
+      // 当前请求在数组中存在时执行函数体
+      if (curURL === 'sys-parameters&get') return
       pending[p].f(); //执行取消操作
       pending.splice(p, 1); //数组移除当前请求
     }
@@ -39,7 +40,10 @@ export function request(config, method) {
     removePending(config); //在一个axios发送前执行一下取消操作
     config.cancelToken = new cancelToken((c) => {
       // pending存放每一次请求的标识，一般是url + 参数名 + 请求方法，当然你可以自己定义
-      pending.push({ u: config.url.split('/')[0] + '&' + config.method, f: c });//config.data为请求参数
+      // 取出最前端的url路径,并加上其对应方法
+      const url = config.url.split('/')[1]
+      pending.push({ u: url + '&' + config.method, f: c });//config.data为请求参数
+      // console.log('pending', pending);
     });
     //添加headrs toKen
     if (toKen) {
@@ -56,7 +60,7 @@ export function request(config, method) {
     // console.log(response.data);
     return response.data
   }, err => {
-    console.log(err);
+    console.error(err);
     if (err.response != undefined) {
       switch (err.response.status) {
         case 400:
@@ -78,7 +82,7 @@ export function request(config, method) {
           break;
       }
     }
-    return err.response ? Promise.reject(err.response.data) : Promise.reject('服务器无法访问');
+    return err.response ? Promise.reject(err.response.data) : Promise.reject('请求返回时发生了错误');
     // return Promise.reject(err.response.data);
   })
 
