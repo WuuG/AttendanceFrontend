@@ -54,9 +54,14 @@ export default {
       });
       this.tagsList = curItem;
     },
-    // 设置标签
+    // 设置标签，若是路由相同，参数不同，则关闭原先的窗口，push进新的窗口
     setTags(route) {
-      const isExist = this.tagsList.some((item) => {
+      const isExist = this.tagsList.some((item, index) => {
+        const tagPath = item.path.split('?');
+        const routPath = route.fullPath.split('?');
+        if (tagPath[0] === routPath[0] && tagPath[1] !== routPath[1]) {
+          this.closeTags(index);
+        }
         return item.path === route.fullPath;
       });
       if (!isExist) {

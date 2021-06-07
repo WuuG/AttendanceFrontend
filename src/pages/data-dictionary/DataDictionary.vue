@@ -109,10 +109,10 @@ export default {
       this.$router.push({
         path: 'dicChildData',
         query: {
-          userId:row.id
+          id: row.id
         }
       });
-      console.log(index, row);
+      // console.log(index, row);
     },
     handleDelete(index, row) {
       this.dicInfo.splice(index, 1);

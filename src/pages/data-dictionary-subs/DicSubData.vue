@@ -89,9 +89,14 @@ export default {
     };
   },
   props: {
-    userId: String
+    id: String
   },
   methods: {
+    // 网络请求方法
+    getDictionary() {
+      console.log(this.id);
+    },
+    // 逻辑方法
     addNewDic() {
       this.isEdit = false;
       this.activeForm = { id: '', itemKey: null, itemValue: '', orderValue: null, defaultValue: null, display: null };
@@ -114,7 +119,6 @@ export default {
       console.log(sel);
     },
     selectAll(sel) {
-      console.log('selecte all ', this.userId);
       console.log(sel);
     },
     //处理子项tab之间的变化
@@ -129,7 +133,7 @@ export default {
       this.dialogFormVisible = false;
     },
     back() {
-      this.$router.go(-1);
+      this.$router.push('/dataDictionary');
     }
   }
 };
