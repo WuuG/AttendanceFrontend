@@ -52,7 +52,6 @@ import { getdictionaries } from 'network/dictionary';
 
 import EditDialog from './child-comps/SysParamsDialog.vue';
 import HeaderBar from './child-comps/SysParmasHeaderBar.vue';
-import moduleName from '';
 export default {
   name: 'DataDictionary',
   data() {
