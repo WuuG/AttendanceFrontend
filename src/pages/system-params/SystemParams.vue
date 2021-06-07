@@ -8,7 +8,6 @@
     <el-main class="data-dic-content">
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :md="9" :lg="10">
-          <el-button @click="addNewDic">新增</el-button>
           <el-button>修改</el-button>
           <el-button>删除</el-button>
         </el-col>
@@ -16,21 +15,19 @@
           <el-col>
             <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
           </el-col>
-          <el-button @click="dataDicSearch">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button @click="dataSearch">搜索</el-button>
+          <el-button @click="load">重置</el-button>
         </el-col>
       </el-row>
       <el-row class="table">
-        <el-table :data="sysParams" border empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
+        <el-table :data="sysParams" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
-          <el-table-column prop="id" label="配置ID" width="75px"> </el-table-column>
-          <el-table-column prop="name" label="配置标题"> </el-table-column>
-          <el-table-column prop="flag" label="配置标识" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="configValue" label="配置值" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="type" label="类型"> </el-table-column>
-          <el-table-column prop="group" label="分组"> </el-table-column>
-          <el-table-column prop="configChoice" label="配置项"> </el-table-column>
-          <el-table-column prop="order" label="显示顺序"> </el-table-column>
+          <el-table-column prop="code" label="配置标识" width="170px"> </el-table-column>
+          <el-table-column prop="name" label="配置标题" width="100px" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="value" label="配置参数" width="75px"> </el-table-column>
+          <el-table-column prop="paramType" label="参数类型" width="75px" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="description" label="参数描述" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="range" label="数值范围"> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -76,6 +73,7 @@
 </template>
 
 <script>
+import { getdictionaries } from 'network/dictionary';
 export default {
   name: 'DataDictionary',
   data() {
@@ -83,28 +81,7 @@ export default {
       query: {
         key: ''
       },
-      sysParams: [
-        {
-          id: 0,
-          name: '服务端口',
-          flag: 'sys_email_port',
-          configValue: '7890',
-          type: '文本',
-          group: '邮箱配置',
-          configChoice: '-',
-          order: '1'
-        },
-        {
-          id: 2,
-          name: '授权密码',
-          flag: 'sys_email_password',
-          configValue: 'UASCSMPMHNDiSJlJSALQV',
-          type: '文本',
-          group: '邮箱配置',
-          configChoice: '-',
-          order: '0'
-        }
-      ],
+      sysParams: [],
       activeSysParams: {
         id: null,
         name: '',
@@ -125,21 +102,24 @@ export default {
       dialogFormVisible: false
     };
   },
+  created() {
+    this.load(0, 10);
+  },
   methods: {
-    addNewDic() {
-      this.activeSysParams = {
-        id: null,
-        name: '',
-        flag: '',
-        configValue: '',
-        type: '',
-        group: '',
-        configChoice: '',
-        order: null
-      };
-      this.isEdit = false;
-      this.dialogFormVisible = true;
+    // 网络请求方法
+    async getdictionaries(curPage, pageSize) {
+      const result = await getdictionaries(curPage, pageSize);
+      if (result.status !== 200) {
+        this.$message({
+          type: 'warning',
+          message: `发生错误，错误码为${result.status}`
+        });
+        return null;
+      }
+      return result.data;
     },
+
+    // 逻辑方法
     saveSysParams() {
       if (this.isEdit) {
         for (let item in this.activeSysParams) {
@@ -150,8 +130,12 @@ export default {
       }
       this.dialogFormVisible = false;
     },
-    dataDicSearch() {
+    dataSearch() {
       console.log('handle search');
+    },
+    async load(curPage, pageSize) {
+      const result = await this.getdictionaries(curPage, pageSize);
+      this.sysParams = result;
     },
     handleEdit(index, row) {
       this.isEdit = true;

@@ -14,6 +14,18 @@ let removePending = (config) => {
     }
   }
 }
+// token过期处理
+function toKenExpiredHandle() {
+  localStorage.removeItem('uid')
+  localStorage.removeItem('toKen')
+  location.replace('/#/passport/login')
+  Message(
+    {
+      message: '请重新登录',
+      type: 'warning'
+    }
+  )
+}
 export function request(config, method) {
   const instance = axios.create({
     baseURL: "/api",
@@ -35,6 +47,9 @@ export function request(config, method) {
       // console.log(config);
     }
     return config
+  }, err => {
+    console.log(`request interceptors error: ${err}`);
+    return Promise.reject(err)
   })
 
   instance.interceptors.response.use(response => {
@@ -67,17 +82,6 @@ export function request(config, method) {
     // return Promise.reject(err.response.data);
   })
 
-  function toKenExpiredHandle() {
-    localStorage.removeItem('uid')
-    localStorage.removeItem('toKen')
-    location.replace('/#/passport/login')
-    Message(
-      {
-        message: '请重新登录',
-        type: 'warning'
-      }
-    )
-  }
 
   return instance(config)
 }
