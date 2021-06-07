@@ -1,6 +1,5 @@
 //防抖函数
-export function debounce(func, duration) {
-  console.log(11);
+export function debounce(func, duration = 200) {
   let timer = null;
   return () => {
     console.log(timer);

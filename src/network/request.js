@@ -1,12 +1,13 @@
 import axios from "axios"
 import { Message } from 'element-ui';
+import { debounce } from 'utils/utils';
 
 let pending = []; //声明一个数组用于存储每个请求的取消函数和axios标识
 let cancelToken = axios.CancelToken;
 let removePending = (config) => {
   for (let p in pending) {
     const curURL = config.url.split('/')[1] + '&' + config.method
-    console.log(curURL);
+    // console.log(curURL);
     if (pending[p].u === curURL) {
       // 当前请求在数组中存在时执行函数体
       if (curURL === 'sys-parameters&get') return
@@ -15,6 +16,8 @@ let removePending = (config) => {
     }
   }
 }
+// 通过防抖函数，防止发送多个请求时，跳出多个弹窗
+const toKenExpiredHandleDebounce = debounce(toKenExpiredHandle)
 // token过期处理
 function toKenExpiredHandle() {
   localStorage.removeItem('uid')
@@ -60,7 +63,6 @@ export function request(config, method) {
     // console.log(response.data);
     return response.data
   }, err => {
-    console.error(err);
     if (err.response != undefined) {
       switch (err.response.status) {
         case 400:
@@ -72,7 +74,8 @@ export function request(config, method) {
         case 403:
           console.log('Forbidden');
           //进行token过期处理
-          toKenExpiredHandle();
+          toKenExpiredHandleDebounce()
+          // toKenExpiredHandle();
           break;
         case 500:
           console.log('Internal Server Error');
@@ -82,7 +85,7 @@ export function request(config, method) {
           break;
       }
     }
-    return err.response ? Promise.reject(err.response.data) : Promise.reject('请求返回时发生了错误');
+    return err.response ? Promise.reject(err.response.data) : Promise.reject(`请求返回时发生了错误:${err}`);
     // return Promise.reject(err.response.data);
   })
 
