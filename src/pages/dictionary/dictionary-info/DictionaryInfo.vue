@@ -103,7 +103,8 @@ export default {
       ],
       dicItem: [
         { id: 0, itemKey: 0, itemValue: '男', orderValue: 0, defaultValue: 0, display: 1 },
-        { id: 1, itemKey: 0, itemValue: '女', orderValue: 1, defaultValue: 0, display: 1 }
+        { id: 1, itemKey: 0, itemValue: '女', orderValue: 1, defaultValue: 0, display: 1 },
+        { id: 1, itemKey: 0, itemValue: '未知', orderValue: 2, defaultValue: 0, display: 1 }
       ],
       //判断是编辑还是新建。
       isEdit: false,

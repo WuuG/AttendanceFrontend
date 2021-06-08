@@ -7,7 +7,7 @@
     <el-main class="main-content">
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :sm="12" :md="9" :lg="10">
-          <el-button @click="addNewDic">新增</el-button>
+          <el-button @click="toAddDic">新增</el-button>
           <el-button>批量删除</el-button>
         </el-col>
         <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
@@ -32,23 +32,6 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-dialog title="新增数据字典" :visible.sync="dialogFormVisible">
-          <el-form :model="activeDicInfo">
-            <el-form-item label="字典id" :label-width="formLabelWidth">
-              <el-input v-model="activeDicInfo.id" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="活动名称" :label-width="formLabelWidth">
-              <el-input v-model="activeDicInfo.name" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="字典描述" :label-width="formLabelWidth">
-              <el-input v-model="activeDicInfo.des" autocomplete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="saveDicInfo">确 定</el-button>
-          </div>
-        </el-dialog>
       </el-row>
     </el-main>
   </div>
@@ -86,20 +69,16 @@ export default {
       //统一设置表单的宽度
       formLabelWidth: '80px',
       //活跃的子项
-      activeName: '0',
-      dialogFormVisible: false
+      activeName: '0'
     };
   },
   methods: {
-    addNewDic() {
-      this.activeDicInfo = { id: null, name: '', des: '' };
-      this.isEdit = false;
-      this.dialogFormVisible = true;
+    toAddDic() {
+      this.$router.push('dicAdd');
     },
     saveDicInfo() {
       this.activeDicInfo.createTime = '2021-4-12 23:12:12';
       this.dicInfo.push(this.activeDicInfo);
-      this.dialogFormVisible = false;
     },
     dataDicSearch() {
       console.log('handle search');
@@ -124,9 +103,7 @@ export default {
     },
     selectAll(sel) {
       console.log(sel);
-    },
-    //处理子项tab之间的变化
-    childTabClick() {}
+    }
   }
 };
 </script>
