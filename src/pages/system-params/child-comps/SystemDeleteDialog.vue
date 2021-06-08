@@ -7,7 +7,7 @@
 </template>
 
 <script>
-// import moduleName from '../../../network/systemParams';
+import { deleteParam } from 'network/systemParams';
 
 import ComfirmDialog from 'components/context/ConfirmDialog.vue';
 export default {
@@ -16,17 +16,49 @@ export default {
     return {};
   },
   props: {
-    visible: Boolean
+    visible: Boolean,
+    code: {
+      type: String,
+      default: ''
+    }
   },
   components: {
     ComfirmDialog
   },
   methods: {
+    //网络请求
+    async deleteParam(code) {
+      try {
+        const result = await deleteParam(code);
+        console.log(result);
+        switch (result.status) {
+          case 200:
+            this.$message({
+              type: 'success',
+              message: '删除成功！'
+            });
+            return true;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+        return false;
+      } catch (error) {
+        console.error(`deleteParam network request error ${error}`);
+      }
+    },
+
+    //页面逻辑
     handleClose() {
       this.$emit('dialog-cancel');
     },
-    handleComfirm() {
-      console.log(1);
+    async handleComfirm() {
+      const result = await this.deleteParam(this.code);
+      this.handleClose();
+      if (result) {
+        this.$emit('reset');
+      }
     }
   }
 };

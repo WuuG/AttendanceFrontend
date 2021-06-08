@@ -20,7 +20,7 @@
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -40,7 +40,12 @@
       <edit-dialog :visible="editDialogVisible" @dialog-cancel="editDialogVisible = false" ref="editDialog"></edit-dialog>
 
       <add-dialog :visible="addDialogVisible" @dialog-cancel="addDialogVisible = false" @reset="reset" :datas="sysParams"> </add-dialog>
-      <delete-dialog :visible="deleteDialogVisible" @dialog-cancel="deleteDialogVisible = false"></delete-dialog>
+      <delete-dialog
+        :visible="deleteDialogVisible"
+        @dialog-cancel="deleteDialogVisible = false"
+        :code="activeSysParams ? activeSysParams.code : null"
+        @reset="reset"
+      ></delete-dialog>
     </el-main>
   </div>
 </template>
@@ -103,7 +108,6 @@ export default {
     async load(curPage, pageSize) {
       this.loading = true;
       const result = await this.getParams(curPage, pageSize);
-      console.log(result);
       this.sysParams = result.content;
       this.pageTotal = result.total;
       this.loading = false;
@@ -113,7 +117,8 @@ export default {
       this.editDialogVisible = true;
       this.$refs.editDialog.form = { ...this.activeSysParams };
     },
-    handleDelete(index, row) {
+    handleDelete(row) {
+      this.activeSysParams = row;
       this.deleteDialogVisible = true;
     },
     //选择时，将被选择的表项记录下来。
@@ -128,7 +133,7 @@ export default {
       this.load(this.query.pageIndex, this.query.pageSize);
     },
     async reset() {
-      await this.load(0, this.query.pageSize);
+      await this.load(this.query.pageIndex, this.query.pageSize);
       this.$set(this.query, 'pageIndex', 1);
     }
   }
