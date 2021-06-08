@@ -36,19 +36,14 @@
           @current-change="handlePageChange"
         ></el-pagination>
       </div>
-      <edit-dialog
-        :visible="editDialogVisible"
-        @dialog-cancel="editDialogVisible = false"
-        :datas="activeSysParams"
-        ref="editDialog"
-      ></edit-dialog>
-      <add-dialog :visible="addDialogVisible" @dialog-cancel="addDialogVisible = false"> </add-dialog>
+      <edit-dialog :visible="editDialogVisible" @dialog-cancel="editDialogVisible = false" ref="editDialog"></edit-dialog>
+      <add-dialog :visible="addDialogVisible" @dialog-cancel="addDialogVisible = false" @reset="reset" :datas="sysParams"> </add-dialog>
     </el-main>
   </div>
 </template>
 
 <script>
-import { getdictionaries } from 'network/dictionary';
+import { getParams } from 'network/systemParams';
 
 import EditDialog from './child-comps/SysParamsDialog.vue';
 import HeaderBar from './child-comps/SysParmasHeaderBar.vue';
@@ -61,7 +56,7 @@ export default {
       query: {
         key: '',
         pageIndex: 1,
-        pageSize: 1
+        pageSize: 10
       },
       pageTotal: 0,
       sysParams: [],
@@ -82,12 +77,12 @@ export default {
     AddDialog
   },
   created() {
-    this.InitLoad();
+    this.load(0, this.query.pageSize);
   },
   methods: {
     // 网络请求方法
-    async getdictionaries(curPage, pageSize) {
-      const result = await getdictionaries(curPage, pageSize);
+    async getParams(curPage, pageSize) {
+      const result = await getParams(curPage, pageSize);
       if (result.status !== 200) {
         this.$message({
           type: 'warning',
@@ -101,16 +96,11 @@ export default {
     // 页面逻辑
     async load(curPage, pageSize) {
       this.loading = true;
-      const result = await this.getdictionaries(curPage, pageSize);
-      this.sysParams = result;
+      const result = await this.getParams(curPage, pageSize);
+      console.log(result);
+      this.sysParams = result.content;
+      this.pageTotal = result.total;
       this.loading = false;
-    },
-    // 因为没有获取长度的方法，所以先用这个暂时用一下
-    async InitLoad() {
-      this.loading = true;
-      const result = await this.getdictionaries();
-      this.pageTotal = result.length;
-      this.load(1, this.query.pageSize);
     },
     handleEdit(row) {
       this.activeSysParams = row;
@@ -132,7 +122,7 @@ export default {
       this.load(this.query.pageIndex, this.query.pageSize);
     },
     async reset() {
-      await this.InitLoad();
+      await this.load(0, this.query.pageSize);
       this.$set(this.query, 'pageIndex', 1);
     }
   }

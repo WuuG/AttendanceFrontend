@@ -1,17 +1,17 @@
 <template>
   <el-dialog :title="title" width="300px" :visible.sync="visible" :before-close="cancel">
-    <el-form :model="form" v-if="form">
-      <el-form-item label="配置标识" :label-width="labelWidth">
+    <el-form :model="form" :rules="rules" ref="form">
+      <el-form-item label="配置标识" :label-width="labelWidth" prop="code">
         <el-col :span="20">
           <el-input v-model="form.code"> </el-input>
         </el-col>
       </el-form-item>
-      <el-form-item label="配置标题" :label-width="labelWidth">
+      <el-form-item label="配置标题" :label-width="labelWidth" prop="name">
         <el-col :span="20">
           <el-input v-model="form.name"> </el-input>
         </el-col>
       </el-form-item>
-      <el-form-item label="配置参数" :label-width="labelWidth">
+      <el-form-item label="配置参数" :label-width="labelWidth" prop="value">
         <el-col :span="15">
           <el-input v-model="form.value"> </el-input>
         </el-col>
@@ -35,35 +35,94 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm">确 定</el-button>
+      <el-button type="primary" @click="submitForm('form')">确 定</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script>
+import { addParams } from 'network/systemParams';
 export default {
+  name: 'SystemParamsAddDialog',
   data() {
+    const validaCode = (rule, value, callback) => {
+      this.datas.forEach((param) => {
+        if (param.code === value) {
+          callback(new Error('配置关键字重复'));
+          return;
+        }
+      });
+      callback();
+    };
     return {
       labelWidth: '80px',
-      title: '新增项目',
+      title: '新增系统参数',
       form: {
         code: '',
         name: '',
         value: '',
         paramType: '',
         description: '',
-        range
+        range: ''
+      },
+      rules: {
+        code: [
+          { required: true, message: '配置关键字必填', trigger: 'blur' },
+          { validator: validaCode, trigger: 'blur' }
+        ],
+        name: [{ required: true, message: '配置名称必填', trigger: 'blur' }],
+        value: [{ required: true, message: '配置参数必填', trigger: 'blur' }]
       }
     };
   },
   props: {
-    visible: Boolean
+    visible: Boolean,
+    datas: Array
   },
   methods: {
+    // 网络请求
+    async addNewParam(form) {
+      const result = await addParams(form);
+      switch (result.status) {
+        case 200:
+          this.$message({
+            type: 'success',
+            message: '系统参数添加成功'
+          });
+          return true;
+        default:
+          this.$message({
+            type: 'error',
+            message: '添加系统参数失败'
+          });
+      }
+      return false;
+    },
+    // 页面逻辑
     cancel(done) {
+      this.clearForm();
       this.$emit('dialog-cancel');
     },
-    submitForm() {}
+    submitForm(form) {
+      try {
+        this.$refs[form].validate(async (valid) => {
+          if (valid) {
+            const result = await this.addNewParam(this.form);
+            this.cancel();
+            if (result) {
+              this.$emit('reset');
+            }
+          }
+        });
+      } catch (error) {
+        console.error(`add newDialog submitForm error:${error}`);
+      }
+    },
+    clearForm() {
+      for (const propName in this.form) {
+        this.form[propName] = '';
+      }
+    }
   }
 };
 </script>
