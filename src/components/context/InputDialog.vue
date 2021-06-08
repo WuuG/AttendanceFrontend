@@ -38,10 +38,12 @@ export default {
     cancel(done) {
       this.$emit('dialog-cancel');
     },
-    submitForm() {}
+    submitForm() {
+      this.$emit('submit');
+    }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 </style>

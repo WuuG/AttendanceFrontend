@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     toAddDic() {
-      this.$router.push('dicAdd');
+      this.$router.replace('dicAdd');
     },
     saveDicInfo() {
       this.activeDicInfo.createTime = '2021-4-12 23:12:12';
