@@ -6,21 +6,21 @@
       <el-breadcrumb-item>数据字典</el-breadcrumb-item>
       <el-breadcrumb-item>数据子项</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-main class="data-dic-content">
-      <el-row type="flex" :gutter="20" justify="space-between">
-        <el-col :span="9" :xs="20" :md="9" :lg="5">
+    <el-main class="main-content">
+      <header-bar>
+        <template #left-content>
           <el-button @click="back" icon="el-icon-arrow-left" type="primary">返回</el-button>
           <el-button @click="addNewDic">新增</el-button>
           <el-button>批量删除</el-button>
-        </el-col>
-        <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
+        </template>
+        <template #right-content>
           <el-col>
             <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
           </el-col>
           <el-button @click="dataDicSearch">搜索</el-button>
           <el-button>重置</el-button>
-        </el-col>
-      </el-row>
+        </template>
+      </header-bar>
       <el-row class="table">
         <el-table :data="dicInfo" border>
           <el-table-column type="selection" align="center"></el-table-column>
@@ -37,7 +37,7 @@
         </el-table>
       </el-row>
     </el-main>
-    <el-main class="data-dic-content">
+    <el-main class="main-content">
       <el-row class="table">
         <el-table :data="dicItem" border empty-text="暂时没有数据" @selection-change="selection" @select-all="selectAll">
           <el-table-column type="selection" align="center"></el-table-column>
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import HeaderBar from 'components/context/HeaderBar.vue';
 export default {
   name: 'DataDictionary',
   data() {
@@ -116,6 +117,9 @@ export default {
   },
   props: {
     id: String
+  },
+  components: {
+    HeaderBar
   },
   methods: {
     // 网络请求方法
@@ -165,16 +169,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.data-dic-content {
-  background-color: #fff;
-  min-width: 440px;
-  .search-bar {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .table {
-    padding-top: 10px;
-  }
+.main-content {
   &:nth-of-type(2) {
     margin-top: 10px;
     .table {

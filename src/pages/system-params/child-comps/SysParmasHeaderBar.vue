@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import HeaderBar from 'components/context/HeadrBar.vue';
+import HeaderBar from 'components/context/HeaderBar.vue';
 export default {
   name: 'SystemParamsHeaderBar',
   data() {

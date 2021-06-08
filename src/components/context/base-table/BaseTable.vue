@@ -58,7 +58,7 @@
 
 <script>
 import InputDialog from '../InputDialog.vue';
-import HeaderBar from '../HeadrBar.vue';
+import HeaderBar from '../HeaderBar.vue';
 export default {
   name: 'DataDictionary',
   data() {

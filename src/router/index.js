@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 const MyBaseTable = () => import('../components/context/base-table/BaseTable.vue')
 const DataDictionary = () => import('../pages/data-dictionary/DataDictionary.vue')
-const DataDicSub = () => import('../pages/data-dictionary-subs/DicSubData.vue')
+const DataDicSub = () => import('../pages/data-dictionary/data-dictionary-subs/DicSubData.vue')
 const SystemParams = () => import('../pages/system-params/SystemParams.vue')
 
 Vue.use(Router);
