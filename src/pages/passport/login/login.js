@@ -74,7 +74,6 @@ export default {
     //登录按钮提交功能
     submitForm(formName) {
       const userInfo = this.userInfo; // 这里需要先获取this的数据，在进入elment的表单验证后，this指针变动就无法找到这个组件中的数据啦。
-      console.log(userInfo);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.login(userInfo);

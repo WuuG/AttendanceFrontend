@@ -36,8 +36,11 @@
           @current-change="handlePageChange"
         ></el-pagination>
       </div>
+
       <edit-dialog :visible="editDialogVisible" @dialog-cancel="editDialogVisible = false" ref="editDialog"></edit-dialog>
+
       <add-dialog :visible="addDialogVisible" @dialog-cancel="addDialogVisible = false" @reset="reset" :datas="sysParams"> </add-dialog>
+      <delete-dialog :visible="deleteDialogVisible" @dialog-cancel="deleteDialogVisible = false"></delete-dialog>
     </el-main>
   </div>
 </template>
@@ -48,6 +51,7 @@ import { getParams } from 'network/systemParams';
 import EditDialog from './child-comps/SysParamsDialog.vue';
 import HeaderBar from './child-comps/SysParmasHeaderBar.vue';
 import AddDialog from './child-comps/SysParamsAddDialog.vue';
+import DeleteDialog from './child-comps/SystemDeleteDialog.vue';
 
 export default {
   name: 'DataDictionary',
@@ -68,13 +72,15 @@ export default {
       //活跃的子项
       editDialogVisible: false,
       addDialogVisible: false,
+      deleteDialogVisible: false,
       loading: false
     };
   },
   components: {
     EditDialog,
     HeaderBar,
-    AddDialog
+    AddDialog,
+    DeleteDialog
   },
   created() {
     this.load(0, this.query.pageSize);
@@ -108,7 +114,7 @@ export default {
       this.$refs.editDialog.form = { ...this.activeSysParams };
     },
     handleDelete(index, row) {
-      this.sysParams.splice(index, 1);
+      this.deleteDialogVisible = true;
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
