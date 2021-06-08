@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" width="300px" :visible.sync="visible" :before-close="cancel">
+  <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel">
     <el-form :model="form" :rules="rules" ref="form">
       <el-form-item label="配置标识" :label-width="labelWidth" prop="code">
         <el-col :span="20">
@@ -68,6 +68,7 @@ export default {
       rules: {
         code: [
           { required: true, message: '配置关键字必填', trigger: 'blur' },
+          { pattern: /^[a-zA-Z]([a-zA-Z0-9_]{2,255})$/, message: '3位以上，首位字母。由数字，字母，下划线构成', trigger: 'blur' },
           { validator: validaCode, trigger: 'blur' }
         ],
         name: [{ required: true, message: '配置名称必填', trigger: 'blur' }],
@@ -100,7 +101,7 @@ export default {
     },
     // 页面逻辑
     cancel(done) {
-      this.clearForm();
+      this.$refs['form'].resetFields();
       this.$emit('dialog-cancel');
     },
     submitForm(form) {
@@ -116,11 +117,6 @@ export default {
         });
       } catch (error) {
         console.error(`add newDialog submitForm error:${error}`);
-      }
-    },
-    clearForm() {
-      for (const propName in this.form) {
-        this.form[propName] = '';
       }
     }
   }
