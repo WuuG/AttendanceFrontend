@@ -10,7 +10,6 @@ let removePending = (config) => {
     // console.log(curURL);
     if (pending[p].u === curURL) {
       // 当前请求在数组中存在时执行函数体
-      if (curURL === 'sys-parameters&get') return
       pending[p].f(); //执行取消操作
       pending.splice(p, 1); //数组移除当前请求
     }
@@ -44,8 +43,9 @@ export function request(config, method) {
     config.cancelToken = new cancelToken((c) => {
       // pending存放每一次请求的标识，一般是url + 参数名 + 请求方法，当然你可以自己定义
       // 取出最前端的url路径,并加上其对应方法
-      const url = config.url.split('/')[1]
+      const url = config.url
       pending.push({ u: url + '&' + config.method, f: c });//config.data为请求参数
+      console.log(pending);
       // console.log('pending', pending);
     });
     //添加headrs toKen
