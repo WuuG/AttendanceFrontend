@@ -6,7 +6,7 @@
       <el-breadcrumb-item>系统参数</el-breadcrumb-item>
     </el-breadcrumb>
     <el-main class="main-content">
-      <header-bar @load="reset" @add-new="addDialogVisible = true"></header-bar>
+      <header-bar @load="reset" @add-new="formDialogVisible = true"></header-bar>
 
       <el-row class="table">
         <el-table :data="sysParams" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll" v-loading="loading">
@@ -37,9 +37,22 @@
         ></el-pagination>
       </div>
 
-      <edit-dialog :visible="editDialogVisible" @dialog-cancel="editDialogVisible = false" ref="editDialog"></edit-dialog>
+      <!-- <edit-dialog
+        :visible="editDialogVisible"
+        @dialog-cancel="editDialogVisible = false"
+        
+        :datas="sysParams"
+      ></edit-dialog> -->
 
-      <add-dialog :visible="addDialogVisible" @dialog-cancel="addDialogVisible = false" @reset="reset" :datas="sysParams"> </add-dialog>
+      <form-dialog
+        :visible="formDialogVisible"
+        @dialog-cancel="formDialogVisible = false"
+        @reset="reset"
+        :datas="sysParams"
+        ref="editDialog"
+      >
+      </form-dialog>
+
       <delete-dialog
         :visible="deleteDialogVisible"
         @dialog-cancel="deleteDialogVisible = false"
@@ -53,10 +66,10 @@
 <script>
 import { getParams } from 'network/systemParams';
 
-import EditDialog from './child-comps/SysParamsDialog.vue';
-import HeaderBar from './child-comps/SysParmasHeaderBar.vue';
-import AddDialog from './child-comps/SysParamsAddDialog.vue';
-import DeleteDialog from './child-comps/SystemDeleteDialog.vue';
+import EditDialog from './child-comps/EditDialog.vue';
+import HeaderBar from './child-comps/HeaderBar.vue';
+import FormDialog from './child-comps/FormDialog.vue';
+import DeleteDialog from './child-comps/DeleteDialog.vue';
 
 export default {
   name: 'DataDictionary',
@@ -70,21 +83,17 @@ export default {
       pageTotal: 0,
       sysParams: [],
       activeSysParams: null,
-      //判断是编辑还是新建。
-      isEdit: false,
       //统一设置表单的宽度
       formLabelWidth: '80px',
       //活跃的子项
-      editDialogVisible: false,
-      addDialogVisible: false,
+      formDialogVisible: false,
       deleteDialogVisible: false,
       loading: false
     };
   },
   components: {
-    EditDialog,
     HeaderBar,
-    AddDialog,
+    FormDialog,
     DeleteDialog
   },
   created() {
@@ -114,7 +123,7 @@ export default {
     },
     handleEdit(row) {
       this.activeSysParams = row;
-      this.editDialogVisible = true;
+      this.formDialogVisible = true;
       this.$refs.editDialog.form = { ...this.activeSysParams };
     },
     handleDelete(row) {
@@ -134,7 +143,6 @@ export default {
     },
     async reset() {
       await this.load(this.query.pageIndex, this.query.pageSize);
-      this.$set(this.query, 'pageIndex', 1);
     }
   }
 };
