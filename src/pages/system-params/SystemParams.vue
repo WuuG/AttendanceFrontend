@@ -7,10 +7,10 @@
     </el-breadcrumb>
 
     <el-main class="main-content">
-      <header-bar @load="reset" @add-new="handleAdd"></header-bar>
+      <header-bar @load="reset" @add-new="handleAdd" :params="selectParamsCode"></header-bar>
 
       <el-row class="table">
-        <el-table :data="sysParams" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll" v-loading="loading">
+        <el-table :data="sysParams" empty-text="暂时没有数据" @selection-change="selection" v-loading="loading">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="code" label="配置标识" width="170px"> </el-table-column>
           <el-table-column prop="name" label="配置标题" width="100px" show-overflow-tooltip> </el-table-column>
@@ -76,16 +76,18 @@ export default {
       },
       pageTotal: 0,
       sysParams: [],
-      // 活跃的系统参数
+      // 活跃的系统参数，用以传入formDialog组件
       activeSysParams: null,
       //统一设置表单的宽度
       formLabelWidth: '80px',
       // 页面获取数据时动画显示
       loading: false,
-      // Dialog的显示
+      // Dialog的相关
       formDialogVisible: false,
       deleteDialogVisible: false,
-      isEdit: null
+      isEdit: null,
+      // 选择的参数,用于传入headerbar组件
+      selectParamsCode: []
     };
   },
   components: {
@@ -120,12 +122,10 @@ export default {
       this.loading = false;
     },
     //选择时，将被选择的表项记录下来。
-    selection(sel) {
-      console.log(sel);
+    selection(selectParams) {
+      this.selectParamsCode = selectParams.map((param) => param.code);
     },
-    selectAll(sel) {
-      console.log(sel);
-    },
+
     handleAdd() {
       this.isEdit = false;
       this.formDialogVisible = true;
