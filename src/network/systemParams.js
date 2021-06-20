@@ -23,9 +23,18 @@ const deleteParam = (code) => {
     url: `/sys-parameters/${code}`
   }, 'delete')
 }
+const modifyParam = (form) => {
+  return request({
+    url: `/sys-parameters/${form.code}`,
+    data: {
+      ...form
+    }
+  }, 'patch')
+}
 
 export {
   getParams,
   addParams,
-  deleteParam
+  deleteParam,
+  modifyParam
 }

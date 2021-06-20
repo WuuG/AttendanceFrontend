@@ -5,8 +5,9 @@
       <el-breadcrumb-item><i class="el-icon-s-tools"></i>系统设置 </el-breadcrumb-item>
       <el-breadcrumb-item>系统参数</el-breadcrumb-item>
     </el-breadcrumb>
+
     <el-main class="main-content">
-      <header-bar @load="reset" @add-new="formDialogVisible = true"></header-bar>
+      <header-bar @load="reset" @add-new="handleAdd"></header-bar>
 
       <el-row class="table">
         <el-table :data="sysParams" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll" v-loading="loading">
@@ -37,18 +38,12 @@
         ></el-pagination>
       </div>
 
-      <!-- <edit-dialog
-        :visible="editDialogVisible"
-        @dialog-cancel="editDialogVisible = false"
-        
-        :datas="sysParams"
-      ></edit-dialog> -->
-
       <form-dialog
         :visible="formDialogVisible"
         @dialog-cancel="formDialogVisible = false"
         @reset="reset"
         :datas="sysParams"
+        :isEdit="isEdit"
         ref="editDialog"
       >
       </form-dialog>
@@ -66,13 +61,12 @@
 <script>
 import { getParams } from 'network/systemParams';
 
-import EditDialog from './child-comps/EditDialog.vue';
 import HeaderBar from './child-comps/HeaderBar.vue';
 import FormDialog from './child-comps/FormDialog.vue';
 import DeleteDialog from './child-comps/DeleteDialog.vue';
 
 export default {
-  name: 'DataDictionary',
+  name: 'SysParams',
   data() {
     return {
       query: {
@@ -82,13 +76,16 @@ export default {
       },
       pageTotal: 0,
       sysParams: [],
+      // 活跃的系统参数
       activeSysParams: null,
       //统一设置表单的宽度
       formLabelWidth: '80px',
-      //活跃的子项
+      // 页面获取数据时动画显示
+      loading: false,
+      // Dialog的显示
       formDialogVisible: false,
       deleteDialogVisible: false,
-      loading: false
+      isEdit: null
     };
   },
   components: {
@@ -114,6 +111,7 @@ export default {
     },
 
     // 页面逻辑
+    // 获取table的数据
     async load(curPage, pageSize) {
       this.loading = true;
       const result = await this.getParams(curPage, pageSize);
@@ -121,21 +119,28 @@ export default {
       this.pageTotal = result.total;
       this.loading = false;
     },
-    handleEdit(row) {
-      this.activeSysParams = row;
-      this.formDialogVisible = true;
-      this.$refs.editDialog.form = { ...this.activeSysParams };
-    },
-    handleDelete(row) {
-      this.activeSysParams = row;
-      this.deleteDialogVisible = true;
-    },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
       console.log(sel);
     },
     selectAll(sel) {
       console.log(sel);
+    },
+    handleAdd() {
+      this.isEdit = false;
+      this.formDialogVisible = true;
+    },
+    // 编辑时修改子组件数据：form和editCode
+    handleEdit(row) {
+      this.isEdit = true;
+      this.activeSysParams = row;
+      this.formDialogVisible = true;
+      this.$refs.editDialog.form = { ...this.activeSysParams };
+      this.$refs.editDialog.editCode = this.activeSysParams.code;
+    },
+    handleDelete(row) {
+      this.activeSysParams = row;
+      this.deleteDialogVisible = true;
     },
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);

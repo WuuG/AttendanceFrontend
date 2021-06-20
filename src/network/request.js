@@ -66,7 +66,7 @@ export function request(config, method) {
     if (err.response != undefined) {
       switch (err.response.status) {
         case 400:
-          console.log('Bad Request');
+          console.error('Bad Request');
           return err.response.data;
         case 401:
           console.log('Unauthorized');
@@ -78,7 +78,7 @@ export function request(config, method) {
           // toKenExpiredHandle();
           break;
         case 500:
-          console.log('Internal Server Error');
+          console.error('Internal Server Error');
           break;
         default:
           console.log(err);

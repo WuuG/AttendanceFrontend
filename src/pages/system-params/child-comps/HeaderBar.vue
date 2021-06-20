@@ -9,7 +9,7 @@
         <el-input prefix-icon="el-icon-search" v-model="queryName"> </el-input>
       </el-col>
       <el-button @click="dataSearch">搜索</el-button>
-      <el-button @click="load">重置</el-button>
+      <el-button @click="load">刷新</el-button>
     </template>
   </header-bar>
 </template>
