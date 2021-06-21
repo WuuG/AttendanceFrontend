@@ -4,6 +4,7 @@
       <el-breadcrumb-item><i class="el-icon-s-tools"></i>系统设置 </el-breadcrumb-item>
       <el-breadcrumb-item>数据字典</el-breadcrumb-item>
     </el-breadcrumb>
+
     <el-main class="main-content">
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :sm="12" :md="9" :lg="10">
@@ -18,13 +19,15 @@
           <el-button>重置</el-button>
         </el-col>
       </el-row>
+
       <el-row class="table">
-        <el-table :data="dicInfo" border empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
+        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection">
           <el-table-column type="selection" align="center"></el-table-column>
-          <el-table-column prop="id" label="字典ID"> </el-table-column>
+          <el-table-column type="index" width="40" label="id" align="center"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
-          <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="createTime" label="创建时间"> </el-table-column>
+          <el-table-column prop="defaultValue" label="默认值" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="defaultName" label="默认值描述" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="description" label="字典描述" show-overflow-tooltip> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -33,32 +36,34 @@
           </el-table-column>
         </el-table>
       </el-row>
+
+      <div class="pagination">
+        <el-pagination
+          background
+          layout="total,-> ,prev, pager, next"
+          :current-page="query.curPage"
+          :page-size="query.pageSize"
+          :total="pageTotal"
+          @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
     </el-main>
   </div>
 </template>
 
 <script>
+import { getDictionaries } from '@/network/dictionary.js';
 export default {
   name: 'DataDictionary',
   data() {
     return {
       query: {
-        key: ''
+        key: '',
+        pageSize: 10,
+        curPage: 1
       },
-      dicInfo: [
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 1,
-          name: '签到形式',
-          des: '签到的不同形式',
-          createTime: '2020-1-12 12:00:00'
-        }
-      ],
+      pageTotal: null,
+      dicInfo: [],
       activeDicInfo: {
         id: null,
         name: '',
@@ -72,7 +77,28 @@ export default {
       activeName: '0'
     };
   },
+  created() {
+    this.load(this.query.curPage);
+  },
   methods: {
+    // 网络请求
+    async getDictionaries(curPage, pageSize) {
+      try {
+        const result = await getDictionaries(curPage, pageSize);
+        if (result.status === 200) {
+          const { total, content } = result.data;
+          return { total, content };
+        }
+        this.$message({
+          type: 'warning',
+          message: '发生了错误，请打开控制台查看'
+        });
+      } catch (error) {
+        console.error(`get dicitonaries error:${error}`);
+      }
+    },
+    // 组件通信
+    // 页面逻辑
     toAddDic() {
       this.$router.replace('dicAdd');
     },
@@ -101,8 +127,13 @@ export default {
     selection(sel) {
       console.log(sel);
     },
-    selectAll(sel) {
-      console.log(sel);
+    handlePageChange(p) {
+      console.log(p);
+    },
+    async load(curPage, pageSize) {
+      const { total, content } = await this.getDictionaries(curPage, pageSize);
+      this.pageTotal = total;
+      this.dicInfo = content;
     }
   }
 };
