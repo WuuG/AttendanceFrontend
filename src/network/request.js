@@ -6,7 +6,7 @@ let pending = []; //声明一个数组用于存储每个请求的取消函数和
 let cancelToken = axios.CancelToken;
 let removePending = (config) => {
   for (let p in pending) {
-    const curURL = config.url.split('/')[1] + '&' + config.method
+    const curURL = config.url + '&' + config.method
     // console.log(curURL);
     if (pending[p].u === curURL) {
       // 当前请求在数组中存在时执行函数体

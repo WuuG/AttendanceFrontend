@@ -92,17 +92,19 @@ export default {
     // 网络请求
     async addNewParam(form) {
       try {
-        await addParams(form);
-        this.$message({
-          type: 'success',
-          message: '系统参数添加成功'
-        });
-      } catch (error) {
-        console.error(`add new param error:${error}`);
+        const result = await addParams(form);
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '系统参数添加成功'
+          });
+        }
         this.$message({
           type: 'error',
           message: '添加系统参数失败'
         });
+      } catch (error) {
+        console.error(`add new param error:${error}`);
       }
     },
     async modifyParam(form) {
