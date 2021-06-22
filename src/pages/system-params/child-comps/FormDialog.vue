@@ -98,12 +98,13 @@ export default {
             type: 'success',
             message: '系统参数添加成功'
           });
-          return;
+          return true;
         }
         this.$message({
           type: 'error',
-          message: '添加系统参数失败'
+          message: result.message
         });
+        return false;
       } catch (error) {
         console.error(`add new param error:${error}`);
       }
