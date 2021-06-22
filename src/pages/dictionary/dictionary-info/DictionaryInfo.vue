@@ -19,7 +19,7 @@
         </template>
       </header-bar>
       <el-row class="table">
-        <el-table :data="dicInfo" border>
+        <el-table :data="dicInfo" border v-loading="dicTableLoading">
           <el-table-column prop="name" label="字典名称"> </el-table-column>
           <el-table-column prop="code" label="字典标识" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="description" label="字典描述" show-overflow-tooltip> </el-table-column>
@@ -31,7 +31,14 @@
         </el-table>
       </el-row>
     </el-main>
-    <dic-dialog :visible="dicDialogVisible" @cancel="dicDialogVisible = false" ref="dicDialog" @submit="modifyDicInfo"></dic-dialog>
+
+    <dic-dialog
+      :visible="dicDialogVisible"
+      @cancel="dicDialogVisible = false"
+      ref="dicDialog"
+      @submit="modifyDicInfo"
+      :buttonDisable="dicButtonDisable"
+    ></dic-dialog>
 
     <el-main class="main-content">
       <el-row class="table">
@@ -91,9 +98,10 @@ export default {
       // 页面数据
       dicInfo: [],
       details: [],
-
+      dicTableLoading: false,
       // 通信数据
       comfirmDialogVisible: false,
+      comfirmButtonDisable: false,
       DetailDialogVisible: false,
       saveButtonLoading: false,
       // 判断是新增还是编辑明细
@@ -101,7 +109,8 @@ export default {
       // 活跃的索引和活跃的对象
       activeIndex: -1,
       activeObj: {},
-      dicDialogVisible: false
+      dicDialogVisible: false,
+      dicButtonDisable: false
     };
   },
   components: {
@@ -134,7 +143,9 @@ export default {
           message: result.message
         });
         return false;
-      } catch (error) {}
+      } catch (error) {
+        console.error(`patch dictionary error ${error}`);
+      }
     },
     // 组件通信
     onDicEdit(row, refName) {
@@ -174,7 +185,11 @@ export default {
       this.details = tranformDetails;
     },
     async modifyDicInfo(data) {
+      this.dicTableLoading = true;
+      this.dicButtonDisable = true;
       const result = await this.patchDictionary({ ...data });
+      this.dicTableLoading = false;
+      this.dicButtonDisable = false;
       if (!result) return;
       window.localStorage.setItem('dictionary', JSON.stringify(result));
       this.init();
