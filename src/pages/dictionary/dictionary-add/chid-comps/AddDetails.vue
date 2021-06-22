@@ -13,21 +13,28 @@
           </el-select>
         </el-col>
       </el-form-item>
-      <el-form-item label="明细项数值" :label-width="labelWidth" prop="value">
+      <el-form-item label="明细项值" :label-width="labelWidth" prop="value">
         <el-col :span="20">
           <el-input v-model="form.value"> </el-input>
         </el-col>
       </el-form-item>
-      <el-form-item label="明细项描述" :label-width="labelWidth">
+      <el-form-item label="明细项标识" :label-width="labelWidth" prop="value">
         <el-col :span="20">
-          <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" :maxlength="100" resize="none">
-          </el-input>
+          <el-input v-model="form.code"> </el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="明细项标识" :label-width="labelWidth" prop="value">
+        <el-col :span="20">
+          <el-select v-model="form.hidden" placeholder="是否隐藏">
+            <el-option label="否" value="false"></el-option>
+            <el-option label="是" value="true"></el-option>
+          </el-select>
         </el-col>
       </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm">确 定</el-button>
+      <el-button type="primary" @click="submitForm" :disabled="comfirmButtonDisable">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -50,23 +57,25 @@ export default {
       title: '新增项目',
       form: {
         name: null,
-        default: 0,
+        default: 'false',
         value: null,
-        description: null
+        code: null,
+        hidden: 'false'
       },
       options: [
         {
-          value: 0,
+          value: 'false',
           label: '否'
         },
         {
-          value: 1,
+          value: 'true',
           label: '是'
         }
       ],
       rules: {
         value: [{ validator: validateValue, trigger: 'blur' }]
-      }
+      },
+      comfirmButtonDisable: false
     };
   },
   props: {
@@ -76,18 +85,17 @@ export default {
   methods: {
     cancel(done) {
       this.$emit('dialog-cancel');
-      this.clearForm();
+      this.resetForm();
     },
     submitForm() {
+      this.comfirmButtonDisable = true;
       this.$emit('submit', { ...this.form });
       this.cancel();
     },
-    async clearForm() {
+    resetForm() {
       for (const propName in this.form) {
-        if (propName === 'default') {
-          await setTimeout(() => {
-            this.form[propName] = 0;
-          }, 100);
+        if (propName === 'default' || propName === 'hidden') {
+          this.form[propName] = 'false';
           continue;
         }
         this.form[propName] = null;

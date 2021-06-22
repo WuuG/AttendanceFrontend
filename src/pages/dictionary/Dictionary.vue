@@ -25,9 +25,10 @@
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column type="index" width="40" label="id" align="center"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
+          <el-table-column prop="code" label="字典标识"> </el-table-column>
+          <el-table-column prop="description" label="字典描述" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="defaultValue" label="默认值" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="defaultName" label="默认值描述" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="description" label="字典描述" show-overflow-tooltip> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -98,21 +99,17 @@ export default {
       }
     },
     // 组件通信
-    // 页面逻辑
     toAddDic() {
-      this.$router.replace('dicAdd');
+      this.$router.replace('/dataDictionary/add');
     },
-    saveDicInfo() {
-      this.activeDicInfo.createTime = '2021-4-12 23:12:12';
-      this.dicInfo.push(this.activeDicInfo);
-    },
+    // 页面逻辑
     dataDicSearch() {
       console.log('handle search');
     },
     handleEdit(index, row) {
       this.isEdit = true;
       this.$router.push({
-        path: 'dicChildData',
+        path: '/dataDictionary/details',
         query: {
           id: row.id
         }

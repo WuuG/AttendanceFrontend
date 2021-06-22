@@ -5,82 +5,145 @@
       <el-breadcrumb-item>数据字典</el-breadcrumb-item>
       <el-breadcrumb-item>新增数据字典</el-breadcrumb-item>
     </el-breadcrumb>
+
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
           <el-button type="primary" @click="toDictionary">返回</el-button>
         </template>
         <template #right-content>
-          <el-button type="primary">保存</el-button>
+          <el-button type="primary" @click="save" :loading="saveButtonLoading">保存</el-button>
           <el-button @click="showAddDialog">添加字典明细</el-button>
           <el-button @click="reset">重置</el-button>
         </template>
       </header-bar>
+
       <el-row class="table">
-        <dic-table></dic-table>
+        <add-dictionary ref="addDictionary" />
       </el-row>
     </el-main>
 
     <el-main class="main-content">
       <el-row class="table">
-        <el-table :data="dicInfo" empty-text="暂时没有数据">
+        <el-table :data="details" empty-text="暂时没有数据">
           <el-table-column prop="name" label="明细项名"> </el-table-column>
           <el-table-column prop="default" label="默认值"> </el-table-column>
           <el-table-column prop="value" label="数值"> </el-table-column>
-          <el-table-column prop="description" label="明细项描述" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="code" label="明细标识"> </el-table-column>
+          <el-table-column prop="hidden" label="是否隐藏"> </el-table-column>
+
           <el-table-column>
             <template #default="scope">
               <el-button>编辑</el-button>
-              <el-button type="danger" @click="deleteDicInfo(scope.$index)">删除</el-button>
+              <el-button type="danger" @click="deletedetail(scope.$index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-row>
     </el-main>
 
-    <add-dic-info-dialog
+    <add-detail-dialog
       :visible="addNewInfoDialogVisible"
-      :dic-info="dicInfo"
+      :dic-info="details"
       @dialog-cancel="addNewInfoDialogVisible = false"
-      @submit="addNewDicInfo"
+      @submit="addDicDetail"
       ref="addDialog"
-    ></add-dic-info-dialog>
+    ></add-detail-dialog>
   </div>
 </template>
 
 <script>
+import { postDictionaries, AddForm } from '../../../network/dictionary';
+
 import HeaderBar from 'components/context/HeaderBar.vue';
-import DicTable from './chid-comps/DicAddTable.vue';
-import AddDicInfoDialog from './chid-comps/AddDicInfo.vue';
+import AddDictionary from './chid-comps/AddDictionary.vue';
+import AddDetailDialog from './chid-comps/AddDetails.vue';
+
 export default {
   name: 'DataDictionary',
   data() {
     return {
-      dicInfo: [],
-      addNewInfoDialogVisible: false
+      details: [],
+      addNewInfoDialogVisible: false,
+      form: {},
+      saveButtonLoading: false
     };
   },
   components: {
     HeaderBar,
-    DicTable,
-    AddDicInfoDialog
+    AddDictionary,
+    AddDetailDialog
   },
   methods: {
+    // 网络方法
+    async addNewDictionaries(form) {
+      try {
+        console.log(form);
+        const result = await postDictionaries(form);
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '数据字典添加成功'
+          });
+          return true;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+        return false;
+      } catch (error) {
+        console.error(`page:add new Dictionary error:${error}`);
+      }
+    },
+    // 页面逻辑
     toDictionary() {
-      this.$router.push('dataDictionary');
+      this.$router.push('/dataDictionary');
     },
-    addNewDicInfo(dicInfo) {
-      this.dicInfo.push(dicInfo);
+    async save() {
+      const detailForm = this.$refs.addDictionary.submit('form');
+      if (detailForm) {
+        this.saveButtonLoading = true;
+        this.form = { ...detailForm };
+        // 这里的对象需要深拷贝，防止修改数组内对象而导致显示的数据发生变化
+        this.form.details = this.details.map((x) => {
+          return { ...x };
+        });
+        // 对需要上传的表单进行处理,并获取最后需要上传的数据
+        const { form } = new AddForm({ ...this.form });
+        const result = await this.addNewDictionaries(form);
+        this.saveButtonLoading = false;
+        if (!result) return;
+        this.$router.replace('/dataDictionary');
+        this.reset();
+      }
     },
-    deleteDicInfo(index) {
-      this.dicInfo.splice(index, 1);
+    addDicDetail(detail) {
+      const showDetail = this.traonform({ ...detail });
+      this.details.push(showDetail);
+    },
+    deletedetail(index) {
+      this.details.splice(index, 1);
     },
     showAddDialog() {
-      this.$refs['addDialog'].form.value = this.dicInfo.length;
+      this.$refs['addDialog'].form.value = this.details.length;
       this.addNewInfoDialogVisible = true;
     },
+    // 重置数据。
     reset() {
-      this.$router.go(0);
+      // 理论上是需要改成null的，但是如果是null的话details为空就有两种情况了，一种是[],一种是null,为了统一所以初始化为[]
+      (this.form = null), (this.details = []);
+      this.$refs['addDictionary'].reset();
+    },
+    // 对展示的数据进行处理,将bool值转换为是与否
+    traonform(data) {
+      for (const x in data) {
+        if (x !== 'default' && x !== 'hidden') {
+          continue;
+        }
+        data[x] = data[x] === 'true' ? '是' : '否';
+      }
+      return data;
     }
   }
 };

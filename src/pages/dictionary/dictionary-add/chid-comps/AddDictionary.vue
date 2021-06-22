@@ -34,15 +34,32 @@ export default {
     return {
       dic: [
         {
-          code: '',
-          name: '',
-          description: ''
+          code: null,
+          name: null,
+          description: null
         }
       ],
       rules: {
         code: [{ required: true, message: '字典关键字必填', trigger: 'blur' }]
       }
     };
+  },
+  methods: {
+    // 组件通信方法
+    // 进行表单验证
+    submit(refName) {
+      let result = null;
+      this.$refs[refName].validate((valid) => {
+        if (!valid) return;
+        result = { ...this.dic[0] };
+      });
+      return result;
+    },
+    reset() {
+      for (const p in this.dic[0]) {
+        this.dic[0][p] = null;
+      }
+    }
   }
 };
 </script>
