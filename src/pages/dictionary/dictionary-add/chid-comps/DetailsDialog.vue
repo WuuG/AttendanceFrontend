@@ -84,11 +84,11 @@ export default {
   },
   methods: {
     cancel(done) {
+      this.buttonDisable(true);
       this.$emit('dialog-cancel');
       this.resetForm();
     },
     submitForm() {
-      this.comfirmButtonDisable = true;
       this.$emit('submit', { ...this.form });
       this.cancel();
     },
@@ -100,6 +100,9 @@ export default {
         }
         this.form[propName] = null;
       }
+    },
+    buttonDisable(boolean) {
+      this.comfirmButtonDisable = boolean;
     }
   }
 };

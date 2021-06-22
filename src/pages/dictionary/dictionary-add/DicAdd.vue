@@ -56,8 +56,8 @@
 import { postDictionaries, AddForm } from '../../../network/dictionary';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
-import AddDictionary from './chid-comps/AddDictionary.vue';
-import AddDetailDialog from './chid-comps/AddDetails.vue';
+import AddDictionary from './chid-comps/DicForm.vue';
+import AddDetailDialog from './chid-comps/DetailsDialog.vue';
 
 export default {
   name: 'DataDictionary',
@@ -118,15 +118,19 @@ export default {
         this.reset();
       }
     },
+    // 添加字典明细到明细表中
     addDicDetail(detail) {
       const showDetail = this.traonform({ ...detail });
       this.details.push(showDetail);
+      // 对新添加的字典明细进行排他处理
+      this.uniqueDefault(this.details.length - 1);
     },
     deletedetail(index) {
       this.details.splice(index, 1);
     },
     showAddDialog() {
       this.$refs['addDialog'].form.value = this.details.length;
+      this.$refs['addDialog'].buttonDisable(false);
       this.addNewInfoDialogVisible = true;
     },
     // 重置数据。
@@ -144,6 +148,15 @@ export default {
         data[x] = data[x] === 'true' ? '是' : '否';
       }
       return data;
+    },
+    // 字典明细的默认值的排他处理
+    uniqueDefault(index) {
+      if (this.details.length > 0 && this.details[index].default === '是') {
+        this.details.forEach((x, i) => {
+          if (i === index) return;
+          x.default = '否';
+        });
+      }
     }
   }
 };
