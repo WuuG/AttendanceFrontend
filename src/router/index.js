@@ -129,14 +129,14 @@ export default new Router({
                     meta: { title: '数据字典' }
                 },
                 {
-                    path: 'dicChildData',
+                    path: '/dataDictionary/details',
                     name: 'dicChildData',
                     component: DictionaryInfo,
                     meta: { title: '数据列表' },
                     props: route => ({ id: route.query.id })
                 },
                 {
-                    path: 'dicadd',
+                    path: '/dataDictionary/add',
                     name: 'dicadd',
                     component: DictionaryAdd,
                     meta: { title: '新增数据字典' },
