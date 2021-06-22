@@ -42,8 +42,8 @@
 <script>
 export default {
   data() {
+    // value的表单验证。
     const validateValue = (rule, value, callback) => {
-      // 这里获取的value为什么是string
       this.dicInfo.forEach((item) => {
         if (item.value === value) {
           if (this.isEdit && item.value === this.active.value) {
@@ -83,16 +83,22 @@ export default {
   },
   props: {
     visible: Boolean,
+    // 获取父组件的已有的表单数据，用来判重和length处理等
     dicInfo: Array,
+    // 判断是编辑还是新增的Dialog
     isEdit: Boolean,
+    // 获取活跃的明细，来防止判重时，和自己重而报错。
     active: Object
   },
   methods: {
+    // 页面逻辑
+    // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
       this.buttonDisable(true);
       this.$emit('dialog-cancel');
       this.resetForm();
     },
+    // 表单验证，并发送submit事件参数为表单内容，并调用cancel()
     submitForm(refName) {
       let result = false;
       this.$refs[refName].validate((valid) => {
@@ -102,6 +108,7 @@ export default {
       this.$emit('submit', { ...this.form });
       this.cancel();
     },
+    // 重置表单
     resetForm() {
       for (const propName in this.form) {
         if (propName === 'default' || propName === 'hidden') {
@@ -111,6 +118,7 @@ export default {
         this.form[propName] = null;
       }
     },
+    // button的disable处理
     buttonDisable(boolean) {
       this.comfirmButtonDisable = boolean;
     }

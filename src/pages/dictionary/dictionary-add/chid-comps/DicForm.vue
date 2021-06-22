@@ -55,6 +55,7 @@ export default {
       });
       return result;
     },
+    // 重置数据字典的表单内容
     reset() {
       for (const p in this.dic[0]) {
         this.dic[0][p] = null;
