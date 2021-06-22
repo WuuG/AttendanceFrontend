@@ -31,7 +31,6 @@
           <el-table-column prop="value" label="数值"> </el-table-column>
           <el-table-column prop="code" label="明细标识"> </el-table-column>
           <el-table-column prop="hidden" label="是否隐藏"> </el-table-column>
-
           <el-table-column>
             <template #default="scope">
               <el-button @click="showEditDialog(scope.row, scope.$index)">编辑</el-button>
@@ -59,7 +58,7 @@ import { postDictionaries, AddForm } from '../../../network/dictionary';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import AddDictionary from './chid-comps/DicForm.vue';
-import AddDetailDialog from './chid-comps/DetailsDialog.vue';
+import AddDetailDialog from '../common/DetailsDialog.vue';
 
 export default {
   name: 'DataDictionary',
@@ -124,26 +123,25 @@ export default {
 
     // 页面逻辑
     toDictionary() {
-      this.$router.push('/dataDictionary');
+      this.$router.replace('/dataDictionary');
     },
     // 对form数据进行拼接处理。 再发送请求
     async save() {
       const detailForm = this.$refs.addDictionary.submit('form');
-      if (detailForm) {
-        this.saveButtonLoading = true;
-        this.form = { ...detailForm };
-        // 这里的对象需要深拷贝，防止修改数组内对象而导致显示的数据发生变化
-        this.form.details = this.details.map((x) => {
-          return { ...x };
-        });
-        // 对需要上传的表单进行处理,并获取最后需要上传的数据
-        const { form } = new AddForm({ ...this.form });
-        const result = await this.addNewDictionaries(form);
-        this.saveButtonLoading = false;
-        if (!result) return;
-        this.$router.replace('/dataDictionary');
-        this.reset();
-      }
+      if (!detailForm) return;
+      this.saveButtonLoading = true;
+      this.form = { ...detailForm };
+      // 这里的对象需要深拷贝，防止修改数组内对象而导致显示的数据发生变化
+      this.form.details = this.details.map((x) => {
+        return { ...x };
+      });
+      // 对需要上传的表单进行处理,并获取最后需要上传的数据
+      const { form } = new AddForm({ ...this.form });
+      const result = await this.addNewDictionaries(form);
+      this.saveButtonLoading = false;
+      if (!result) return;
+      this.$router.replace('/dataDictionary');
+      this.reset();
     },
     // 删除字典明细
     deletedetail(index) {
@@ -151,7 +149,7 @@ export default {
     },
     // 添加字典明细到明细表中,根据编辑还是新建进行不同的处理
     addDicDetail(detail) {
-      const showDetail = this.traonform({ ...detail });
+      const showDetail = this.transform({ ...detail });
       if (this.isEdit) {
         this.$set(this.details, this.activeIndex, { ...showDetail });
         this.uniqueDefault(this.activeIndex);
@@ -169,7 +167,7 @@ export default {
       this.$refs['addDictionary'].reset();
     },
     // 对展示的数据进行处理,将bool值转换为是与否
-    traonform(data) {
+    transform(data) {
       for (const x in data) {
         if (x !== 'default' && x !== 'hidden') {
           continue;

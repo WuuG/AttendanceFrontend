@@ -21,9 +21,9 @@
       </el-row>
 
       <el-row class="table">
-        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection">
+        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection" v-loading="loading">
           <el-table-column type="selection" align="center"></el-table-column>
-          <el-table-column type="index" width="40" label="id" align="center"> </el-table-column>
+          <el-table-column type="index" width="40" align="center"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
           <el-table-column prop="code" label="字典标识"> </el-table-column>
           <el-table-column prop="description" label="字典描述" show-overflow-tooltip> </el-table-column>
@@ -31,7 +31,7 @@
           <el-table-column prop="defaultName" label="默认值描述" show-overflow-tooltip> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -70,15 +70,17 @@ export default {
         name: '',
         des: ''
       },
-      //判断是编辑还是新建。
-      isEdit: false,
       //统一设置表单的宽度
       formLabelWidth: '80px',
       //活跃的子项
-      activeName: '0'
+      activeName: '0',
+      loading: false
     };
   },
   created() {
+    this.load(this.query.curPage);
+  },
+  activated() {
     this.load(this.query.curPage);
   },
   methods: {
@@ -92,7 +94,7 @@ export default {
         }
         this.$message({
           type: 'warning',
-          message: '发生了错误，请打开控制台查看'
+          message: result.message
         });
       } catch (error) {
         console.error(`get dicitonaries error:${error}`);
@@ -102,19 +104,16 @@ export default {
     toAddDic() {
       this.$router.replace('/dataDictionary/add');
     },
+    handleEdit(row) {
+      window.localStorage.setItem('dictionary', JSON.stringify(row));
+      this.$router.push({
+        path: '/dataDictionary/details'
+      });
+    },
+
     // 页面逻辑
     dataDicSearch() {
       console.log('handle search');
-    },
-    handleEdit(index, row) {
-      this.isEdit = true;
-      this.$router.push({
-        path: '/dataDictionary/details',
-        query: {
-          id: row.id
-        }
-      });
-      // console.log(index, row);
     },
     handleDelete(index, row) {
       this.dicInfo.splice(index, 1);
@@ -124,13 +123,16 @@ export default {
     selection(sel) {
       console.log(sel);
     },
-    handlePageChange(p) {
-      console.log(p);
+    handlePageChange(curPage) {
+      this.query.curPage = curPage;
+      this.load(this.query.curPage, this.query.pageSize);
     },
-    async load(curPage, pageSize) {
+    async load(curPage, pageSize = this.query.pageSize) {
+      this.loading = true;
       const { total, content } = await this.getDictionaries(curPage, pageSize);
       this.pageTotal = total;
       this.dicInfo = content;
+      this.loading = false;
     }
   }
 };

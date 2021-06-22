@@ -3,8 +3,10 @@ import { request } from './request';
 const getDictionaries = (curPage, pageSize) => {
 	return request({
 		url: 'dictionaries',
-		data: {
-			...arguments
+		params: {
+			curPage,
+			pageSize,
+			orderBy: 'createTime'
 		}
 	}, 'get')
 }
@@ -15,6 +17,14 @@ const postDictionaries = (form) => {
 			...form
 		}
 	}, 'post')
+}
+const patchDictionary = (form) => {
+	return request({
+		url: `dictionaries/${form.id}`,
+		data: {
+			...form
+		}
+	}, 'patch')
 }
 
 class AddForm {
@@ -55,5 +65,6 @@ class AddForm {
 export {
 	getDictionaries,
 	postDictionaries,
+	patchDictionary,
 	AddForm
 }
