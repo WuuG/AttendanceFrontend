@@ -15,6 +15,7 @@ let removePending = (config) => {
     }
   }
 }
+
 // 通过防抖函数，防止发送多个请求时，跳出多个弹窗
 const toKenExpiredHandleDebounce = debounce(toKenExpiredHandle)
 // token过期处理
@@ -29,6 +30,7 @@ function toKenExpiredHandle() {
     }
   )
 }
+
 export function request(config, method) {
   const instance = axios.create({
     baseURL: "/api",
@@ -37,17 +39,16 @@ export function request(config, method) {
   })
 
   instance.interceptors.request.use(config => {
-    const toKen = localStorage.getItem('toKen')
-    // console.log(config);
+    // 多次发送请求，进行防抖处理
     removePending(config); //在一个axios发送前执行一下取消操作
     config.cancelToken = new cancelToken((c) => {
       // pending存放每一次请求的标识，一般是url + 参数名 + 请求方法，当然你可以自己定义
       // 取出最前端的url路径,并加上其对应方法
-      const url = config.url
-      pending.push({ u: url + '&' + config.method, f: c });//config.data为请求参数
-      console.log(pending);
-      // console.log('pending', pending);
+      const url = config.url + '&' + config.method
+      pending.push({ u: url, f: c });//config.data为请求参数
     });
+
+    const toKen = localStorage.getItem('toKen')
     //添加headrs toKen
     if (toKen) {
       config.headers.Authorization = 'Bearer ' + toKen
