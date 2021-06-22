@@ -98,6 +98,7 @@ export default {
             type: 'success',
             message: '系统参数添加成功'
           });
+          return;
         }
         this.$message({
           type: 'error',
