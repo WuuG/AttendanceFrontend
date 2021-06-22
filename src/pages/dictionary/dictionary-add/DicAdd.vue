@@ -34,7 +34,7 @@
 
           <el-table-column>
             <template #default="scope">
-              <el-button>编辑</el-button>
+              <el-button @click="showEditDialog(scope.row, scope.$index)">编辑</el-button>
               <el-button type="danger" @click="deletedetail(scope.$index)">删除</el-button>
             </template>
           </el-table-column>
@@ -45,6 +45,8 @@
     <add-detail-dialog
       :visible="addNewInfoDialogVisible"
       :dic-info="details"
+      :active="activeObj"
+      :isEdit="isEdit"
       @dialog-cancel="addNewInfoDialogVisible = false"
       @submit="addDicDetail"
       ref="addDialog"
@@ -66,7 +68,12 @@ export default {
       details: [],
       addNewInfoDialogVisible: false,
       form: {},
-      saveButtonLoading: false
+      saveButtonLoading: false,
+      // 判断是新增还是编辑明细
+      isEdit: false,
+      // 活跃的索引和活跃的对象
+      activeIndex: -1,
+      activeObj: {}
     };
   },
   components: {
@@ -96,10 +103,30 @@ export default {
         console.error(`page:add new Dictionary error:${error}`);
       }
     },
+
+    // 组件通信方法
+    // 弹出新增明细dialog，并修改内部默认内容。
+    showAddDialog() {
+      this.isEdit = false;
+      this.$refs['addDialog'].form.value = this.details.length;
+      this.$refs['addDialog'].buttonDisable(false);
+      this.addNewInfoDialogVisible = true;
+    },
+    // 弹出修改明细dialog，并修改内部内容，并设置活跃明细
+    showEditDialog(value, index) {
+      this.isEdit = true;
+      this.$refs['addDialog'].form = { ...value };
+      this.$refs['addDialog'].buttonDisable(false);
+      this.activeIndex = index;
+      this.activeObj = value;
+      this.addNewInfoDialogVisible = true;
+    },
+
     // 页面逻辑
     toDictionary() {
       this.$router.push('/dataDictionary');
     },
+    // 对form数据进行拼接处理。 再发送请求
     async save() {
       const detailForm = this.$refs.addDictionary.submit('form');
       if (detailForm) {
@@ -118,20 +145,22 @@ export default {
         this.reset();
       }
     },
-    // 添加字典明细到明细表中
-    addDicDetail(detail) {
-      const showDetail = this.traonform({ ...detail });
-      this.details.push(showDetail);
-      // 对新添加的字典明细进行排他处理
-      this.uniqueDefault(this.details.length - 1);
-    },
+    // 删除字典明细
     deletedetail(index) {
       this.details.splice(index, 1);
     },
-    showAddDialog() {
-      this.$refs['addDialog'].form.value = this.details.length;
-      this.$refs['addDialog'].buttonDisable(false);
-      this.addNewInfoDialogVisible = true;
+    // 添加字典明细到明细表中,根据编辑还是新建进行不同的处理
+    addDicDetail(detail) {
+      const showDetail = this.traonform({ ...detail });
+      if (this.isEdit) {
+        this.$set(this.details, this.activeIndex, { ...showDetail });
+        this.uniqueDefault(this.activeIndex);
+        // this.$set(this.activeObj, { ...showDetail });
+        console.log(this.details);
+        return;
+      }
+      this.details.push(showDetail);
+      this.uniqueDefault(this.details.length - 1);
     },
     // 重置数据。
     reset() {
@@ -154,6 +183,7 @@ export default {
       if (this.details.length > 0 && this.details[index].default === '是') {
         this.details.forEach((x, i) => {
           if (i === index) return;
+          console.log(`修改时的index：${index}和被修改的i:${i}`);
           x.default = '否';
         });
       }

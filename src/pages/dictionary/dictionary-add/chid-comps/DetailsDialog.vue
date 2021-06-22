@@ -18,12 +18,12 @@
           <el-input v-model="form.value"> </el-input>
         </el-col>
       </el-form-item>
-      <el-form-item label="明细项标识" :label-width="labelWidth" prop="value">
+      <el-form-item label="明细项标识" :label-width="labelWidth">
         <el-col :span="20">
           <el-input v-model="form.code"> </el-input>
         </el-col>
       </el-form-item>
-      <el-form-item label="明细项标识" :label-width="labelWidth" prop="value">
+      <el-form-item label="是否隐藏" :label-width="labelWidth">
         <el-col :span="20">
           <el-select v-model="form.hidden" placeholder="是否隐藏">
             <el-option label="否" value="false"></el-option>
@@ -34,7 +34,7 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm" :disabled="comfirmButtonDisable">确 定</el-button>
+      <el-button type="primary" @click="submitForm('form')" :disabled="comfirmButtonDisable">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -45,9 +45,12 @@ export default {
     const validateValue = (rule, value, callback) => {
       // 这里获取的value为什么是string
       this.dicInfo.forEach((item) => {
-        if (item.value === Number.parseInt(value)) {
-          callback(new Error('数值重复'));
-          return false;
+        if (item.value === value) {
+          if (this.isEdit && item.value === this.active.value) {
+            callback();
+            return;
+          }
+          callback(new Error('明细数值重复'));
         }
       });
       callback();
@@ -80,7 +83,9 @@ export default {
   },
   props: {
     visible: Boolean,
-    dicInfo: Array
+    dicInfo: Array,
+    isEdit: Boolean,
+    active: Object
   },
   methods: {
     cancel(done) {
@@ -88,7 +93,12 @@ export default {
       this.$emit('dialog-cancel');
       this.resetForm();
     },
-    submitForm() {
+    submitForm(refName) {
+      let result = false;
+      this.$refs[refName].validate((valid) => {
+        result = valid;
+      });
+      if (!result) return;
       this.$emit('submit', { ...this.form });
       this.cancel();
     },
