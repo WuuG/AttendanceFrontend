@@ -20,7 +20,7 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+      <el-button type="primary" @click="submitForm('form')" :disabled="buttonDisable">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -38,7 +38,8 @@ export default {
     };
   },
   props: {
-    visible: Boolean
+    visible: Boolean,
+    buttonDisable: Boolean
   },
   methods: {
     cancel(done) {
