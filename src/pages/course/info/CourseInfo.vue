@@ -63,12 +63,20 @@
         </el-col>
       </el-row>
     </el-main>
+
     <add-dialog
       :visible="addDialogVisible"
       :buttonDisable="addDialogButtonDisable"
       @cancel="addDialogVisible = false"
       @submit="addCourse"
     ></add-dialog>
+
+    <edit-dialog
+      :visible="editDialogVisible"
+      :buttonDisable="editDialogButtonDisable"
+      @cancel="editDialogVisible = false"
+      @submit="modifyCourse"
+    ></edit-dialog>
   </div>
 </template>
 
@@ -78,6 +86,7 @@ import CONST from 'utils/const';
 
 import HeaderBar from '../../../components/context/HeaderBar.vue';
 import AddDialog from './child-comps/AddDialog.vue';
+import EditDialog from './child-comps/EditDialog.vue';
 
 export default {
   name: 'DataDictionary',
@@ -97,12 +106,15 @@ export default {
       activeIndex: null,
       activeCourse: null,
       addDialogVisible: false,
-      addDialogButtonDisable: false
+      addDialogButtonDisable: false,
+      editDialogVisible: false,
+      editDialogButtonDisable: false
     };
   },
   components: {
     HeaderBar,
-    AddDialog
+    AddDialog,
+    EditDialog
   },
   created() {
     this.load();
@@ -147,8 +159,10 @@ export default {
       console.log('handle search');
     },
     handleEdit(index, row) {
-      this.isEdit = true;
-      console.log(index, row);
+      this.activeCourse = row;
+      this.activeIndex = index;
+      this.editDialogVisible = true;
+      console.log(row, index);
     },
     handleDelete(index, row) {
       console.log(index, row);
@@ -174,7 +188,8 @@ export default {
       avatar.append('avatar', file);
       await putCourseAvatar(course.id, avatar);
       this.load();
-    }
+    },
+    modifyCourse() {}
   }
 };
 </script>

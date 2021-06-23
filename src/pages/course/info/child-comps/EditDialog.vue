@@ -1,5 +1,6 @@
+
 <template>
-  <div class="course-add-dialog">
+  <div class="course-edit-dialog">
     <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="课程名称" :label-width="labelWidth" placeholder="请输入课程名称">
@@ -171,7 +172,7 @@ export default {
 <style lang="less" scoped>
 </style>
 <style>
-.course-add-dialog .el-dialog__body {
+.course-edit-dialog .el-dialog__body {
   padding-bottom: 0;
 }
 .avatar-uploader .el-upload {
