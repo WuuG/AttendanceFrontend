@@ -105,25 +105,25 @@ export default new Router({
                     meta: { title: '403' }
                 },
                 {
-                    path: '/info',
+                    path: '/courseInfo',
                     name: 'courseInfo',
-                    component: () => import('../pages/course/CourseInfo.vue'),
+                    component: () => import('../pages/course/info/CourseInfo.vue'),
                     meta: { title: '课程信息' }
                 },
                 {
                     path: '/studentInfo',
-                    name: 'StudentInfo',
-                    component: () => import('../pages/course/StudentInfo.vue'),
+                    name: 'studentInfo',
+                    component: () => import('../pages/course/students-info/StudentInfo.vue'),
                     meta: { title: '学生信息' }
                 },
                 {
-                    path: 'myInfo',
+                    path: '/myInfo',
                     name: 'myInfo',
                     component: () => import('../pages/MyInfo.vue'),
                     meta: { title: '我的信息' }
                 },
                 {
-                    path: 'dataDictionary',
+                    path: '/dataDictionary',
                     name: 'dataDictionary',
                     component: Dictionary,
                     meta: { title: '数据字典' }

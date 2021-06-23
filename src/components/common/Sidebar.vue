@@ -66,7 +66,7 @@ export default {
           title: '课程管理',
           subs: [
             {
-              index: 'info',
+              index: 'courseInfo',
               title: '课程信息'
             },
             {
