@@ -13,9 +13,9 @@
           <el-button>批量删除</el-button>
         </template>
         <template #right-content>
-          <el-button type="primary" @click="save">保存</el-button>
+          <el-button type="primary" @click="save">保存排序</el-button>
           <el-button @click="showAddDialog('detailDialog')">添加明细</el-button>
-          <el-button>重置</el-button>
+          <el-button @click="init">重置</el-button>
         </template>
       </header-bar>
       <el-row class="table">
@@ -44,10 +44,18 @@
       <el-row class="table">
         <el-table :data="details" border empty-text="暂时没有数据">
           <el-table-column prop="name" label="明细项名"> </el-table-column>
-          <el-table-column prop="default" label="默认值"> </el-table-column>
+          <el-table-column prop="default" label="默认值">
+            <template #default="scope">
+              {{ scope.row.default ? '是' : '否' }}
+            </template>
+          </el-table-column>
           <el-table-column prop="value" label="数值"> </el-table-column>
           <el-table-column prop="code" label="明细标识"> </el-table-column>
-          <el-table-column prop="hidden" label="是否隐藏"> </el-table-column>
+          <el-table-column prop="hidden" label="是否隐藏">
+            <template #default="scope">
+              {{ scope.row.hidden ? '是' : '否' }}
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template #default="scope">
               <el-button @click="showEditDialog(scope.row, scope.$index, 'detailDialog')" size="mini">编辑</el-button>
@@ -56,8 +64,20 @@
           </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" icon="el-icon-caret-top" @click="sort(scope.$index, scope.$index - 1)"></el-button>
-              <el-button size="mini" icon="el-icon-caret-bottom" @click="sort(scope.$index, scope.$index + 1)"></el-button>
+              <el-button
+                size="mini"
+                icon="el-icon-caret-top"
+                @click="sort(scope.$index, scope.$index - 1)"
+                v-if="scope.$index > 0"
+                :loading="sortButtonLoading"
+              ></el-button>
+              <el-button
+                size="mini"
+                icon="el-icon-caret-bottom"
+                @click="sort(scope.$index, scope.$index + 1)"
+                v-if="scope.$index < details.length - 1"
+                :loading="sortButtonLoading"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -77,14 +97,14 @@
       :active="activeObj"
       :isEdit="isEdit"
       @dialog-cancel="DetailDialogVisible = false"
-      @submit="addDicDetail"
+      @submit="submitDetail"
       ref="detailDialog"
     />
   </div>
 </template>
 
 <script>
-import { AddForm, patchDictionary } from '../../../network/dictionary';
+import { AddForm, patchDictionary, patchDetail, DetailForm } from '../../../network/dictionary';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import DetailDialog from '../common/DetailsDialog.vue';
@@ -110,7 +130,8 @@ export default {
       activeIndex: -1,
       activeObj: {},
       dicDialogVisible: false,
-      dicButtonDisable: false
+      dicButtonDisable: false,
+      sortButtonLoading: false
     };
   },
   components: {
@@ -127,6 +148,7 @@ export default {
   },
   methods: {
     // 网络请求方法
+    // 修改数据字典父类
     async patchDictionary(form) {
       try {
         const result = await patchDictionary(form);
@@ -145,6 +167,24 @@ export default {
         return false;
       } catch (error) {
         console.error(`patch dictionary error ${error}`);
+      }
+    },
+    async patchDetail(dicId, form) {
+      try {
+        const result = await patchDetail(dicId, form);
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '数据明细修改成功'
+          });
+          return result.data;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`patch detail error: ${error}`);
       }
     },
     // 组件通信
@@ -167,7 +207,9 @@ export default {
     // 弹出修改明细dialog，并修改内部内容，并设置活跃明细
     showEditDialog(value, index, refName) {
       this.isEdit = true;
-      this.$refs[refName].form = { ...value };
+      const inform = this.transform({ ...value });
+      console.log(inform);
+      this.$refs[refName].form = this.transform({ ...value });
       this.$refs[refName].buttonDisable(false);
       this.DetailDialogVisible = true;
       this.activeIndex = index;
@@ -181,8 +223,7 @@ export default {
     // 初始化获取数据字典信息
     init() {
       this.dicInfo = [JSON.parse(window.localStorage.getItem('dictionary'))];
-      const tranformDetails = this.dicInfo[0].details.map((x) => this.transform(x));
-      this.details = tranformDetails;
+      this.details = this.dicInfo[0].details;
     },
     async modifyDicInfo(data) {
       this.dicTableLoading = true;
@@ -198,25 +239,33 @@ export default {
     deletedetail() {
       this.details.splice(this.activeIndex, 1);
     },
-    // 添加字典明细
-    addDicDetail(detail) {
-      const showDetail = this.transform({ ...detail });
+    // 字典明细提交，根据是否编辑进行处理
+    submitDetail(detail) {
       if (this.isEdit) {
-        this.$set(this.details, this.activeIndex, { ...showDetail });
-        this.uniqueDefault(this.activeIndex);
-        // this.$set(this.activeObj, { ...showDetail });
-        console.log(this.details);
+        this.editDetail(detail);
         return;
       }
       this.details.push(showDetail);
       this.uniqueDefault(this.details.length - 1);
     },
+    async editDetail(showDetail) {
+      const dicId = this.dicInfo[0].id;
+      // 转换获取到的'true'和'false'
+      const { form } = new DetailForm(showDetail);
+      const result = await this.patchDetail(dicId, form);
+      this.details = result.details;
+    },
+    // 将ture或者'true' 转换成是与否
     transform(data) {
       for (const x in data) {
         if (x !== 'default' && x !== 'hidden') {
           continue;
         }
-        data[x] = data[x] == 'true' ? '是' : '否';
+        if (data[x] == true || data[x] == false) {
+          data[x] = data[x] == true ? 'true' : 'false';
+        } else {
+          data[x] = data[x] == 'true' ? true : false;
+        }
       }
       return data;
     },

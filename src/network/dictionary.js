@@ -26,6 +26,14 @@ const patchDictionary = (form) => {
 		}
 	}, 'patch')
 }
+const patchDetail = (dicId, form) => {
+	return request({
+		url: `dictionaries/${dicId}/${form.id}`,
+		data: {
+			...form
+		}
+	}, 'patch')
+}
 
 class AddForm {
 	constructor(form) {
@@ -61,10 +69,23 @@ class AddForm {
 		this.form.defaultName = this.form.details[0].name;
 	}
 }
+class DetailForm {
+	constructor(form) {
+		this.form = { ...form }
+		for (const x in this.form) {
+			if (x !== 'default' && x !== 'hidden') {
+				continue
+			}
+			this.form[x] = this.form[x] == 'true' ? true : false
+		}
+	}
+}
 
 export {
 	getDictionaries,
 	postDictionaries,
 	patchDictionary,
-	AddForm
+	patchDetail,
+	AddForm,
+	DetailForm
 }
