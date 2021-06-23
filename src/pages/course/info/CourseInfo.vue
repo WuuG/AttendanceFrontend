@@ -26,7 +26,7 @@
           <el-table-column prop="avatar" label="课程头像">
             <template #default="scope">
               <el-avatar>
-                <el-image :src="scope.row.avatart ? baseURL + scope.row.avatar : ''">
+                <el-image :src="scope.row.avatar ? baseURL + scope.row.avatar : ''">
                   <template #error>
                     <i class="el-icon-picture-outline"></i>
                   </template>
@@ -73,8 +73,8 @@
 </template>
 
 <script>
-import { getCourse, postCourse } from '../../../network/course/info';
-import { IMG_BASEURL } from 'utils/const';
+import { getCourse, postCourse, putCourseAvatar } from '../../../network/course/info';
+import CONST from 'utils/const';
 
 import HeaderBar from '../../../components/context/HeaderBar.vue';
 import AddDialog from './child-comps/AddDialog.vue';
@@ -87,12 +87,12 @@ export default {
       query: {
         key: '',
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
       },
       pageTotal: 0,
       courseInfo: [],
       courseTableLoading: false,
-      baseURL: IMG_BASEURL,
+      baseURL: CONST.IMG_BASEURL,
       // 组件通信数据
       activeIndex: null,
       activeCourse: null,
@@ -125,6 +125,12 @@ export default {
     async postCouese(form) {
       try {
         const result = await postCourse(form);
+        if (result.status === 200) return result.data;
+      } catch (error) {}
+    },
+    async putAvatar(courseID, form) {
+      try {
+        const result = await putCourseAvatar(courseID, form);
         console.log(result);
       } catch (error) {}
     },
@@ -157,11 +163,17 @@ export default {
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
-      this.getData();
+      this.load();
     },
-    async addCourse(form) {
+    async addCourse(form, file) {
       console.log(form);
-      await this.postCouese(form);
+      const course = await this.postCouese(form);
+      if (!course) return;
+      console.log(course.id, file);
+      const avatar = new FormData();
+      avatar.append('avatar', file);
+      await putCourseAvatar(course.id, avatar);
+      this.load();
     }
   }
 };

@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { getOrganization } from '../../../../network/course/info';
+import { getOrganization } from 'network/course/info';
 export default {
   data() {
     // value的表单验证。
@@ -87,7 +87,7 @@ export default {
         // value: [{ validator: validateValue, trigger: 'blur' }]
       },
       src: null,
-      avatarForm: { avatar: null }
+      avatarFile: null
     };
   },
   props: {
@@ -129,7 +129,7 @@ export default {
       if (!result) return;
       const form = { ...this.form };
       form.schoolMajorID = form.schoolMajorID.pop();
-      this.$emit('submit', { ...form });
+      this.$emit('submit', { ...form }, this.avatarFile);
       this.cancel();
     },
     // 重置表单
@@ -159,7 +159,7 @@ export default {
     beforeAvatarUpload(file) {
       const windownURL = window.URL || window.webkitURL;
       this.src = windownURL.createObjectURL(file);
-      this.avatarForm.avatar = file;
+      this.avatarFile = file;
       return false;
     }
   }
