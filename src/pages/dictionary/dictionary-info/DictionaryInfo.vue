@@ -14,7 +14,7 @@
         </template>
         <template #right-content>
           <el-button @click="showAddDialog('detailDialog')">添加明细</el-button>
-          <el-button @click="init">重置</el-button>
+          <el-button @click="init">刷新</el-button>
         </template>
       </header-bar>
       <el-row class="table">
@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { patchDictionary, patchDetail, DetailForm, getDictionary, dicDetailsSort } from '../../../network/dictionary';
+import { patchDictionary, patchDetail, DetailForm, getDictionary, dicDetailsSort, postDicdetail } from '../../../network/dictionary';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import DetailDialog from '../common/DetailsDialog.vue';
@@ -217,6 +217,24 @@ export default {
         console.error(`post sort error ${error}`);
       }
     },
+    async postDetail(dicId, form) {
+      try {
+        const result = await postDicdetail(dicId, form);
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '字典明细添加成功'
+          });
+          return;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`post detail error:${error}`);
+      }
+    },
     // 组件通信
     onDicEdit(row, refName) {
       this.$refs[refName].form = {
@@ -280,8 +298,7 @@ export default {
         this.editDetail(detail);
         return;
       }
-      this.details.push(showDetail);
-      this.uniqueDefault(this.details.length - 1);
+      this.addDetial(detail);
     },
     async editDetail(showDetail) {
       const dicId = this.dicInfo[0].id;
@@ -291,6 +308,14 @@ export default {
       const result = await this.patchDetail(dicId, form);
       this.detailTableLoading = false;
       this.details = result.details;
+    },
+    async addDetial(detail) {
+      const form = this.transform({ ...detail });
+      form.order = this.details.length;
+      this.detailTableLoading = true;
+      await this.postDetail(this.id, form);
+      this.load();
+      this.detailTableLoading = false;
     },
     // 将ture或者'true' 转换成是与否
     transform(data) {
