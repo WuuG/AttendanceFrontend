@@ -18,6 +18,11 @@ const postDictionaries = (form) => {
 		}
 	}, 'post')
 }
+const getDictionary = (dicId) => {
+	return request({
+		url: `dictionaries/${dicId}`
+	}, 'get')
+}
 const patchDictionary = (form) => {
 	return request({
 		url: `dictionaries/${form.id}`,
@@ -84,8 +89,9 @@ class DetailForm {
 export {
 	getDictionaries,
 	postDictionaries,
+	getDictionary,
 	patchDictionary,
 	patchDetail,
 	AddForm,
-	DetailForm
+	DetailForm,
 }

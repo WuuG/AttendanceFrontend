@@ -77,7 +77,7 @@ export default {
       loading: false
     };
   },
-  created() {
+  mounted() {
     this.load(this.query.curPage);
   },
   activated() {
@@ -105,9 +105,9 @@ export default {
       this.$router.replace('/dataDictionary/add');
     },
     handleEdit(row) {
-      window.localStorage.setItem('dictionary', JSON.stringify(row));
       this.$router.push({
-        path: '/dataDictionary/details'
+        path: '/dataDictionary/details',
+        query: { id: row.id }
       });
     },
 

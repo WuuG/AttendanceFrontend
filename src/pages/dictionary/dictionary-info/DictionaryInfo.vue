@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { AddForm, patchDictionary, patchDetail, DetailForm } from '../../../network/dictionary';
+import { AddForm, patchDictionary, patchDetail, DetailForm, getDictionary } from '../../../network/dictionary';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import DetailDialog from '../common/DetailsDialog.vue';
@@ -133,6 +133,9 @@ export default {
       dicButtonDisable: false,
       sortButtonLoading: false
     };
+  },
+  props: {
+    id: String
   },
   components: {
     HeaderBar,
@@ -187,6 +190,21 @@ export default {
         console.error(`patch detail error: ${error}`);
       }
     },
+    async getDictionary(dicId) {
+      try {
+        const result = await getDictionary(dicId);
+        if (result.status === 200) {
+          return result.data;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`get dictionary error: ${error}`);
+      }
+    },
+
     // 组件通信
     onDicEdit(row, refName) {
       this.$refs[refName].form = {
@@ -221,18 +239,20 @@ export default {
 
     // 页面逻辑
     // 初始化获取数据字典信息
-    init() {
-      this.dicInfo = [JSON.parse(window.localStorage.getItem('dictionary'))];
+    async init() {
+      this.dicTableLoading = true;
+      const result = await this.getDictionary(this.id);
+      this.dicTableLoading = false;
+      this.dicInfo = [result];
       this.details = this.dicInfo[0].details;
     },
     async modifyDicInfo(data) {
       this.dicTableLoading = true;
       this.dicButtonDisable = true;
       const result = await this.patchDictionary({ ...data });
-      this.dicTableLoading = false;
       this.dicButtonDisable = false;
+      this.dicTableLoading = false;
       if (!result) return;
-      window.localStorage.setItem('dictionary', JSON.stringify(result));
       this.init();
     },
     // 删除数据字典明细

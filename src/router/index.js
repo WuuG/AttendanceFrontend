@@ -133,6 +133,7 @@ export default new Router({
                     name: 'dicChildData',
                     component: DictionaryInfo,
                     meta: { title: '数据列表' },
+                    props: route => ({ id: route.query.id })
                 },
                 {
                     path: '/dataDictionary/add',
