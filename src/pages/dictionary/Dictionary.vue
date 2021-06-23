@@ -16,7 +16,7 @@
             <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
           </el-col>
           <el-button @click="dataDicSearch">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button @click="load(query.curPage, query.pageSize)">刷新</el-button>
         </el-col>
       </el-row>
 
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { getDictionaries } from '@/network/dictionary.js';
+import { getDictionaries, deleteDictionary } from '@/network/dictionary.js';
 export default {
   name: 'DataDictionary',
   data() {

@@ -58,10 +58,10 @@
           <el-table-column label="操作" width="150" align="center">
             <template #default="scope">
               <el-button @click="showEditDialog(scope.row, scope.$index, 'detailDialog')" size="mini">编辑</el-button>
-              <el-button type="danger" @click="comfirmDialogVisible = true" size="mini">删除</el-button>
+              <el-button type="danger" @click="showDeleteDialog(scope.row)" size="mini">删除</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150" align="center">
+          <el-table-column label="排序" width="150" align="center" v-if="details.length > 1">
             <template v-slot:default="scope">
               <el-button
                 size="mini"
@@ -86,8 +86,9 @@
     <comfirm-dialog
       :visible="comfirmDialogVisible"
       @cancel="comfirmDialogVisible = false"
-      @comfirm="deletedetail"
+      @comfirm="onDeleteDetail"
       :activeIndex="activeIndex"
+      :disable="comfirmButtonDisable"
     ></comfirm-dialog>
 
     <detail-dialog
@@ -103,7 +104,15 @@
 </template>
 
 <script>
-import { patchDictionary, patchDetail, DetailForm, getDictionary, dicDetailsSort, postDicdetail } from '../../../network/dictionary';
+import {
+  patchDictionary,
+  patchDetail,
+  DetailForm,
+  getDictionary,
+  dicDetailsSort,
+  postDicdetail,
+  deleteDicDetail
+} from '../../../network/dictionary';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import DetailDialog from '../common/DetailsDialog.vue';
@@ -235,6 +244,24 @@ export default {
         console.error(`post detail error:${error}`);
       }
     },
+    async deleteDetail(dicId, detailId) {
+      try {
+        const result = await deleteDicDetail(dicId, detailId);
+        if (result.status == 200) {
+          this.$message({
+            type: 'success',
+            message: '删除字典明细成功'
+          });
+          return;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`delte detail error:${error}`);
+      }
+    },
     // 组件通信
     onDicEdit(row, refName) {
       this.$refs[refName].form = {
@@ -263,6 +290,10 @@ export default {
       this.activeIndex = index;
       this.activeObj = value;
     },
+    showDeleteDialog(row) {
+      this.comfirmDialogVisible = true;
+      this.activeObj = row;
+    },
     back() {
       this.$router.push('/dataDictionary');
     },
@@ -289,8 +320,13 @@ export default {
       if (!result) return;
     },
     // 删除数据字典明细
-    deletedetail() {
-      this.details.splice(this.activeIndex, 1);
+    async onDeleteDetail() {
+      this.comfirmButtonDisable = true;
+      this.detailTableLoading = true;
+      await this.deleteDetail(this.id, this.activeObj.id);
+      await this.load();
+      this.comfirmButtonDisable = false;
+      this.detailTableLoading = false;
     },
     // 字典明细提交，根据是否编辑进行处理
     submitDetail(detail) {

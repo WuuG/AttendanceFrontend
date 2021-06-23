@@ -55,6 +55,16 @@ const postDicdetail = (dicId, form) => {
 		}
 	}, 'post')
 }
+const deleteDictionary = (dicId) => {
+	return request({
+		url: `dictionaries/${dicId}`
+	}, 'delete')
+}
+const deleteDicDetail = (dicId, detailId) => {
+	return request({
+		url: `dictionaries/${dicId}/${detailId}`
+	}, 'delete')
+}
 class AddForm {
 	constructor(form) {
 		this.form = { ...form }
@@ -109,6 +119,8 @@ export {
 	patchDetail,
 	dicDetailsSort,
 	postDicdetail,
+	deleteDictionary,
+	deleteDicDetail,
 	AddForm,
 	DetailForm,
 }
