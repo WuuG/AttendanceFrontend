@@ -24,7 +24,8 @@
         </el-form-item>
         <el-form-item label="开课院校" :label-width="labelWidth">
           <el-col :span="20">
-            <el-cascader v-model="form.schoolMajorID" :props="props" :show-all-levels="false"> </el-cascader>
+            <el-cascader v-model="form.schoolMajorID" :props="props" :show-all-levels="false" :placeholder="form.schoolMajorName">
+            </el-cascader>
           </el-col>
         </el-form-item>
         <el-form-item label="开课教师" :label-width="labelWidth">
@@ -40,7 +41,7 @@
         </el-form-item>
         <el-form-item label="上传课程封面">
           <el-upload class="avatar-uploader" action="" :show-file-list="false" :before-upload="beforeAvatarUpload">
-            <img v-if="src" :src="src" class="avatar" />
+            <img v-if="imgURL" :src="imgURL" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -55,15 +56,14 @@
 
 <script>
 import { getOrganization } from 'network/course/info';
+import CONST from 'utils/const';
+
 export default {
   data() {
-    // value的表单验证。
-    // const validateValue = (rule, value, callback) => {
-    // };
     let _self = this;
     return {
       labelWidth: '90px',
-      title: '新增项目',
+      title: '修改课程',
       form: {
         name: null,
         state: 0,
@@ -106,6 +106,17 @@ export default {
       default: false
     }
   },
+  computed: {
+    imgURL() {
+      if (this.src) {
+        return this.src;
+      }
+      if (this.form.avatar) {
+        return CONST.IMG_BASEURL + this.form.avatar;
+      }
+      return false;
+    }
+  },
   methods: {
     // 网络方法
     async getOrganization(orgId) {
@@ -130,19 +141,19 @@ export default {
         result = valid;
       });
       if (!result) return;
-      const form = { ...this.form };
-      form.schoolMajorID = form.schoolMajorID.pop();
+      const form = this.filterForm(this.form);
       this.$emit('submit', { ...form }, this.avatarFile);
       this.cancel();
     },
     // 重置表单
     resetForm() {
       for (const propName in this.form) {
-        if (propName === 'hidden') {
-          this.form[propName] = 'false';
-          continue;
-        }
         this.form[propName] = null;
+        this.src = null;
+        if (propName === 'state') {
+          this.form[propName] = 0;
+        }
+        this.avatar = null;
       }
     },
     // 级联选择器获取组织方法
@@ -164,6 +175,19 @@ export default {
       this.src = windownURL.createObjectURL(file);
       this.avatarFile = file;
       return false;
+    },
+    filterForm(form) {
+      let filteredForm = {};
+      form.avatar = null;
+      for (const x in form) {
+        if (form[x] !== null) {
+          filteredForm[x] = form[x];
+        }
+      }
+      if (filteredForm.schoolMajorID) {
+        filteredForm.schoolMajorID = typeof form.schoolMajorID !== 'string' ? form.schoolMajorID.pop() : form.schoolMajorID;
+      }
+      return filteredForm;
     }
   }
 };

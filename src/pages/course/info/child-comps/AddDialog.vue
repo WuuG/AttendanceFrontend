@@ -137,11 +137,11 @@ export default {
     // 重置表单
     resetForm() {
       for (const propName in this.form) {
-        if (propName === 'hidden') {
-          this.form[propName] = 'false';
-          continue;
-        }
         this.form[propName] = null;
+        this.url = null;
+        if (propName === 'state') {
+          this.form[propName] = 0;
+        }
       }
     },
     // 级联选择器获取组织方法

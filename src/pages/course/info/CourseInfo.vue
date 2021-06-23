@@ -15,7 +15,7 @@
             <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
           </el-col>
           <el-button @click="dataSearch">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button @click="load">重置</el-button>
         </template>
       </header-bar>
 
@@ -25,7 +25,7 @@
           <el-table-column prop="name" label="课程名称"> </el-table-column>
           <el-table-column prop="avatar" label="课程头像">
             <template #default="scope">
-              <el-avatar>
+              <el-avatar shape="square">
                 <el-image :src="scope.row.avatar ? baseURL + scope.row.avatar : ''">
                   <template #error>
                     <i class="el-icon-picture-outline"></i>
@@ -76,12 +76,13 @@
       :buttonDisable="editDialogButtonDisable"
       @cancel="editDialogVisible = false"
       @submit="modifyCourse"
+      ref="editDialog"
     ></edit-dialog>
   </div>
 </template>
 
 <script>
-import { getCourse, postCourse, putCourseAvatar } from '../../../network/course/info';
+import { getCourse, postCourse, putCourseAvatar, patchCourse } from '../../../network/course/info';
 import CONST from 'utils/const';
 
 import HeaderBar from '../../../components/context/HeaderBar.vue';
@@ -137,14 +138,50 @@ export default {
     async postCouese(form) {
       try {
         const result = await postCourse(form);
-        if (result.status === 200) return result.data;
-      } catch (error) {}
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '课程添加成功'
+          });
+          return result.data;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`post course error: ${error}`);
+      }
     },
     async putAvatar(courseID, form) {
       try {
         const result = await putCourseAvatar(courseID, form);
-        console.log(result);
-      } catch (error) {}
+        if (result.status === 200) return;
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`put avatar error: ${error}`);
+      }
+    },
+    async patchCourse(form) {
+      try {
+        const result = await patchCourse(form);
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '课程修改成功'
+          });
+          return;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`patch course error: ${error}`);
+      }
     },
     // 页面逻辑
     async load() {
@@ -162,7 +199,7 @@ export default {
       this.activeCourse = row;
       this.activeIndex = index;
       this.editDialogVisible = true;
-      console.log(row, index);
+      this.$refs['editDialog'].form = { ...row };
     },
     handleDelete(index, row) {
       console.log(index, row);
@@ -171,7 +208,6 @@ export default {
     selection(sel) {
       console.log(sel);
     },
-
     // 删除已选
     deleteSelectedItem() {},
     // 分页导航
@@ -180,16 +216,22 @@ export default {
       this.load();
     },
     async addCourse(form, file) {
-      console.log(form);
       const course = await this.postCouese(form);
       if (!course) return;
-      console.log(course.id, file);
       const avatar = new FormData();
       avatar.append('avatar', file);
       await putCourseAvatar(course.id, avatar);
       this.load();
     },
-    modifyCourse() {}
+    async modifyCourse(form, file) {
+      if (file) {
+        const avatar = new FormData();
+        avatar.append('avatar', file);
+        await putCourseAvatar(form.id, avatar);
+      }
+      await patchCourse(form);
+      this.load();
+    }
   }
 };
 </script>

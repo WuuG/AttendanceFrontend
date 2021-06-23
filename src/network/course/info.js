@@ -31,9 +31,16 @@ const putCourseAvatar = (courseId, form) => {
 		data: form
 	}, 'put')
 }
+const patchCourse = (form) => {
+	return request({
+		url: `courses/${form.id}`,
+		data: form
+	}, 'patch')
+}
 export {
 	getCourse,
 	postCourse,
 	getOrganization,
-	putCourseAvatar
+	putCourseAvatar,
+	patchCourse
 }
