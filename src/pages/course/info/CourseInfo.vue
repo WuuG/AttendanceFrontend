@@ -1,13 +1,13 @@
 <template emplate>
   <div>
     <el-breadcrumb separator="/" class="crumbs">
-      <el-breadcrumb-item>基础表格</el-breadcrumb-item>
+      <el-breadcrumb-item>课程信息</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="changeDialogVisibel">新增</el-button>
+          <el-button @click="addDialogVisible = true">新增</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
         </template>
         <template #right-content>
@@ -20,12 +20,25 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
+        <el-table :data="courseInfo" empty-text="暂时没有数据" @selection-change="selection" v-loading="courseTableLoading">
           <el-table-column type="selection" align="center"></el-table-column>
-          <el-table-column prop="id" label="字典ID"> </el-table-column>
-          <el-table-column prop="name" label="字典名称"> </el-table-column>
-          <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="createTime" label="创建时间"> </el-table-column>
+          <el-table-column prop="name" label="课程名称"> </el-table-column>
+          <el-table-column prop="avatar" label="课程头像">
+            <template #default="scope">
+              <el-avatar>
+                <el-image :src="scope.row.avatart ? baseURL + scope.row.avatar : ''">
+                  <template #error>
+                    <i class="el-icon-picture-outline"></i>
+                  </template>
+                </el-image>
+              </el-avatar>
+            </template>
+          </el-table-column>
+          <el-table-column prop="schoolMajorName" label="大学-学院" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="semester" label="学期" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="stateName" label="课程状态"> </el-table-column>
+          <el-table-column prop="teacherName" label="教师名字"> </el-table-column>
+          <el-table-column prop="courseClass" label="课程班级"> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -50,11 +63,17 @@
         </el-col>
       </el-row>
     </el-main>
+    <add-dialog :visible="addDialogVisible" :buttonDisable="addDialogButtonDisable" @cancel="addDialogVisible = false"></add-dialog>
   </div>
 </template>
 
 <script>
+import { getCourse } from '../../../network/course/info';
+import { IMG_BASEURL } from 'utils/const';
+
 import HeaderBar from '../../../components/context/HeaderBar.vue';
+import AddDialog from './child-comps/AddDialog.vue';
+
 export default {
   name: 'DataDictionary',
   data() {
@@ -66,32 +85,48 @@ export default {
         pageSize: 10
       },
       pageTotal: 0,
-      dicInfo: [
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        }
-      ],
-      //统一设置表单的宽度
-      labelWidth: '80px',
-      //活跃的子项
-      activeName: '0',
-      // 新增按钮对应的Dialog Visible
-      addNewDialogVsible: false
+      courseInfo: [],
+      courseTableLoading: false,
+      baseURL: IMG_BASEURL,
+      // 组件通信数据
+      activeIndex: null,
+      activeCourse: null,
+      addDialogVisible: false,
+      addDialogButtonDisable: false
     };
   },
   components: {
-    HeaderBar
+    HeaderBar,
+    AddDialog
+  },
+  created() {
+    this.load();
   },
   methods: {
+    // 网络方法
+    async getCourse(curPage, pageSize) {
+      try {
+        const result = await getCourse(curPage, pageSize);
+        if (result.status === 200) return result.data;
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+        return null;
+      } catch (error) {
+        console.error(`get courses error: ${error}`);
+      }
+    },
+
+    // 页面逻辑
+    async load() {
+      this.courseTableLoading = true;
+      const result = await this.getCourse(this.query.pageIndex, this.query.pageSize);
+      this.courseTableLoading = false;
+      if (!result) return;
+      this.courseInfo = result.content;
+      this.pageTotal = result.total;
+    },
     dataSearch() {
       console.log('handle search');
     },
@@ -106,19 +141,13 @@ export default {
     selection(sel) {
       console.log(sel);
     },
-    // 选择全部
-    selectAll(sel) {
-      console.log(sel);
-    },
+
     // 删除已选
     deleteSelectedItem() {},
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
-    },
-    changeDialogVisibel() {
-      this.addNewDialogVsible = !this.addNewDialogVsible;
     }
   }
 };

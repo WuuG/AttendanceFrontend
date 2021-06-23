@@ -1,36 +1,44 @@
 <template>
   <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel">
     <el-form :model="form" :rules="rules" ref="form">
-      <el-form-item label="明细名称" :label-width="labelWidth">
+      <el-form-item label="课程名称" :label-width="labelWidth" placeholder="请输入课程名称">
         <el-col :span="20">
           <el-input v-model="form.name"> </el-input>
         </el-col>
       </el-form-item>
-
-      <el-form-item label="明细项值" :label-width="labelWidth" prop="value">
+      <el-form-item label="课程状态" :label-width="labelWidth" prop="value">
         <el-col :span="20">
-          <el-input v-model="form.value"> </el-input>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="明细项标识" :label-width="labelWidth">
-        <el-col :span="20">
-          <el-input v-model="form.code"> </el-input>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="是否隐藏" :label-width="labelWidth">
-        <el-col :span="20">
-          <el-select v-model="form.hidden" placeholder="是否隐藏">
-            <el-option label="否" value="false"></el-option>
-            <el-option label="是" value="true"></el-option>
+          <el-select v-model="form.state" placeholder="请选择课程状态">
+            <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
           </el-select>
         </el-col>
       </el-form-item>
-      <el-form-item label="参数描述" :label-width="labelWidth">
+      <el-form-item label="课程学期" :label-width="labelWidth">
+        <el-col :span="20">
+          <el-select v-model="form.semester" placeholder="请选择开课学期">
+            <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="开课院校" :label-width="labelWidth">
+        <el-col :span="20">
+          <el-select v-model="form.schoolMajorName" placeholder="">
+            <el-option v-for="item in schoolMajorOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="开课教师" :label-width="labelWidth">
+        <el-col :span="20">
+          <el-input v-model="form.tracherName" placeholder="请输入开课教师名"></el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="课程描述" :label-width="labelWidth">
         <el-col :span="24">
           <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" :maxlength="100" resize="none">
           </el-input>
         </el-col>
       </el-form-item>
+      <el-form-item label="label"> </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
@@ -50,11 +58,21 @@ export default {
       title: '新增项目',
       form: {
         name: null,
-        default: 'false',
-        value: null,
-        code: null,
-        hidden: 'false'
+        state: 0,
+        semester: null,
+        schoolMajorName: null,
+        avatar: null
       },
+      stateOptions: [
+        { value: 0, label: '开课中' },
+        { valeu: 1, label: '未开课' },
+        { value: 2, label: '已结课' }
+      ],
+      semesterOptions: [
+        { value: '2020-2021-1', label: '2020-2021-1' },
+        { value: '2020-2021-2', label: '2020-2021-2' }
+      ],
+      schoolMajorOptions: [],
       rules: {
         // value: [{ validator: validateValue, trigger: 'blur' }]
       }
