@@ -39,6 +39,14 @@ const patchDetail = (dicId, form) => {
 		}
 	}, 'patch')
 }
+const dicDetailsSort = (dicId, form) => {
+	return request({
+		url: `dictionaries/${dicId}/orders`,
+		data: [
+			...form
+		]
+	}, 'post')
+}
 
 class AddForm {
 	constructor(form) {
@@ -92,6 +100,7 @@ export {
 	getDictionary,
 	patchDictionary,
 	patchDetail,
+	dicDetailsSort,
 	AddForm,
 	DetailForm,
 }

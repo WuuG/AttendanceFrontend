@@ -13,7 +13,6 @@
           <el-button>批量删除</el-button>
         </template>
         <template #right-content>
-          <el-button type="primary" @click="save">保存排序</el-button>
           <el-button @click="showAddDialog('detailDialog')">添加明细</el-button>
           <el-button @click="init">重置</el-button>
         </template>
@@ -42,7 +41,7 @@
 
     <el-main class="main-content">
       <el-row class="table">
-        <el-table :data="details" border empty-text="暂时没有数据">
+        <el-table :data="details" border empty-text="暂时没有数据" v-loading="detailTableLoading">
           <el-table-column prop="name" label="明细项名"> </el-table-column>
           <el-table-column prop="default" label="默认值">
             <template #default="scope">
@@ -104,7 +103,7 @@
 </template>
 
 <script>
-import { AddForm, patchDictionary, patchDetail, DetailForm, getDictionary } from '../../../network/dictionary';
+import { patchDictionary, patchDetail, DetailForm, getDictionary, dicDetailsSort } from '../../../network/dictionary';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import DetailDialog from '../common/DetailsDialog.vue';
@@ -119,6 +118,9 @@ export default {
       dicInfo: [],
       details: [],
       dicTableLoading: false,
+      detailTableLoading: false,
+      dicButtonDisable: false,
+      sortButtonLoading: false,
       // 通信数据
       comfirmDialogVisible: false,
       comfirmButtonDisable: false,
@@ -129,9 +131,7 @@ export default {
       // 活跃的索引和活跃的对象
       activeIndex: -1,
       activeObj: {},
-      dicDialogVisible: false,
-      dicButtonDisable: false,
-      sortButtonLoading: false
+      dicDialogVisible: false
     };
   },
   props: {
@@ -143,7 +143,7 @@ export default {
     DetailDialog,
     ComfirmDialog
   },
-  mounted() {
+  created() {
     this.init();
   },
   activated() {
@@ -204,7 +204,19 @@ export default {
         console.error(`get dictionary error: ${error}`);
       }
     },
-
+    async postSort(dicId, form) {
+      try {
+        const result = await dicDetailsSort(dicId, form);
+        if (result.status != 200) {
+          this.$message({
+            type: 'warning',
+            message: result.message
+          });
+        }
+      } catch (error) {
+        console.error(`post sort error ${error}`);
+      }
+    },
     // 组件通信
     onDicEdit(row, refName) {
       this.$refs[refName].form = {
@@ -240,9 +252,12 @@ export default {
     // 页面逻辑
     // 初始化获取数据字典信息
     async init() {
-      this.dicTableLoading = true;
+      (this.dicTableLoading = true), (this.detailTableLoading = true);
+      await this.load();
+      (this.dicTableLoading = false), (this.detailTableLoading = false);
+    },
+    async load() {
       const result = await this.getDictionary(this.id);
-      this.dicTableLoading = false;
       this.dicInfo = [result];
       this.details = this.dicInfo[0].details;
     },
@@ -250,10 +265,10 @@ export default {
       this.dicTableLoading = true;
       this.dicButtonDisable = true;
       const result = await this.patchDictionary({ ...data });
+      this.load();
       this.dicButtonDisable = false;
       this.dicTableLoading = false;
       if (!result) return;
-      this.init();
     },
     // 删除数据字典明细
     deletedetail() {
@@ -272,7 +287,9 @@ export default {
       const dicId = this.dicInfo[0].id;
       // 转换获取到的'true'和'false'
       const { form } = new DetailForm(showDetail);
+      this.detailTableLoading = true;
       const result = await this.patchDetail(dicId, form);
+      this.detailTableLoading = false;
       this.details = result.details;
     },
     // 将ture或者'true' 转换成是与否
@@ -300,35 +317,21 @@ export default {
       }
     },
     // 排序
-    sort(oldIndex, newIndex) {
-      console.log(this.details);
+    async sort(oldIndex, newIndex) {
       const length = this.details.length;
       if (newIndex < 0 || newIndex > length - 1) {
-        console.log(1);
         return;
       }
-      let temp = this.details[oldIndex];
-      this.details[oldIndex] = this.details[newIndex];
-      this.details[newIndex] = temp;
-      const tempArray = [...this.details];
-      this.details = [...tempArray];
-    },
-    async save() {
-      const detailForm = this.$refs.addDictionary.submit('form');
-      if (!detailForm) return;
-      this.saveButtonLoading = true;
-      this.form = { ...detailForm };
-      // 这里的对象需要深拷贝，防止修改数组内对象而导致显示的数据发生变化
-      this.form.details = this.details.map((x) => {
-        return { ...x };
-      });
-      // 对需要上传的表单进行处理,并获取最后需要上传的数据
-      const { form } = new AddForm({ ...this.form });
-      const result = await this.addNewDictionaries(form);
-      this.saveButtonLoading = false;
-      if (!result) return;
-      this.$router.replace('/dataDictionary');
-      this.reset();
+      const form = this.details.map((x) => x.id);
+      let temp = form[oldIndex];
+      form[oldIndex] = form[newIndex];
+      form[newIndex] = temp;
+      this.detailTableLoading = true;
+      this.sortButtonLoading = true;
+      await this.postSort(this.id, form);
+      await this.load();
+      this.detailTableLoading = false;
+      this.sortButtonLoading = false;
     }
   }
 };
