@@ -63,12 +63,17 @@
         </el-col>
       </el-row>
     </el-main>
-    <add-dialog :visible="addDialogVisible" :buttonDisable="addDialogButtonDisable" @cancel="addDialogVisible = false"></add-dialog>
+    <add-dialog
+      :visible="addDialogVisible"
+      :buttonDisable="addDialogButtonDisable"
+      @cancel="addDialogVisible = false"
+      @submit="addCourse"
+    ></add-dialog>
   </div>
 </template>
 
 <script>
-import { getCourse } from '../../../network/course/info';
+import { getCourse, postCourse } from '../../../network/course/info';
 import { IMG_BASEURL } from 'utils/const';
 
 import HeaderBar from '../../../components/context/HeaderBar.vue';
@@ -117,7 +122,12 @@ export default {
         console.error(`get courses error: ${error}`);
       }
     },
-
+    async postCouese(form) {
+      try {
+        const result = await postCourse(form);
+        console.log(result);
+      } catch (error) {}
+    },
     // 页面逻辑
     async load() {
       this.courseTableLoading = true;
@@ -148,6 +158,10 @@ export default {
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
+    },
+    async addCourse(form) {
+      console.log(form);
+      await this.postCouese(form);
     }
   }
 };

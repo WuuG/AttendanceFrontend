@@ -22,14 +22,12 @@
       </el-form-item>
       <el-form-item label="开课院校" :label-width="labelWidth">
         <el-col :span="20">
-          <el-select v-model="form.schoolMajorName" placeholder="">
-            <el-option v-for="item in schoolMajorOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-          </el-select>
+          <el-cascader v-model="form.schoolMajorID" :props="props" :show-all-levels="false"> </el-cascader>
         </el-col>
       </el-form-item>
       <el-form-item label="开课教师" :label-width="labelWidth">
         <el-col :span="20">
-          <el-input v-model="form.tracherName" placeholder="请输入开课教师名"></el-input>
+          <el-input v-model="form.teacherName" placeholder="请输入开课教师名"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="课程描述" :label-width="labelWidth">
@@ -38,7 +36,12 @@
           </el-input>
         </el-col>
       </el-form-item>
-      <el-form-item label="label"> </el-form-item>
+      <el-form-item label="上传课程封面">
+        <el-upload class="avatar-uploader" action="" :show-file-list="false" :before-upload="beforeAvatarUpload">
+          <img v-if="src" :src="src" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
@@ -48,11 +51,13 @@
 </template>
 
 <script>
+import { getOrganization } from '../../../../network/course/info';
 export default {
   data() {
     // value的表单验证。
     // const validateValue = (rule, value, callback) => {
     // };
+    let _self = this;
     return {
       labelWidth: '90px',
       title: '新增项目',
@@ -60,8 +65,9 @@ export default {
         name: null,
         state: 0,
         semester: null,
-        schoolMajorName: null,
-        avatar: null
+        schoolMajorID: null,
+        teacherName: null,
+        description: null
       },
       stateOptions: [
         { value: 0, label: '开课中' },
@@ -73,9 +79,15 @@ export default {
         { value: '2020-2021-2', label: '2020-2021-2' }
       ],
       schoolMajorOptions: [],
+      props: {
+        lazy: true,
+        lazyLoad: _self.getOrganizationOptions
+      },
       rules: {
         // value: [{ validator: validateValue, trigger: 'blur' }]
-      }
+      },
+      src: null,
+      avatarForm: { avatar: null }
     };
   },
   props: {
@@ -92,6 +104,16 @@ export default {
     }
   },
   methods: {
+    // 网络方法
+    async getOrganization(orgId) {
+      try {
+        const result = await getOrganization(orgId);
+        if (result.status === 200) return result.data;
+      } catch (error) {
+        console.error(`get organization error: ${error}`);
+      }
+    },
+
     // 页面逻辑
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
@@ -105,7 +127,9 @@ export default {
         result = valid;
       });
       if (!result) return;
-      this.$emit('submit', { ...this.form });
+      const form = { ...this.form };
+      form.schoolMajorID = form.schoolMajorID.pop();
+      this.$emit('submit', { ...form });
       this.cancel();
     },
     // 重置表单
@@ -117,10 +141,55 @@ export default {
         }
         this.form[propName] = null;
       }
+    },
+    // 级联选择器获取组织方法
+    async getOrganizationOptions(node, resolve) {
+      let { value: parentId } = node;
+      if (!parentId) {
+        parentId = 1;
+      }
+      const tempData = await this.getOrganization(parentId);
+      const nodes = Array.from(tempData.children).map((x) => ({
+        value: x.id,
+        label: x.fullName,
+        leaf: x.childrenCount === 0 ? true : false
+      }));
+      resolve(nodes);
+    },
+    beforeAvatarUpload(file) {
+      const windownURL = window.URL || window.webkitURL;
+      this.src = windownURL.createObjectURL(file);
+      this.avatarForm.avatar = file;
+      return false;
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
+</style>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
