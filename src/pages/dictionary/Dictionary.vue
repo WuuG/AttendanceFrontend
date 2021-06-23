@@ -32,11 +32,18 @@
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" type="danger" @click="showDeleteDialog(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-row>
+
+      <delete-dialog
+        :visible="comfirmDialogVisible"
+        :disable="comfirmButtonDisable"
+        @cancel="comfirmDialogVisible = false"
+        @comfirm="onDeleteDictionary"
+      ></delete-dialog>
 
       <div class="pagination">
         <el-pagination
@@ -54,6 +61,8 @@
 
 <script>
 import { getDictionaries, deleteDictionary } from '@/network/dictionary.js';
+
+import deleteDialog from './common/ComfirmDialog.vue';
 export default {
   name: 'DataDictionary',
   data() {
@@ -65,18 +74,17 @@ export default {
       },
       pageTotal: null,
       dicInfo: [],
-      activeDicInfo: {
-        id: null,
-        name: '',
-        des: ''
-      },
       //统一设置表单的宽度
       formLabelWidth: '80px',
       //活跃的子项
-      activeName: '0',
-      loading: false
+      loading: false,
+
+      // 通信数据
+      comfirmDialogVisible: false,
+      comfirmButtonDisable: false
     };
   },
+  components: { deleteDialog },
   mounted() {
     this.load(this.query.curPage);
   },
@@ -97,7 +105,26 @@ export default {
           message: result.message
         });
       } catch (error) {
+        console.log(error);
         console.error(`get dicitonaries error:${error}`);
+      }
+    },
+    async deleteDictionary(dicId) {
+      try {
+        const result = await deleteDictionary(dicId);
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '删除数据字典成功'
+          });
+          return;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`delete dictionary error:${error}`);
       }
     },
     // 组件通信
@@ -110,14 +137,20 @@ export default {
         query: { id: row.id }
       });
     },
+    showDeleteDialog(row) {
+      this.activeObj = { ...row };
+      this.comfirmDialogVisible = true;
+    },
 
     // 页面逻辑
     dataDicSearch() {
       console.log('handle search');
     },
-    handleDelete(index, row) {
-      this.dicInfo.splice(index, 1);
-      console.log(index, row);
+    async onDeleteDictionary() {
+      this.comfirmButtonDisable = true;
+      await this.deleteDictionary(this.activeObj.id);
+      await this.load(this.query.curPage, this.query.pageSize);
+      this.comfirmButtonDisable = false;
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
