@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel">
+  <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @open="open">
     <el-form :model="form" :rules="rules" ref="form">
       <el-form-item label="明细名称" :label-width="labelWidth">
         <el-col :span="20">
@@ -57,7 +57,9 @@ export default {
       },
       rules: {
         // value: [{ validator: validateValue, trigger: 'blur' }]
-      }
+      },
+
+      buttonDisable: false
     };
   },
   props: {
@@ -67,11 +69,7 @@ export default {
     // 判断是编辑还是新增的Dialog
     isEdit: Boolean,
     // 获取活跃的明细，来防止判重时，和自己重而报错。
-    active: Object,
-    buttonDisable: {
-      type: Boolean,
-      default: false
-    }
+    active: Object
   },
   methods: {
     // 页面逻辑
@@ -87,6 +85,7 @@ export default {
         result = valid;
       });
       if (!result) return;
+      this.buttonDisable = true;
       this.$emit('submit', { ...this.form });
       this.cancel();
     },
@@ -95,6 +94,9 @@ export default {
       for (const propName in this.form) {
         this.form[propName] = null;
       }
+    },
+    open() {
+      this.buttonDisable = false;
     }
   }
 };
