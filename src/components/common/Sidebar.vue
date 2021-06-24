@@ -52,12 +52,12 @@ export default {
       items: [
         {
           icon: 'el-icon-lx-home',
-          index: 'dashboard',
+          index: '/dashboard',
           title: '系统首页'
         },
         {
           icon: 'el-icon-lx-cascades',
-          index: 'mybasetable',
+          index: '/mybasetable',
           title: '基础表格'
         },
         {
@@ -66,13 +66,9 @@ export default {
           title: '课程管理',
           subs: [
             {
-              index: 'courseInfo',
+              index: '/courseInfo',
               title: '课程信息'
             }
-            // {
-            //   index: 'studentInfo',
-            //   title: '学生信息'
-            // }
           ]
         },
         {
@@ -81,11 +77,11 @@ export default {
           title: '系统管理',
           subs: [
             {
-              index: 'systemParams',
+              index: '/systemParams',
               title: '系统参数'
             },
             {
-              index: 'dataDictionary',
+              index: '/dataDictionary',
               title: '数据字典'
             }
           ]
