@@ -93,10 +93,6 @@ export default {
     // 重置表单
     resetForm() {
       for (const propName in this.form) {
-        if (propName === 'hidden') {
-          this.form[propName] = 'false';
-          continue;
-        }
         this.form[propName] = null;
       }
     }
