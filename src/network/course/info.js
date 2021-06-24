@@ -37,10 +37,17 @@ const patchCourse = (form) => {
 		data: form
 	}, 'patch')
 }
+const deleteCourse = (courseId) => {
+	return request({
+		url: `courses/${courseId}`,
+	}, 'delete')
+}
+
 export {
 	getCourse,
 	postCourse,
 	getOrganization,
 	putCourseAvatar,
-	patchCourse
+	patchCourse,
+	deleteCourse
 }

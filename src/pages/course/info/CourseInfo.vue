@@ -78,16 +78,24 @@
       @submit="modifyCourse"
       ref="editDialog"
     ></edit-dialog>
+
+    <delete-dialog
+      :visible="deleteDialogVisible"
+      @cancel="deleteDialogVisible = false"
+      @comfirm="ondeleteCourse"
+      :disable="deleteButtonDisable"
+    ></delete-dialog>
   </div>
 </template>
 
 <script>
-import { getCourse, postCourse, putCourseAvatar, patchCourse } from '../../../network/course/info';
+import { getCourse, postCourse, putCourseAvatar, patchCourse, deleteCourse } from '../../../network/course/info';
 import CONST from 'utils/const';
 
 import HeaderBar from '../../../components/context/HeaderBar.vue';
 import AddDialog from './child-comps/AddDialog.vue';
 import EditDialog from './child-comps/EditDialog.vue';
+import DeleteDialog from './child-comps/deleteDialog.vue';
 
 export default {
   name: 'DataDictionary',
@@ -109,13 +117,16 @@ export default {
       addDialogVisible: false,
       addDialogButtonDisable: false,
       editDialogVisible: false,
-      editDialogButtonDisable: false
+      editDialogButtonDisable: false,
+      deleteDialogVisible: false,
+      deleteButtonDisable: false
     };
   },
   components: {
     HeaderBar,
     AddDialog,
-    EditDialog
+    EditDialog,
+    DeleteDialog
   },
   created() {
     this.load();
@@ -183,6 +194,36 @@ export default {
         console.error(`patch course error: ${error}`);
       }
     },
+    async deleteCourse(courseId) {
+      try {
+        const result = await deleteCourse(courseId);
+        if (result.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '课程删除成功'
+          });
+          return;
+        }
+        this.$message({
+          type: 'warning',
+          message: result.message
+        });
+      } catch (error) {
+        console.error(`delete Course error:${error}`);
+      }
+    },
+    // 组件通信
+    handleEdit(index, row) {
+      this.activeCourse = row;
+      this.activeIndex = index;
+      this.editDialogVisible = true;
+      this.$refs['editDialog'].form = { ...row };
+    },
+    handleDelete(index, row) {
+      this.activeCourse = row;
+      this.activeIndex = index;
+      this.deleteDialogVisible = true;
+    },
     // 页面逻辑
     async load() {
       this.courseTableLoading = true;
@@ -195,26 +236,16 @@ export default {
     dataSearch() {
       console.log('handle search');
     },
-    handleEdit(index, row) {
-      this.activeCourse = row;
-      this.activeIndex = index;
-      this.editDialogVisible = true;
-      this.$refs['editDialog'].form = { ...row };
-    },
-    handleDelete(index, row) {
-      console.log(index, row);
-    },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
       console.log(sel);
     },
-    // 删除已选
-    deleteSelectedItem() {},
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.load();
     },
+    deleteSelectedItem() {},
     async addCourse(form, file) {
       const course = await this.postCouese(form);
       if (!course) return;
@@ -231,6 +262,12 @@ export default {
       }
       await patchCourse(form);
       this.load();
+    },
+    async ondeleteCourse() {
+      this.deleteButtonDisable = true;
+      await this.deleteCourse(this.activeCourse.id);
+      this.deleteButtonDisable = false;
+      await this.load();
     }
   }
 };
