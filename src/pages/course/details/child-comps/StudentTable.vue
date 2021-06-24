@@ -43,7 +43,7 @@ export default {
       query: {
         key: '',
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
       },
       pageTotal: 0,
       studentInfo: [],
@@ -64,10 +64,9 @@ export default {
   },
   methods: {
     // 网络方法
-    async getStudents(courseId) {
+    async getStudents(courseId, form) {
       try {
-        const result = await getStudents(courseId);
-        console.log(result);
+        const result = await getStudents(courseId, form);
         return result.data;
       } catch (error) {
         console.error(`get students error：${error}`);
@@ -81,10 +80,15 @@ export default {
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
+      this.load();
     },
     async load() {
       this.tableLoading = true;
-      const result = await this.getStudents(this.courseId);
+      const form = {
+        curPage: this.query.pageIndex,
+        pageSize: this.query.pageSize
+      };
+      const result = await this.getStudents(this.courseId, form);
       this.tableLoading = false;
       this.pageTotal = result.total;
       this.studentInfo = result.content;

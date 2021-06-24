@@ -1,13 +1,16 @@
 import { request } from '../request';
 
-const getStudents = (courseId) => {
+const getStudents = (courseId, form) => {
 	return request({
-		url: `courses/${courseId}/students`
+		url: `courses/${courseId}/students`,
+		params: {
+			...form
+		}
 	}, 'get')
 }
 const getCourseById = (id) => {
 	return request({
-		url: `courses/${id}`
+		url: `courses/${id}`,
 	}, 'get')
 }
 
