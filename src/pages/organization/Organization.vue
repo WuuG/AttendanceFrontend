@@ -18,6 +18,7 @@
 
       <el-row class="table">
         <el-table
+          ref="table"
           :data="data"
           empty-text="暂时没有数据"
           @selection-change="selection"
@@ -35,8 +36,8 @@
           <el-table-column label="操作" width="220" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
-              <el-button size="mini" @click="showAddDialog(scope.row)">添加</el-button>
-              <el-button size="mini" type="danger" @click="showDeleteDialog(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" @click="showAddDialog(scope.row)" type="success" plain>添加</el-button>
+              <el-button size="mini" type="danger" @click="showDeleteDialog(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -64,6 +65,13 @@
       :parentId="parentId"
       @submit="reloadOrganization"
     ></add-dialog>
+
+    <delete-dialog
+      :visible="deleteDialogVisible"
+      @cancel="deleteDialogVisible = false"
+      :organization="organization"
+      @comfirm="deleteReloadOrganization"
+    ></delete-dialog>
   </div>
 </template>
 
@@ -72,6 +80,7 @@ import { getOrganization, getSchools } from '../../network/auth/organization';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import AddDialog from './chil-comps/AddDialog.vue';
+import DeleteDialog from './chil-comps/deleteDialog.vue';
 export default {
   name: 'DataDictionary',
   data() {
@@ -87,19 +96,23 @@ export default {
       initId: '1',
       tableLoading: false,
       activeOrganization: null,
-      activeTree: null,
-      activeResolve: null,
+      treeMap: new Map(),
       //通信数据
-      addDialogVisible: false
+      addDialogVisible: false,
+      deleteDialogVisible: false
     };
   },
   components: {
     HeaderBar,
-    AddDialog
+    AddDialog,
+    DeleteDialog
   },
   computed: {
     parentId() {
       return this.activeOrganization ? this.activeOrganization.id : this.initId;
+    },
+    organization() {
+      return this.activeOrganization ? this.activeOrganization : {};
     }
   },
   created() {
@@ -124,18 +137,20 @@ export default {
     },
     // 组件通信
     showAddDialog(row) {
+      console.log(row);
       if (row) {
-        this.activeOrganization = row;
+        this.activeOrganization = { ...row };
         this.addDialogVisible = true;
         return;
       }
       this.activeOrganization.id = this.initId;
     },
     showEditDialog(row) {
-      this.activeOrganization = row;
+      this.activeOrganization = { ...row };
     },
-    showDeleteDialog(index, row) {
-      console.log(index, row);
+    showDeleteDialog(row) {
+      this.activeOrganization = { ...row };
+      this.deleteDialogVisible = true;
     },
     // 页面逻辑
     async load() {
@@ -146,9 +161,10 @@ export default {
       this.data = this.setHasChildrenFlag(this.data);
       this.pageTotal = result.total;
     },
+    // 对展开的tree节点所对饮的tree，treeNode，resolve进行存储。待之后使用
     async loadOrganization(tree, treeNode, resolve) {
-      this.activeTree = tree;
-      this.activeResolve = resolve;
+      const id = tree.id;
+      this.treeMap.set(id, { tree, treeNode, resolve });
       const result = await this.getOrganization(tree.id);
       const children = this.setHasChildrenFlag(result);
       resolve(children);
@@ -162,13 +178,29 @@ export default {
       });
       return temp;
     },
+    // 对已经存在懒加载书树中的数据进行更新，用之前存下来的三个参数，进行前端界面的处理。
     async reloadOrganization() {
-      this.load();
-      if (this.activeTree) {
-        const result = await this.getOrganization(this.activeTree.id);
+      for (const x in this.$refs.table.store.states.lazyTreeNodeMap) {
+        const treeParam = this.treeMap.get(x);
+        if (!treeParam) return;
+        const { tree, treeNode, resolve } = treeParam;
+        this.tableLoading = true;
+        const result = await this.getOrganization(tree.id);
+        this.tableLoading = false;
+        if (!result) return;
         const children = this.setHasChildrenFlag(result);
-        this.activeResolve(children);
+        resolve(children);
       }
+    },
+    // 删除节点时，判断其父亲节点在删除了一个子节点后，是否还能展开，若不能展开就将其子节点设为空。 并在treeMap中删去被删除节点所存储的参数。最后进行reload
+    async deleteReloadOrganization() {
+      const parentId = this.organization.parentId;
+      const length = this.$refs.table.store.states.lazyTreeNodeMap[parentId].length - 1;
+      if (!length) {
+        this.$set(this.$refs.table.store.states.lazyTreeNodeMap, parentId, []);
+        this.treeMap.delete(this.organization.id);
+      }
+      this.reloadOrganization();
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {

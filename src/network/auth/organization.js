@@ -23,9 +23,15 @@ const postOrganization = (form) => {
 		}
 	}, 'post')
 }
+const deleteOrganization = (orgId) => {
+	return request({
+		url: `organizations/${orgId}`,
+	}, 'delete')
+}
 
 export {
 	getOrganization,
 	getSchools,
-	postOrganization
+	postOrganization,
+	deleteOrganization
 }

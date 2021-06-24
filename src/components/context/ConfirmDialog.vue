@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px">
+  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open">
     <slot name="content">
       <span>确认吗？</span>
     </slot>
@@ -12,21 +12,29 @@
 
 <script>
 export default {
+  data() {
+    return {
+      disable: false
+    };
+  },
   props: {
     title: {
       type: String,
       default: '默认的标题'
     },
-    visible: Boolean,
-    disable: Boolean
+    visible: Boolean
   },
   methods: {
     handleClose() {
       this.$emit('cancel');
     },
     handleComfirm() {
+      this.disable = true;
       this.$emit('comfirm');
       this.handleClose();
+    },
+    open() {
+      this.disable = false;
     }
   }
 };
