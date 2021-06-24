@@ -153,7 +153,9 @@ export default {
     },
     async load(curPage, pageSize = this.query.pageSize) {
       this.loading = true;
-      const { total, content } = await this.getDictionaries(curPage, pageSize);
+      const result = await this.getDictionaries(curPage, pageSize);
+      if (!result) return;
+      const { total, content } = result;
       this.pageTotal = total;
       this.dicInfo = content;
       this.loading = false;

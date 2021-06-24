@@ -288,6 +288,7 @@ export default {
     },
     async load() {
       const result = await this.getDictionary(this.id);
+      if (!result) return;
       this.dicInfo = [result];
       this.details = this.dicInfo[0].details;
     },
