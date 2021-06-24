@@ -57,7 +57,7 @@ export default {
   created() {
     this.load();
   },
-  activated(e) {
+  activated() {
     this.load();
   },
   methods: {
