@@ -78,6 +78,9 @@ export default {
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
     }
+    // async   load() {
+    //   const result =
+    //   }
   }
 };
 </script>

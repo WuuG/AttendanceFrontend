@@ -101,7 +101,6 @@ export default {
           return { total, content };
         }
       } catch (error) {
-        console.log(error);
         console.error(`get dicitonaries error:${error}`);
       }
     },
