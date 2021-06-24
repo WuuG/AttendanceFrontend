@@ -141,10 +141,10 @@ export default {
         this.$emit('reset');
       });
     },
-    // 发送dialog-cancel事件，并调用resetForm
+    // 发送cancel事件，并调用resetForm
     cancel(done) {
       this.resetForm();
-      this.$emit('dialog-cancel');
+      this.$emit('cancel');
     },
     // 重置表单内容，为了防止直接清楚表单的突兀，添加了延迟。
     resetForm() {
@@ -154,7 +154,7 @@ export default {
           this.form[p] = null;
         }
         this.editCode = null;
-      }, 100);
+      }, 200);
     }
   }
 };

@@ -40,7 +40,7 @@
 
       <form-dialog
         :visible="formDialogVisible"
-        @dialog-cancel="formDialogVisible = false"
+        @cancel="formDialogVisible = false"
         @reset="reset"
         :datas="sysParams"
         :isEdit="isEdit"

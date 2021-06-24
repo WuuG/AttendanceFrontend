@@ -10,10 +10,10 @@
           <el-input prefix-icon="el-icon-search" v-model="queryName"> </el-input>
         </el-col>
         <el-button @click="dataSearch">搜索</el-button>
-        <el-button @click="load">刷新</el-button>
+        <el-button @click="load">重置</el-button>
       </template>
     </header-bar>
-    <comfirm-dialog :visible="comfirmVisible" @dialog-cancel="handleClose" @comfirm="handleComfirm">
+    <comfirm-dialog :visible="comfirmVisible" @cancel="handleClose" @comfirm="handleComfirm">
       <template #content>
         <span> 确认删除此系统参数吗？ </span>
       </template>
