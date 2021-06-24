@@ -8,11 +8,11 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="addNewDialogVsible = true">新增组织</el-button>
+          <el-button @click="showAddDialog">新增组织</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
         </template>
         <template #right-content>
-          <el-button>重置</el-button>
+          <el-button @click="load">重置</el-button>
         </template>
       </header-bar>
 
@@ -31,10 +31,11 @@
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="name" label="学校名称" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="childrenCount" label="子节点数量" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="id" label="学校id" show-overflow-tooltip> </el-table-column>
           <el-table-column label="操作" width="220" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" @click="showAddDialog(scope.row)">编辑</el-button>
-              <el-button size="mini" @click="showEditDialog(scope.row)">添加</el-button>
+              <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
+              <el-button size="mini" @click="showAddDialog(scope.row)">添加</el-button>
               <el-button size="mini" type="danger" @click="showDeleteDialog(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -56,6 +57,13 @@
         </el-col>
       </el-row>
     </el-main>
+
+    <add-dialog
+      :visible="addDialogVisible"
+      @cancel="addDialogVisible = false"
+      :parentId="parentId"
+      @submit="reloadOrganization"
+    ></add-dialog>
   </div>
 </template>
 
@@ -63,6 +71,7 @@
 import { getOrganization, getSchools } from '../../network/auth/organization';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
+import AddDialog from './chil-comps/AddDialog.vue';
 export default {
   name: 'DataDictionary',
   data() {
@@ -75,15 +84,23 @@ export default {
       },
       pageTotal: 0,
       data: [],
-      initId: 1,
+      initId: '1',
       tableLoading: false,
       activeOrganization: null,
       activeTree: null,
-      activeResolve: null
+      activeResolve: null,
+      //通信数据
+      addDialogVisible: false
     };
   },
   components: {
-    HeaderBar
+    HeaderBar,
+    AddDialog
+  },
+  computed: {
+    parentId() {
+      return this.activeOrganization ? this.activeOrganization.id : this.initId;
+    }
   },
   created() {
     this.load();
@@ -107,9 +124,16 @@ export default {
     },
     // 组件通信
     showAddDialog(row) {
+      if (row) {
+        this.activeOrganization = row;
+        this.addDialogVisible = true;
+        return;
+      }
+      this.activeOrganization.id = this.initId;
+    },
+    showEditDialog(row) {
       this.activeOrganization = row;
     },
-    showEditDialog(row) {},
     showDeleteDialog(index, row) {
       console.log(index, row);
     },
@@ -139,9 +163,12 @@ export default {
       return temp;
     },
     async reloadOrganization() {
-      const result = await this.getOrganization(this.activeTree.id);
-      const children = this.setHasChildrenFlag(result);
-      this.activeResolve(children);
+      this.load();
+      if (this.activeTree) {
+        const result = await this.getOrganization(this.activeTree.id);
+        const children = this.setHasChildrenFlag(result);
+        this.activeResolve(children);
+      }
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {

@@ -15,9 +15,17 @@ const getSchools = (curPage, pageSize, form) => {
 		}
 	}, 'get')
 }
-
+const postOrganization = (form) => {
+	return request({
+		url: `organizations`,
+		data: {
+			...form
+		}
+	}, 'post')
+}
 
 export {
 	getOrganization,
-	getSchools
+	getSchools,
+	postOrganization
 }
