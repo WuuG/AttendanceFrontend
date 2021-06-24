@@ -17,9 +17,7 @@
         <!-- 消息中心 -->
         <div class="btn-bell">
           <el-tooltip effect="dark" :content="message ? `有${message}条未读消息` : `消息中心`" placement="bottom">
-            <router-link to="/tabs">
-              <i class="el-icon-bell"></i>
-            </router-link>
+            <i class="el-icon-bell"></i>
           </el-tooltip>
           <span class="btn-bell-badge" v-if="message"></span>
         </div>

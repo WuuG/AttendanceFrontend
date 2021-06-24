@@ -87,51 +87,6 @@ export default {
           ]
         }
         // {
-        //   icon: 'el-icon-info',
-        //   title: '权限管理',
-        //   index: '3',
-        //   subs: [
-        //     {
-        //       index: 'userList',
-        //       title: '用户管理'
-        //     }
-        //   ]
-        // },
-        // {
-        //   icon: 'el-icon-lx-copy',
-        //   index: 'tabs',
-        //   title: 'tab选项卡'
-        // },
-        // {
-        //   icon: 'el-icon-lx-calendar',
-        //   index: '4',
-        //   title: '表单相关',
-        //   subs: [
-        //     {
-        //       index: 'form',
-        //       title: '基本表单'
-        //     },
-        //     {
-        //       index: '3-2',
-        //       title: '三级菜单',
-        //       subs: [
-        //         {
-        //           index: 'editor',
-        //           title: '富文本编辑器'
-        //         },
-        //         {
-        //           index: 'markdown',
-        //           title: 'markdown编辑器'
-        //         }
-        //       ]
-        //     },
-        //     {
-        //       index: 'upload',
-        //       title: '文件上传'
-        //     }
-        //   ]
-        // },
-        // {
         //   icon: 'el-icon-lx-emoji',
         //   index: 'icon',
         //   title: '自定义图标'
@@ -153,26 +108,6 @@ export default {
         //     {
         //       index: 'dialog',
         //       title: '拖拽弹框'
-        //     }
-        //   ]
-        // },
-        // {
-        //   icon: 'el-icon-lx-global',
-        //   index: 'i18n',
-        //   title: '国际化功能'
-        // },
-        // {
-        //   icon: 'el-icon-lx-warn',
-        //   index: '7',
-        //   title: '错误处理',
-        //   subs: [
-        //     {
-        //       index: 'permission',
-        //       title: '权限测试'
-        //     },
-        //     {
-        //       index: '404',
-        //       title: '404页面'
         //     }
         //   ]
         // }

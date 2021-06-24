@@ -4,7 +4,7 @@
       <el-col :span="8">
         <el-card shadow="hover" class="mgb20" style="height: 252px">
           <div class="user-info">
-            <img src="../../assets/img/img.jpg" class="user-avator" alt />
+            <img src="~assets/img/img.jpg" class="user-avator" alt />
             <div class="user-info-cont">
               <div class="user-info-name">{{ name }}</div>
               <div>{{ role }}</div>
@@ -107,7 +107,7 @@
 
 <script>
 import Schart from 'vue-schart';
-import bus from '../common/bus';
+import bus from '../components/common/bus';
 export default {
   name: 'dashboard',
   data() {

@@ -1,11 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { getUserInfo } from "network/userInfo"
 
 Vue.use(Vuex);
 
-
-let uid = localStorage.getItem('uid')
 
 const store = new Vuex.Store({
   state: {
