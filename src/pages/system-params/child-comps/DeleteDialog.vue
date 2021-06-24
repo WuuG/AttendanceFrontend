@@ -1,5 +1,5 @@
 <template>
-  <comfirm-dialog :visible="visible" @dialog-cancel="handleClose" @comfirm="handleComfirm">
+  <comfirm-dialog :visible="visible" @cancel="handleClose" @comfirm="handleComfirm">
     <template #content>
       <span> 确认删除此系统参数吗？ </span>
     </template>
@@ -51,7 +51,7 @@ export default {
 
     //页面逻辑
     handleClose() {
-      this.$emit('dialog-cancel');
+      this.$emit('cancel');
     },
     async handleComfirm() {
       const result = await this.deleteParam(this.code);

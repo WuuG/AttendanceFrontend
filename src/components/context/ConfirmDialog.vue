@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose">
+  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px">
     <slot name="content">
       <span>确认吗？</span>
     </slot>
@@ -17,14 +17,16 @@ export default {
       type: String,
       default: '默认的标题'
     },
-    visible: Boolean
+    visible: Boolean,
+    disable: Boolean
   },
   methods: {
     handleClose() {
-      this.$emit('dialog-cancel');
+      this.$emit('cancel');
     },
     handleComfirm() {
       this.$emit('comfirm');
+      this.handleClose();
     }
   }
 };

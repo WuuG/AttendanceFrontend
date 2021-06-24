@@ -38,9 +38,9 @@
           <el-table-column prop="semester" label="学期" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="stateName" label="课程状态"> </el-table-column>
           <el-table-column prop="teacherName" label="教师名字"> </el-table-column>
-          <el-table-column prop="courseClass" label="课程班级"> </el-table-column>
-          <el-table-column label="操作" width="150" align="center">
+          <el-table-column label="操作" width="210" align="center">
             <template v-slot:default="scope">
+              <el-button type="primary" size="mini">查看</el-button>
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
@@ -81,10 +81,13 @@
 
     <delete-dialog
       :visible="deleteDialogVisible"
+      :disable="deleteButtonDisable"
+      title="删除课程"
       @cancel="deleteDialogVisible = false"
       @comfirm="ondeleteCourse"
-      :disable="deleteButtonDisable"
-    ></delete-dialog>
+    >
+      <template #content> <span>确认删除课程吗？</span></template>
+    </delete-dialog>
   </div>
 </template>
 
@@ -92,10 +95,10 @@
 import { getCourse, postCourse, putCourseAvatar, patchCourse, deleteCourse } from '../../../network/course/info';
 import CONST from 'utils/const';
 
-import HeaderBar from '../../../components/context/HeaderBar.vue';
+import HeaderBar from 'components/context/HeaderBar.vue';
+import DeleteDialog from 'components/context/ConfirmDialog.vue';
 import AddDialog from './child-comps/AddDialog.vue';
 import EditDialog from './child-comps/EditDialog.vue';
-import DeleteDialog from './child-comps/deleteDialog.vue';
 
 export default {
   name: 'DataDictionary',

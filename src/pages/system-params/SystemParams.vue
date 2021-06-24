@@ -50,7 +50,7 @@
 
       <delete-dialog
         :visible="deleteDialogVisible"
-        @dialog-cancel="deleteDialogVisible = false"
+        @cancel="deleteDialogVisible = false"
         :code="activeSysParams ? activeSysParams.code : null"
         @reset="reset"
       ></delete-dialog>
