@@ -4,9 +4,9 @@
       class="sidebar-el-menu"
       :default-active="onRoutes"
       :collapse="collapse"
-      background-color="#4e4e50"
-      text-color="#bfcbd9"
       active-text-color="#20a0ff"
+      text-color="#bfcbd9"
+      background-color="#4e4e50"
       unique-opened
       router
     >
@@ -85,6 +85,17 @@ export default {
               title: '数据字典'
             }
           ]
+        },
+        {
+          icon: 'el-icon-s-custom',
+          index: '3',
+          title: '角色权限管理',
+          subs: [
+            {
+              index: '/auth/organization',
+              title: '组织架构'
+            }
+          ]
         }
         // {
         //   icon: 'el-icon-lx-emoji',
@@ -116,7 +127,7 @@ export default {
   },
   computed: {
     onRoutes() {
-      return this.$route.path.replace('/', '');
+      return this.$route.path;
     }
   },
   created() {

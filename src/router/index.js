@@ -6,6 +6,7 @@ const Dictionary = () => import('../pages/dictionary/Dictionary.vue')
 const DictionaryInfo = () => import('../pages/dictionary/dictionary-info/DictionaryInfo.vue')
 const DictionaryAdd = () => import('../pages/dictionary/dictionary-add/DicAdd.vue')
 const SystemParams = () => import('../pages/system-params/SystemParams.vue')
+const Organization = () => import('../pages/organization/Organization.vue')
 
 Vue.use(Router);
 
@@ -98,22 +99,28 @@ export default new Router({
                     meta: { title: '新增数据字典' },
                 },
                 {
-                    path: 'systemParams',
+                    path: '/systemParams',
                     name: 'systemParams',
                     component: SystemParams,
                     meta: { title: '系统参数' }
                 },
                 {
-                    path: 'userList',
+                    path: '/userList',
                     name: 'userList',
                     component: () => import('pages/authorityManagement/UserList.vue'),
                     meta: { title: '用户管理' }
                 },
                 {
-                    path: 'mybasetable',
+                    path: '/mybasetable',
                     name: 'mybasetable',
                     component: MyBaseTable,
                     meta: { title: '基础表格' }
+                },
+                {
+                    path: '/auth/organization',
+                    name: 'routeName',
+                    meta: { title: '组织架构' },
+                    component: Organization
                 },
             ]
         },

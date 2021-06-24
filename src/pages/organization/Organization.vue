@@ -1,4 +1,3 @@
-
 <template emplate>
   <div>
     <el-breadcrumb separator="/" class="crumbs">
@@ -21,7 +20,7 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection">
+        <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="字典ID"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
@@ -50,16 +49,12 @@
           </div>
         </el-col>
       </el-row>
-
-      <input-dialog title="新增项目" :visible="addNewDialogVsible" @cancel="addNewDialogVsible = false"></input-dialog>
     </el-main>
   </div>
 </template>
 
 <script>
-import InputDialog from '../InputDialog.vue';
 import HeaderBar from 'components/context/HeaderBar.vue';
-
 export default {
   name: 'DataDictionary',
   data() {
@@ -71,30 +66,10 @@ export default {
         pageSize: 10
       },
       pageTotal: 0,
-      dicInfo: [
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        }
-      ],
-      //统一设置表单的宽度
-      labelWidth: '80px',
-      //活跃的子项
-      activeName: '0',
-      // 新增按钮对应的Dialog Visible
-      addNewDialogVsible: false
+      data: []
     };
   },
   components: {
-    InputDialog,
     HeaderBar
   },
   methods: {
