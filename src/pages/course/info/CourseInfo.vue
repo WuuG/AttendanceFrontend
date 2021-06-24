@@ -127,10 +127,7 @@ export default {
       try {
         const result = await getCourse(curPage, pageSize);
         if (result.status === 200) return result.data;
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
+
         return null;
       } catch (error) {
         console.error(`get courses error: ${error}`);
@@ -146,10 +143,6 @@ export default {
           });
           return result.data;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`post course error: ${error}`);
       }
@@ -158,10 +151,6 @@ export default {
       try {
         const result = await putCourseAvatar(courseID, form);
         if (result.status === 200) return;
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`put avatar error: ${error}`);
       }
@@ -176,10 +165,6 @@ export default {
           });
           return;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`delete Course error:${error}`);
       }

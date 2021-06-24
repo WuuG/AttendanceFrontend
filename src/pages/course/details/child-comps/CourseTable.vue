@@ -72,10 +72,6 @@ export default {
           });
           return;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`patch course error: ${error}`);
       }
@@ -84,10 +80,6 @@ export default {
       try {
         const result = await putCourseAvatar(courseId, form);
         if (result.status === 200) return;
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`put avatar error: ${error}`);
       }
@@ -98,10 +90,6 @@ export default {
         if (result.status === 200) {
           return result.data;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`get course error: ${error}`);
       }

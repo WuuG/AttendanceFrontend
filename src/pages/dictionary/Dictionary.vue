@@ -100,10 +100,6 @@ export default {
           const { total, content } = result.data;
           return { total, content };
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.log(error);
         console.error(`get dicitonaries error:${error}`);
@@ -119,10 +115,6 @@ export default {
           });
           return;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`delete dictionary error:${error}`);
       }

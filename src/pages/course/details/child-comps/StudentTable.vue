@@ -57,7 +57,14 @@ export default {
   },
   methods: {
     // 网络方法
-    async get(courserId) {},
+    async getStudents(courseId) {
+      try {
+        const result = await getStudents(courseId);
+        return result.data;
+      } catch (error) {
+        console.error(`get students error：${error}`);
+      }
+    },
     // 页面逻辑
     dataSearch() {},
     onEdit(index, row) {

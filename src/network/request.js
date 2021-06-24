@@ -61,16 +61,19 @@ export function request(config, method) {
   })
 
   instance.interceptors.response.use(response => {
-    // console.log(response.data);
     return response.data
   }, err => {
     if (err.response != undefined) {
+      Message({
+        type: 'error',
+        message: err.response.data.message
+      })
       switch (err.response.status) {
         case 400:
           console.error('Bad Request');
           return err.response.data;
         case 401:
-          console.log('Unauthorized');
+          console.error('Unauthorized');
           break;
         case 403:
           console.log('Forbidden');

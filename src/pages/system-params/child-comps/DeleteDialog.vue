@@ -39,10 +39,6 @@ export default {
             });
             return true;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
         return false;
       } catch (error) {
         console.error(`deleteParam network request error ${error}`);

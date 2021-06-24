@@ -100,10 +100,6 @@ export default {
           });
           return true;
         }
-        this.$message({
-          type: 'error',
-          message: result.message
-        });
         return false;
       } catch (error) {
         console.error(`add new param error:${error}`);
@@ -120,10 +116,6 @@ export default {
         }
       } catch (error) {
         console.error(`modify param error:${error}`);
-        this.$message({
-          type: 'error',
-          message: '添加系统修改失败'
-        });
       }
     },
 

@@ -172,10 +172,7 @@ export default {
           });
           return result.data;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
+
         return false;
       } catch (error) {
         console.error(`patch dictionary error ${error}`);
@@ -191,10 +188,6 @@ export default {
           });
           return result.data;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`patch detail error: ${error}`);
       }
@@ -205,10 +198,6 @@ export default {
         if (result.status === 200) {
           return result.data;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`get dictionary error: ${error}`);
       }
@@ -236,10 +225,6 @@ export default {
           });
           return;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`post detail error:${error}`);
       }
@@ -254,10 +239,6 @@ export default {
           });
           return;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
       } catch (error) {
         console.error(`delte detail error:${error}`);
       }

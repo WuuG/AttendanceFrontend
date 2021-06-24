@@ -103,10 +103,6 @@ export default {
     async getParams(curPage, pageSize) {
       const result = await getParams(curPage, pageSize);
       if (result.status !== 200) {
-        this.$message({
-          type: 'warning',
-          message: `发生错误，错误码为${result.status}`
-        });
         return null;
       }
       return result.data;

@@ -93,10 +93,7 @@ export default {
           });
           return true;
         }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
+
         return false;
       } catch (error) {
         console.error(`page:add new Dictionary error:${error}`);
