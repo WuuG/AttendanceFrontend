@@ -8,7 +8,7 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="changeDialogVisibel">新增</el-button>
+          <el-button @click="addNewDialogVsible = true">新增</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
         </template>
         <template #right-content>
@@ -21,7 +21,7 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection" @selection-all="selectAll">
+        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="字典ID"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
@@ -29,8 +29,8 @@
           <el-table-column prop="createTime" label="创建时间"> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" @click="onEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -51,7 +51,7 @@
         </el-col>
       </el-row>
 
-      <input-dialog title="新增项目" :visible="addNewDialogVsible" @dialog-cancel="changeDialogVisibel"></input-dialog>
+      <input-dialog title="新增项目" :visible="addNewDialogVsible" @cancel="addNewDialogVsible = false"></input-dialog>
     </el-main>
   </div>
 </template>
@@ -100,19 +100,15 @@ export default {
     dataSearch() {
       console.log('handle search');
     },
-    handleEdit(index, row) {
+    onEdit(index, row) {
       this.isEdit = true;
       console.log(index, row);
     },
-    handleDelete(index, row) {
+    onDelete(index, row) {
       console.log(index, row);
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
-      console.log(sel);
-    },
-    // 选择全部
-    selectAll(sel) {
       console.log(sel);
     },
     // 删除已选
@@ -120,10 +116,6 @@ export default {
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
-      this.getData();
-    },
-    changeDialogVisibel() {
-      this.addNewDialogVsible = !this.addNewDialogVsible;
     }
   }
 };

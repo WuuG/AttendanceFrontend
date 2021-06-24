@@ -40,7 +40,7 @@
           <el-table-column prop="teacherName" label="教师名字"> </el-table-column>
           <el-table-column label="操作" width="210" align="center">
             <template v-slot:default="scope">
-              <el-button type="primary" size="mini">查看</el-button>
+              <el-button type="primary" size="mini" @click="toStudents(scope.row)">查看</el-button>
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
@@ -216,6 +216,14 @@ export default {
       }
     },
     // 组件通信
+    toStudents(row) {
+      this.$router.push({
+        path: 'studentInfo',
+        query: {
+          id: row.id
+        }
+      });
+    },
     handleEdit(index, row) {
       this.activeCourse = row;
       this.activeIndex = index;
