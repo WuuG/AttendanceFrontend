@@ -5,7 +5,13 @@ const getStudents = (courseId) => {
 		url: `courses/${courseId}/students`
 	}, 'get')
 }
+const getCourseById = (id) => {
+	return request({
+		url: `courses/${id}`
+	}, 'get')
+}
 
 export {
-	getStudents
+	getStudents,
+	getCourseById
 }

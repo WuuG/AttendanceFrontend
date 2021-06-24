@@ -38,10 +38,9 @@
           <el-table-column prop="semester" label="学期" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="stateName" label="课程状态"> </el-table-column>
           <el-table-column prop="teacherName" label="教师名字"> </el-table-column>
-          <el-table-column label="操作" width="210" align="center">
+          <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
-              <el-button type="primary" size="mini" @click="toStudents(scope.row)">查看</el-button>
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" @click="toStudents(scope.row)">修改</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -71,14 +70,6 @@
       @submit="addCourse"
     ></add-dialog>
 
-    <edit-dialog
-      :visible="editDialogVisible"
-      :buttonDisable="editDialogButtonDisable"
-      @cancel="editDialogVisible = false"
-      @submit="modifyCourse"
-      ref="editDialog"
-    ></edit-dialog>
-
     <delete-dialog
       :visible="deleteDialogVisible"
       :disable="deleteButtonDisable"
@@ -92,13 +83,12 @@
 </template>
 
 <script>
-import { getCourse, postCourse, putCourseAvatar, patchCourse, deleteCourse } from '../../../network/course/info';
+import { getCourse, postCourse, putCourseAvatar, deleteCourse } from '../../../network/course/info';
 import CONST from 'utils/const';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import DeleteDialog from 'components/context/ConfirmDialog.vue';
 import AddDialog from './child-comps/AddDialog.vue';
-import EditDialog from './child-comps/EditDialog.vue';
 
 export default {
   name: 'DataDictionary',
@@ -119,8 +109,6 @@ export default {
       activeCourse: null,
       addDialogVisible: false,
       addDialogButtonDisable: false,
-      editDialogVisible: false,
-      editDialogButtonDisable: false,
       deleteDialogVisible: false,
       deleteButtonDisable: false
     };
@@ -128,7 +116,6 @@ export default {
   components: {
     HeaderBar,
     AddDialog,
-    EditDialog,
     DeleteDialog
   },
   created() {
@@ -179,24 +166,6 @@ export default {
         console.error(`put avatar error: ${error}`);
       }
     },
-    async patchCourse(form) {
-      try {
-        const result = await patchCourse(form);
-        if (result.status === 200) {
-          this.$message({
-            type: 'success',
-            message: '课程修改成功'
-          });
-          return;
-        }
-        this.$message({
-          type: 'warning',
-          message: result.message
-        });
-      } catch (error) {
-        console.error(`patch course error: ${error}`);
-      }
-    },
     async deleteCourse(courseId) {
       try {
         const result = await deleteCourse(courseId);
@@ -223,12 +192,6 @@ export default {
           id: row.id
         }
       });
-    },
-    handleEdit(index, row) {
-      this.activeCourse = row;
-      this.activeIndex = index;
-      this.editDialogVisible = true;
-      this.$refs['editDialog'].form = { ...row };
     },
     handleDelete(index, row) {
       this.activeCourse = row;
@@ -263,15 +226,6 @@ export default {
       const avatar = new FormData();
       avatar.append('avatar', file);
       await putCourseAvatar(course.id, avatar);
-      this.load();
-    },
-    async modifyCourse(form, file) {
-      if (file) {
-        const avatar = new FormData();
-        avatar.append('avatar', file);
-        await putCourseAvatar(form.id, avatar);
-      }
-      await patchCourse(form);
       this.load();
     },
     async ondeleteCourse() {
