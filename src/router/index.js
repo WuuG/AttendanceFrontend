@@ -111,10 +111,10 @@ export default new Router({
                     meta: { title: '课程信息' }
                 },
                 {
-                    path: '/studentInfo',
+                    path: '/courseInfo/details',
                     name: 'studentInfo',
                     component: () => import('../pages/course/students-info/StudentInfo.vue'),
-                    meta: { title: '学生信息' },
+                    meta: { title: '课程详情' },
                     props: route => ({ courseId: route.query.id })
                 },
                 {

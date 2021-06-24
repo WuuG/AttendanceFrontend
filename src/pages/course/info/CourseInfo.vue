@@ -218,7 +218,7 @@ export default {
     // 组件通信
     toStudents(row) {
       this.$router.push({
-        path: 'studentInfo',
+        path: '/courseInfo/details',
         query: {
           id: row.id
         }

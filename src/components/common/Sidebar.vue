@@ -68,11 +68,11 @@ export default {
             {
               index: 'courseInfo',
               title: '课程信息'
-            },
-            {
-              index: 'studentInfo',
-              title: '学生信息'
             }
+            // {
+            //   index: 'studentInfo',
+            //   title: '学生信息'
+            // }
           ]
         },
         {

@@ -1,12 +1,14 @@
 <template emplate>
   <div>
     <el-breadcrumb separator="/" class="crumbs">
-      <el-breadcrumb-item>基础表格</el-breadcrumb-item>
+      <el-breadcrumb-item>课程信息</el-breadcrumb-item>
+      <el-breadcrumb-item>选课信息</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
+          <el-button type="primary" @click="toCourse">返回</el-button>
           <el-button>新增</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
         </template>
@@ -19,6 +21,34 @@
         </template>
       </header-bar>
 
+      <el-row class="table">
+        <el-table :data="courseInfo" empty-text="暂时没有数据" @selection-change="selection" v-loading="courseTableLoading">
+          <el-table-column type="selection" align="center"></el-table-column>
+          <el-table-column prop="name" label="课程名称"> </el-table-column>
+          <el-table-column prop="avatar" label="课程头像">
+            <template #default="scope">
+              <el-avatar shape="square">
+                <el-image :src="scope.row.avatar ? baseURL + scope.row.avatar : ''">
+                  <template #error>
+                    <i class="el-icon-picture-outline"></i>
+                  </template>
+                </el-image>
+              </el-avatar>
+            </template>
+          </el-table-column>
+          <el-table-column prop="schoolMajorName" label="大学-学院" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="semester" label="学期" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="stateName" label="课程状态"> </el-table-column>
+          <el-table-column prop="teacherName" label="教师名字"> </el-table-column>
+          <el-table-column label="操作" width="210" align="center">
+            <template v-slot:default="scope">
+              <el-button size="mini" @click="onCourseEdit(scope.$index, scope.row)">编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-row>
+    </el-main>
+    <el-main class="main-content">
       <el-row class="table">
         <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection">
           <el-table-column type="selection" align="center"></el-table-column>
@@ -66,6 +96,7 @@ export default {
         pageSize: 10
       },
       pageTotal: 0,
+      courseInfo: [],
       dicInfo: [
         {
           id: 0,
@@ -80,11 +111,11 @@ export default {
           createTime: '2020-1-12 12:00:00'
         }
       ],
-      //统一设置表单的宽度
-      labelWidth: '80px',
+      courseTableLoading: false,
       //活跃的子项
       activeName: '0'
       // 新增按钮对应的Dialog Visible
+      // 通信数据
     };
   },
   components: {
@@ -98,8 +129,11 @@ export default {
   },
   methods: {
     // 网络方法
-    async
+    async get(courserId) {},
     // 通信方法
+    toCourse() {
+      this.$router.push('/courseInfo');
+    },
     // 页面逻辑
     dataSearch() {},
     onEdit(index, row) {
@@ -123,4 +157,9 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.main-content {
+  &:first-of-type {
+    margin-bottom: 10px;
+  }
+}
 </style>
