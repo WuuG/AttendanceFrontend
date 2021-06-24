@@ -174,7 +174,8 @@ export default {
       this.$router.push({
         path: '/courseInfo/details',
         query: {
-          id: row.id
+          id: row.id,
+          code: row.code
         }
       });
     },

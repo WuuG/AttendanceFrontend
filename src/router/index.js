@@ -115,7 +115,7 @@ export default new Router({
                     name: 'studentInfo',
                     component: () => import('../pages/course/details/Details.vue'),
                     meta: { title: '课程详情' },
-                    props: route => ({ courseId: route.query.id })
+                    props: route => ({ courseId: route.query.id, courseCode: route.query.code })
                 },
                 {
                     path: '/myInfo',

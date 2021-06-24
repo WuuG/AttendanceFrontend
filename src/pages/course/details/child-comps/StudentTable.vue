@@ -4,15 +4,14 @@
       <el-col> 学生列表 </el-col>
     </el-row>
     <el-row class="table">
-      <el-table :data="studentInfo" empty-text="暂时没有数据">
-        <el-table-column prop="id" label="字典ID"> </el-table-column>
-        <el-table-column prop="name" label="字典名称"> </el-table-column>
-        <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
-        <el-table-column prop="createTime" label="创建时间"> </el-table-column>
+      <el-table :data="studentInfo" empty-text="暂时没有数据" v-loading="tableLoading">
+        <el-table-column prop="realName" label="学生姓名" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="gender" label="学生性别" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="schoolName" label="学生学院" show-overflow-tooltip> </el-table-column>
         <el-table-column label="操作" width="150" align="center">
           <template v-slot:default="scope">
-            <el-button size="mini" @click="onEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除学生</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -48,18 +47,27 @@ export default {
       },
       pageTotal: 0,
       studentInfo: [],
-      //活跃的子项
+      tableLoading: false,
       activeObj: null,
       activeIndex: null
-      // 新增按钮对应的Dialog Visible
       // 通信数据
     };
+  },
+  props: {
+    courseId: String
+  },
+  created() {
+    this.load();
+  },
+  activated() {
+    this.load();
   },
   methods: {
     // 网络方法
     async getStudents(courseId) {
       try {
         const result = await getStudents(courseId);
+        console.log(result);
         return result.data;
       } catch (error) {
         console.error(`get students error：${error}`);
@@ -67,20 +75,20 @@ export default {
     },
     // 页面逻辑
     dataSearch() {},
-    onEdit(index, row) {
-      this.isEdit = true;
-      console.log(index, row);
-    },
     onDelete(index, row) {
       console.log(index, row);
     },
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
+    },
+    async load() {
+      this.tableLoading = true;
+      const result = await this.getStudents(this.courseId);
+      this.tableLoading = false;
+      this.pageTotal = result.total;
+      this.studentInfo = result.content;
     }
-    // async   load() {
-    //   const result =
-    //   }
   }
 };
 </script>

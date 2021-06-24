@@ -9,7 +9,7 @@
       <header-bar>
         <template #left-content>
           <el-button type="primary" @click="toCourse">返回</el-button>
-          <el-button>新增学生</el-button>
+          <el-button>添加学生</el-button>
         </template>
         <template #right-content>
           <el-button>重置</el-button>
@@ -35,7 +35,8 @@ export default {
     StudentTable
   },
   props: {
-    courseId: String
+    courseId: String,
+    courseCode: String
   },
   created() {
     // this.load()
