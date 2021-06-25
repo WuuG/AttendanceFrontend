@@ -7,6 +7,7 @@ const DictionaryInfo = () => import('../pages/dictionary/dictionary-info/Diction
 const DictionaryAdd = () => import('../pages/dictionary/dictionary-add/DicAdd.vue')
 const SystemParams = () => import('../pages/system-params/SystemParams.vue')
 const Organization = () => import('../pages/organization/Organization.vue')
+const UserList = () => import('../pages/userList/UserList.vue')
 
 Vue.use(Router);
 
@@ -105,12 +106,6 @@ export default new Router({
                     meta: { title: '系统参数' }
                 },
                 {
-                    path: '/userList',
-                    name: 'userList',
-                    component: () => import('pages/authorityManagement/UserList.vue'),
-                    meta: { title: '用户管理' }
-                },
-                {
                     path: '/mybasetable',
                     name: 'mybasetable',
                     component: MyBaseTable,
@@ -121,6 +116,12 @@ export default new Router({
                     name: 'routeName',
                     meta: { title: '组织架构' },
                     component: Organization
+                },
+                {
+                    path: '/auth/userList',
+                    name: 'userList',
+                    meta: { title: '用户列表' },
+                    component: UserList
                 },
             ]
         },

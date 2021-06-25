@@ -94,6 +94,10 @@ export default {
             {
               index: '/auth/organization',
               title: '组织架构'
+            },
+            {
+              index: '/auth/userList',
+              title: '用户列表'
             }
           ]
         }
