@@ -42,11 +42,12 @@ export default {
     // 网络方法
     async postOrganization(form) {
       try {
-        await postOrganization(form);
+        const result = await postOrganization(form);
         this.$message({
           type: 'success',
           message: '成功添加组织!'
         });
+        return result;
       } catch (error) {
         console.error(`post organizaiotn error:${error}`);
       }
@@ -69,8 +70,11 @@ export default {
       if (!result) return;
       this.buttonDisable = true;
       const form = this.filterForm(this.form);
-      this.$emit('before-submit');
-      await this.postOrganization(form);
+      this.$emit('before-submit', true);
+      const orgArr = await this.postOrganization(form);
+      if (!orgArr) {
+        this.$emit('befor-submit', false);
+      }
       this.$emit('submit');
       this.cancel();
     },

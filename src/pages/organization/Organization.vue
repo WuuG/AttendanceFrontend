@@ -179,9 +179,9 @@ export default {
       this.deleteDialogVisible = true;
     },
     // 设置按钮loading,因为本身没有loading，所以需要使用this.$set
-    setButtonLoading() {
+    setButtonLoading(bool) {
       if (!this.activeOrganization) return;
-      this.$set(this.activeOrganization, 'loading', true);
+      this.$set(this.activeOrganization, 'loading', bool);
     },
     // 页面逻辑
     /**
@@ -222,6 +222,7 @@ export default {
     setTreeParams(data, level) {
       const temp = Array.from(data);
       temp.forEach((item) => {
+        item.hasChildren = false;
         if (item.childrenCount > 0) {
           item.hasChildren = true;
         }
@@ -231,26 +232,27 @@ export default {
       return temp;
     },
     /**
-     * 对已经存在懒加载书树中的数据进行更新，用之前存下来的三个参数，进行前端界面的处理。
-     * @treeParam 获取之前存取的关于tree的三个参数
-     * @result 以tree.id 所获取子节点数据
-     * @loading 结束按钮loading的状态
-     * @shouldLoadTree  是否应该进行节点懒加载。 若是新增最大父节点是不需要进行懒加载的
+     * 在添加后进行懒加载的更新
+     * @id 要么是自己，要么是其父亲节点的id。通过是否在this.treeMap中进行判断
+     * @reloadTreeArray 需要进行更新的节点相关数据的对象数组
+     * @number 添加时只需要进行一次懒加载
+     * @level 根据lever进行判断是否要进行数据的修改，不发请求，直接本地修改。通过hasChildren和children字段来使其可以展开
      */
     async addReloadOrganization() {
       if (!this.activeOrganization) {
         await this.load();
         return;
       }
-      let { id, parentId, level } = this.activeOrganization;
+      let { id, parentId, childrenCount, level } = this.activeOrganization;
       if (level === 0) {
-        await this.load();
+        this.$set(this.activeOrganization, 'childrenCount', childrenCount + 1);
+        this.$set(this.activeOrganization, 'hasChildren', true);
+        this.$set(this.activeOrganization, 'children', [{ id: 1, name: '骗人字段' }]);
       }
       id = this.treeMap.get(id) ? id : parentId;
       const reloadTreeArray = this.recurveGetTreeArray(id, [], 1);
-      console.log('获取到需要load的对象数组', reloadTreeArray);
       await this.reloadTree(reloadTreeArray);
-      this.$set(this.activeOrganization, 'loading', false);
+      this.setButtonLoading(false);
     },
     /**
      * 递归获取存在 treeMap中的三个参数,并存下两个map用于以后处理
