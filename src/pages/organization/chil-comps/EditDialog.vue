@@ -9,7 +9,7 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm('form')" :disabled="buttonDisable">确 定</el-button>
+      <el-button type="primary" @click="submitForm('form')" :loading="buttonLoading">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -31,7 +31,7 @@ export default {
       rules: {
         name: [{ required: true, message: '组织名称不可为空', trigger: 'blur' }]
       },
-      buttonDisable: false
+      buttonLoading: false
     };
   },
   props: {
@@ -43,13 +43,19 @@ export default {
     async editeOrganization(orgId, form) {
       try {
         const result = await editeOrganization(orgId, form);
+        if (result.status !== 200) return false;
+        this.$message({
+          type: 'success',
+          message: '修改组织成功!'
+        });
+        return true;
       } catch (error) {
         console.error(`edite organization ${error}`);
       }
     },
     // 页面逻辑
     open() {
-      this.buttonDisable = false;
+      this.buttonLoading = false;
       this.form.name = this.organization.name;
     },
     // 发送关闭dialog事件，按钮处理和reset表单
@@ -64,10 +70,13 @@ export default {
         result = valid;
       });
       if (!result) return;
-      this.buttonDisable = true;
-      this.$emit('before-submit');
-      await this.editeOrganization(this.organization.id, this.form);
-      this.$emit('submit');
+      this.buttonLoading = true;
+      this.$emit('before-submit', true);
+      const editResult = await this.editeOrganization(this.organization.id, this.form);
+      if (!editResult) {
+        this.$emit('before-submit', false);
+      }
+      this.$emit('submit', { ...this.form });
       this.cancel();
     },
     // 重置表单

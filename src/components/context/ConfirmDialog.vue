@@ -1,11 +1,11 @@
 <template>
   <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open">
     <slot name="content">
-      <span>确认吗？</span>
+      <span>暂时还没有做</span>
     </slot>
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="handleComfirm">确定</el-button>
+      <el-button type="primary" @click="handleComfirm" :disabled="disable">确定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -20,7 +20,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '默认的标题'
+      default: '还没有做，对不起'
     },
     visible: Boolean
   },

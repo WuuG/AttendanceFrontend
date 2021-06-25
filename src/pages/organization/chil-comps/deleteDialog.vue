@@ -40,7 +40,7 @@ export default {
       this.$emit('before-comfirm', true);
       const result = await this.deleteOrganization(this.organization.id);
       if (!result) {
-        this.$$emit('befor-comfirm', false);
+        this.$emit('before-comfirm', false);
         return;
       }
       this.$emit('comfirm');

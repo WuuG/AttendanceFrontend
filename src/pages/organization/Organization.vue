@@ -9,9 +9,13 @@
       <header-bar>
         <template #left-content>
           <el-button @click="showAddDialog(false)">新增组织</el-button>
-          <el-button @click="deleteSelectedItem">删除</el-button>
+          <el-button @click="tempDialogVisible = true">删除</el-button>
         </template>
         <template #right-content>
+          <el-col>
+            <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
+          </el-col>
+          <el-button @click="dataSearch">搜索</el-button>
           <el-button @click="load">重置</el-button>
         </template>
       </header-bar>
@@ -66,6 +70,8 @@
           </div>
         </el-col>
       </el-row>
+
+      <temp-dialog :visible="tempDialogVisible" @cancel="tempDialogVisible = false"></temp-dialog>
     </el-main>
 
     <add-dialog
@@ -88,7 +94,8 @@
       :visible="editDialogVisible"
       :organization="organization"
       @cancel="editDialogVisible = false"
-      @befor-submit="setButtonLoading"
+      @before-submit="setButtonLoading"
+      @submit="editeReloadOrganization"
     ></edit-dialog>
   </div>
 </template>
@@ -97,6 +104,7 @@
 import { getOrganization, getSchools } from '../../network/auth/organization';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
+import TempDialog from '../../components/context/ConfirmDialog.vue';
 import AddDialog from './chil-comps/AddDialog.vue';
 import DeleteDialog from './chil-comps/deleteDialog.vue';
 import EditDialog from './chil-comps/EditDialog.vue';
@@ -119,14 +127,16 @@ export default {
       //通信数据
       addDialogVisible: false,
       deleteDialogVisible: false,
-      editDialogVisible: false
+      editDialogVisible: false,
+      tempDialogVisible: false
     };
   },
   components: {
     HeaderBar,
     AddDialog,
     DeleteDialog,
-    EditDialog
+    EditDialog,
+    TempDialog
   },
   computed: {
     parentId() {
@@ -277,8 +287,9 @@ export default {
       }
       this.reloadTree(reloadTreeArray);
     },
-    editeReloadOrganization() {
-      const { id, parentId } = this.activeOrganization;
+    editeReloadOrganization(form) {
+      this.activeOrganization.name = form.name;
+      this.setButtonLoading(false);
     },
     /**
      * 递归获取存在 treeMap中的三个参数,并存下两个map用于以后处理
