@@ -13,7 +13,7 @@ class UserQuery {
 	constructor(query) {
 		this.curPage = query.pageIndex
 		this.pageSize = query.pageSize
-		this.key = query.pageSize
+		this.search = query.key
 	}
 }
 

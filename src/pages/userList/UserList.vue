@@ -13,10 +13,10 @@
         </template>
         <template #right-content>
           <el-col>
-            <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
+            <el-input prefix-icon="el-icon-search" v-model="query.key"> </el-input>
           </el-col>
-          <el-button @click="dataSearch">搜索</el-button>
-          <el-button @click="load">重置</el-button>
+          <el-button @click="searchUser">搜索</el-button>
+          <el-button @click="reset">重置</el-button>
         </template>
       </header-bar>
 
@@ -133,9 +133,6 @@ export default {
       this.usersData = result.content;
       this.pageTotal = result.total;
     },
-    dataSearch() {
-      console.log('handle search');
-    },
     onEdit(index, row) {
       console.log(index, row);
     },
@@ -151,6 +148,14 @@ export default {
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
+    },
+    searchUser() {
+      this.query.pageIndex = 1;
+    },
+    reset() {
+      this.query.key = '';
+      this.query.pageIndex = 1;
+      this.load();
     }
   }
 };
