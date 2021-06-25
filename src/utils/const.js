@@ -18,5 +18,5 @@ export default {
     SMSCODE: '请输入4-6位验证码',
     ACCOUNT: '请输入正确的用户名、邮箱、手机号等',
   },
-  IMG_BASEURL: 'http://172.17.169.27:8080',
+  IMG_BASEURL: 'http://attendance.keepdev.top/api',
 }

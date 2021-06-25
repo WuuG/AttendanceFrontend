@@ -21,7 +21,7 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="dicInfo" empty-text="暂时没有数据" @selection-change="selection">
+        <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="字典ID"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
@@ -57,11 +57,11 @@
 </template>
 
 <script>
-import InputDialog from '../InputDialog.vue';
+import InputDialog from 'components/context/InputDialog.vue';
 import HeaderBar from 'components/context/HeaderBar.vue';
 
 export default {
-  name: 'DataDictionary',
+  name: 'BaseTable',
   data() {
     return {
       // 表格页面pagenation的参数
@@ -71,7 +71,7 @@ export default {
         pageSize: 10
       },
       pageTotal: 0,
-      dicInfo: [
+      data: [
         {
           id: 0,
           name: '性别',
@@ -85,6 +85,7 @@ export default {
           createTime: '2020-1-12 12:00:00'
         }
       ],
+      tabelLoading: false,
       //统一设置表单的宽度
       labelWidth: '80px',
       //活跃的子项
@@ -102,7 +103,6 @@ export default {
       console.log('handle search');
     },
     onEdit(index, row) {
-      this.isEdit = true;
       console.log(index, row);
     },
     onDelete(index, row) {
