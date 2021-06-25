@@ -34,11 +34,16 @@ const editeOrganization = (orgId, form) => {
 		data: form
 	}, 'patch')
 }
-
+class SearchParams {
+	constructor(params) {
+		this.search = params.key
+	}
+}
 export {
 	getOrganization,
 	getSchools,
 	postOrganization,
 	deleteOrganization,
-	editeOrganization
+	editeOrganization,
+	SearchParams
 }

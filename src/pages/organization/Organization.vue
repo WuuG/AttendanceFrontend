@@ -13,10 +13,10 @@
         </template>
         <template #right-content>
           <el-col>
-            <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
+            <el-input prefix-icon="el-icon-search" v-model="query.key"> </el-input>
           </el-col>
           <el-button @click="dataSearch">搜索</el-button>
-          <el-button @click="load">重置</el-button>
+          <el-button @click="reset">重置</el-button>
         </template>
       </header-bar>
 
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { getOrganization, getSchools } from '../../network/auth/organization';
+import { getOrganization, getSchools, SearchParams } from '../../network/auth/organization';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import TempDialog from '../../components/context/ConfirmDialog.vue';
@@ -162,10 +162,14 @@ export default {
         console.error(`get organization error:${error}`);
       }
     },
-    async getSchools(curPage, pageSize, form) {
+    async getSchools(curPage, pageSize, params) {
       try {
-        const result = await getSchools(curPage, pageSize, form);
-        return result.data.childrenWrapper;
+        const upParams = new SearchParams(params);
+        const result = await getSchools(curPage, pageSize, upParams);
+        if (result.data.childrenWrapper) {
+          return result.data.childrenWrapper;
+        }
+        this.data = [];
       } catch (error) {
         console.error(`get schools error:${error}`);
       }
@@ -205,7 +209,7 @@ export default {
       if (this.data.length === 1) {
         this.query.pageIndex--;
       }
-      const result = await this.getSchools(this.query.pageIndex, this.query.pageSize);
+      const result = await this.getSchools(this.query.pageIndex, this.query.pageSize, this.query);
       this.tableLoading = false;
       if (!result) return;
       this.data = result.content;
@@ -279,11 +283,9 @@ export default {
       const { tree } = this.treeMap.get(parentId);
       let reloadTreeArray = [];
       if (this.tableState.lazyTreeNodeMap[tree.id].length === 1) {
-        console.log(`tree.childrenCunt:${tree.childrenCount}`);
         this.$set(this.tableState.lazyTreeNodeMap, tree.id, []);
       } else {
         reloadTreeArray = this.recurveGetTreeArray(tree.id, [], 1);
-        console.log(`reloadTreeArray`, reloadTreeArray);
       }
       this.reloadTree(reloadTreeArray);
     },
@@ -300,7 +302,6 @@ export default {
      */
     recurveGetTreeArray(id, treeArray, number) {
       if (this.treeMap.size === 0 || id == this.initId || treeArray.length > number) {
-        console.log(`获取到的数组对象`, treeArray);
         return treeArray;
       }
       const { tree, resolve } = this.treeMap.get(id);
@@ -330,6 +331,15 @@ export default {
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
+      this.load();
+    },
+    dataSearch() {
+      this.query.pageIndex = 1;
+      this.load();
+    },
+    reset() {
+      this.query.pageIndex = 1;
+      this.query.key = '';
       this.load();
     }
   }
