@@ -140,6 +140,9 @@ export default {
     async onDeleteDictionary() {
       this.comfirmButtonDisable = true;
       await this.deleteDictionary(this.activeObj.id);
+      if (this.dicInfo.length < 2) {
+        this.query.curPage--;
+      }
       await this.load(this.query.curPage, this.query.pageSize);
       this.comfirmButtonDisable = false;
     },

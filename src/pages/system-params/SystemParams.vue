@@ -143,6 +143,9 @@ export default {
       this.load(this.query.pageIndex, this.query.pageSize);
     },
     async reset() {
+      if (this.sysParams.length < 2) {
+        this.query.pageIndex--;
+      }
       await this.load(this.query.pageIndex, this.query.pageSize);
     }
   }

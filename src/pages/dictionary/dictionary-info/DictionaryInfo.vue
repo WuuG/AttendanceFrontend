@@ -164,7 +164,6 @@ export default {
     async patchDictionary(form) {
       try {
         const result = await patchDictionary(form);
-        console.log(result);
         if (result.status === 200) {
           this.$message({
             type: 'success',
