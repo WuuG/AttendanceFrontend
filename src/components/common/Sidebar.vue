@@ -57,8 +57,18 @@ export default {
         },
         {
           icon: 'el-icon-lx-cascades',
-          index: '/mybasetable',
-          title: '基础表格'
+          index: '4',
+          title: '基础组件',
+          subs: [
+            {
+              index: '/mybasetable',
+              title: '基础表格'
+            },
+            {
+              index: '/draggableTable',
+              title: '拖拽表格'
+            }
+          ]
         },
         {
           icon: 'el-icon-lx-read',

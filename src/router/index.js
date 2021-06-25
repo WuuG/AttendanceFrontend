@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 const MyBaseTable = () => import('../components/context/base-table/BaseTable.vue')
+const DraggableTable = () => import('../components/context/base-table/DraggableTable.vue')
 const Dictionary = () => import('../pages/dictionary/Dictionary.vue')
 const DictionaryInfo = () => import('../pages/dictionary/dictionary-info/DictionaryInfo.vue')
 const DictionaryAdd = () => import('../pages/dictionary/dictionary-add/DicAdd.vue')
@@ -122,6 +123,12 @@ export default new Router({
                     name: 'userList',
                     meta: { title: '用户列表' },
                     component: UserList
+                },
+                {
+                    path: '/draggableTable',
+                    name: 'draggableTable',
+                    meta: { title: '拖拽表格' },
+                    component: DraggableTable
                 },
             ]
         },

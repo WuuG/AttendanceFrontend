@@ -1,8 +1,10 @@
 
+
 <template emplate>
   <div>
     <el-breadcrumb separator="/" class="crumbs">
-      <el-breadcrumb-item>基础表格</el-breadcrumb-item>
+      <el-breadcrumb-item>基础组件</el-breadcrumb-item>
+      <el-breadcrumb-item>拖拽表格</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-main class="main-content">
@@ -21,7 +23,7 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading">
+        <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tabelLoading">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="字典ID"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
@@ -61,7 +63,7 @@ import InputDialog from 'components/context/InputDialog.vue';
 import HeaderBar from 'components/context/HeaderBar.vue';
 
 export default {
-  name: 'BaseTable',
+  name: 'DraggleTable',
   data() {
     return {
       // 表格页面pagenation的参数
@@ -79,13 +81,25 @@ export default {
           createTime: '2020-1-12 12:00:00'
         },
         {
-          id: 0,
+          id: 1,
           name: '性别',
           des: '性别，用于表示男，女等。',
           createTime: '2020-1-12 12:00:00'
+        },
+        {
+          id: 2,
+          name: '东门大虚',
+          des: '这个是可是大家拉开觉得',
+          createTime: '2020-1-12 12:00:00'
+        },
+        {
+          id: 3,
+          name: '没有什么难以',
+          des: '测试拖拽组件',
+          createTime: '2020-1-12 12:00:00'
         }
       ],
-      tableLoading: false,
+      tabelLoading: false,
       //统一设置表单的宽度
       labelWidth: '80px',
       //活跃的子项
