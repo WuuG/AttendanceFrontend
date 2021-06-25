@@ -23,12 +23,14 @@ export default {
     async deleteOrganization(id) {
       try {
         const result = await deleteOrganization(id);
-        if (result.status !== 200) return;
+        console.log(result);
         this.$message({
           type: 'success',
           message: `成功删除${this.organization.name}`
         });
-      } catch (error) {}
+      } catch (error) {
+        console.error(`delete organization error:${error}`);
+      }
     },
     cancel() {
       this.$emit('cancel');

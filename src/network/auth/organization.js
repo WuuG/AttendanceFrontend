@@ -28,10 +28,17 @@ const deleteOrganization = (orgId) => {
 		url: `organizations/${orgId}`,
 	}, 'delete')
 }
+const editeOrganization = (orgId, form) => {
+	return request({
+		url: `organizations/${orgId}`,
+		form: form
+	}, 'patch')
+}
 
 export {
 	getOrganization,
 	getSchools,
 	postOrganization,
-	deleteOrganization
+	deleteOrganization,
+	editeOrganization
 }

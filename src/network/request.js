@@ -61,6 +61,9 @@ export function request(config, method) {
   })
 
   instance.interceptors.response.use(response => {
+    if (response.data.status !== 200) {
+      throw new Error(response)
+    }
     return response.data
   }, err => {
     if (err.response != undefined) {
@@ -71,7 +74,7 @@ export function request(config, method) {
       switch (err.response.status) {
         case 400:
           console.error('Bad Request');
-          return err.response.data;
+          break
         case 401:
           console.error('Unauthorized');
           break;

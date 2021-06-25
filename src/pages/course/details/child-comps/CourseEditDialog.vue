@@ -24,8 +24,7 @@
         </el-form-item>
         <el-form-item label="开课院校" :label-width="labelWidth">
           <el-col :span="20">
-            <el-cascader v-model="form.schoolMajorID" :props="props" :show-all-levels="false" :placeholder="form.schoolMajorName">
-            </el-cascader>
+            <el-cascader v-model="form.schoolMajorID" :props="props" :placeholder="form.schoolMajorName"> </el-cascader>
           </el-col>
         </el-form-item>
         <el-form-item label="开课教师" :label-width="labelWidth">
@@ -165,7 +164,7 @@ export default {
       const tempData = await this.getOrganization(parentId);
       const nodes = Array.from(tempData.children).map((x) => ({
         value: x.id,
-        label: x.fullName,
+        label: x.name,
         leaf: x.childrenCount === 0 ? true : false
       }));
       resolve(nodes);

@@ -1,4 +1,3 @@
-
 <template>
   <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @open="open">
     <el-form :model="form" :rules="rules" ref="form">
@@ -16,7 +15,7 @@
 </template>
 
 <script>
-import { postOrganization } from '../../../network/auth/organization';
+import { editeOrganization } from '../../../network/auth/organization';
 export default {
   data() {
     // value的表单验证。
@@ -24,7 +23,7 @@ export default {
     // };
     return {
       labelWidth: '90px',
-      title: '新增组织',
+      title: '修改组织',
       form: {
         name: null
       },
@@ -40,9 +39,9 @@ export default {
   },
   methods: {
     // 网络方法
-    async postOrganization(form) {
+    async postOrganization(OrgId, form) {
       try {
-        await postOrganization(form);
+        await postOrganization(OrgId, form);
         this.$message({
           type: 'success',
           message: '成功添加组织!'
