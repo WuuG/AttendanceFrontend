@@ -81,6 +81,7 @@
       @cancel="deleteDialogVisible = false"
       :organization="organization"
       @before-comfirm="setButtonLoading"
+      @comfirm="deleteReloadOrganization"
     ></delete-dialog>
 
     <edit-dialog
@@ -187,9 +188,13 @@ export default {
     /**
      * 获取组织架构
      * @result 所有学校的数据
+     * @length 若是最后一个数据删除后，索引减一
      */
     async load() {
       this.tableLoading = true;
+      if (this.data.length === 1) {
+        this.query.pageIndex--;
+      }
       const result = await this.getSchools(this.query.pageIndex, this.query.pageSize);
       this.tableLoading = false;
       if (!result) return;
@@ -240,7 +245,7 @@ export default {
      */
     async addReloadOrganization() {
       if (!this.activeOrganization) {
-        await this.load();
+        this.load();
         return;
       }
       let { id, parentId, childrenCount, level } = this.activeOrganization;
@@ -254,6 +259,27 @@ export default {
       await this.reloadTree(reloadTreeArray);
       this.setButtonLoading(false);
     },
+    deleteReloadOrganization() {
+      const { id, parentId } = this.activeOrganization;
+      this.treeMap.delete(id);
+      if (parentId === this.initId) {
+        this.load();
+        return;
+      }
+      const { tree } = this.treeMap.get(parentId);
+      let reloadTreeArray = [];
+      if (this.tableState.lazyTreeNodeMap[tree.id].length === 1) {
+        console.log(`tree.childrenCunt:${tree.childrenCount}`);
+        this.$set(this.tableState.lazyTreeNodeMap, tree.id, []);
+      } else {
+        reloadTreeArray = this.recurveGetTreeArray(tree.id, [], 1);
+        console.log(`reloadTreeArray`, reloadTreeArray);
+      }
+      this.reloadTree(reloadTreeArray);
+    },
+    editeReloadOrganization() {
+      const { id, parentId } = this.activeOrganization;
+    },
     /**
      * 递归获取存在 treeMap中的三个参数,并存下两个map用于以后处理
      * @initId 最外层id，到达后退出数组
@@ -266,7 +292,6 @@ export default {
         console.log(`获取到的数组对象`, treeArray);
         return treeArray;
       }
-      console.log(this.treeMap.get(id));
       const { tree, resolve } = this.treeMap.get(id);
       treeArray.push({ tree, resolve });
       this.recurveGetTreeArray(tree.parentId, treeArray, number);
@@ -285,44 +310,6 @@ export default {
         resolve(filterdOrgArr);
       }
     },
-    // 删除节点时，判断其父亲节点在删除了一个子节点后，是否还能展开，若不能展开就将其子节点设为空。 并在treeMap中删去被删除节点所存储的参数。最后进行reload
-    deleteReloadOrganization(response) {
-      if (!response) {
-        this.$set(this.activeOrganization, 'loading', false);
-        return;
-      }
-      this.treeMap.delete(this.activeOrganization.id);
-      if (this.data.length === 1) {
-        this.query.pageIndex--;
-      }
-      const parentId = this.activeOrganization.parentId;
-      // 这里需要判断其是不是大类节点,大类节点不存在父节点。因此需要先做处理
-      if (parentId === this.initId) {
-        this.load();
-        return;
-      }
-      const length = this.$refs.table.store.states.lazyTreeNodeMap[parentId].length - 1;
-      if (!length) {
-        this.$set(this.$refs.table.store.states.lazyTreeNodeMap, parentId, []);
-        this.treeMap.delete(this.activeOrganization.parentId);
-      }
-      this.reloadOrganization(true);
-    },
-    // 用以在reloadOrganization时判断是否要刷新表格
-    async shouldLoadTable(isDelete) {
-      if (!this.activeOrganization) {
-        await this.load();
-        return false;
-      }
-      if (!isDelete && this.activeOrganization.level === 0) {
-        await this.load();
-      }
-      if (isDelete && this.activeOrganization.level < 2) {
-        await this.load();
-      }
-      return true;
-    },
-
     //选择时，将被选择的表项记录下来。
     selection(sel) {
       console.log(sel);
