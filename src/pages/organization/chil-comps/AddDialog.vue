@@ -54,6 +54,7 @@ export default {
     // 页面逻辑
     open() {
       this.buttonDisable = false;
+      console.log(this.parentId);
     },
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
@@ -76,9 +77,7 @@ export default {
     },
     // 重置表单
     resetForm() {
-      for (const propName in this.form) {
-        this.form[propName] = null;
-      }
+      this.$refs['form'].resetFields();
     },
     // 处理表单
     filterForm(form) {

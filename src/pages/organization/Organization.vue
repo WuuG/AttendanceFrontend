@@ -8,7 +8,7 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="showAddDialog">新增组织</el-button>
+          <el-button @click="showAddDialog(false)">新增组织</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
         </template>
         <template #right-content>
@@ -89,7 +89,13 @@
       @before-comfirm="setButtonLoading"
     ></delete-dialog>
 
-    <edit-dialog :visible="editDialogVisible" :organization="organization" @cancel="editDialogVisible = false"></edit-dialog>
+    <edit-dialog
+      :visible="editDialogVisible"
+      :organization="organization"
+      @cancel="editDialogVisible = false"
+      @befor-submit="setButtonLoading"
+      @submit="reloadOrganization"
+    ></edit-dialog>
   </div>
 </template>
 
@@ -101,7 +107,7 @@ import AddDialog from './chil-comps/AddDialog.vue';
 import DeleteDialog from './chil-comps/deleteDialog.vue';
 import EditDialog from './chil-comps/EditDialog.vue';
 export default {
-  name: 'DataDictionary',
+  name: 'Organization',
   data() {
     return {
       // 表格页面pagenation的参数
@@ -130,7 +136,8 @@ export default {
   },
   computed: {
     parentId() {
-      return this.activeOrganization ? this.activeOrganization.id : this.initId;
+      const parentId = this.activeOrganization ? this.activeOrganization.id : this.initId;
+      return parentId;
     },
     organization() {
       return this.activeOrganization ? { ...this.activeOrganization } : {};
@@ -160,13 +167,19 @@ export default {
       }
     },
     // 组件通信
+    /**
+     * 显示添加Dialog，需要判断其是否添加的是否是最大类。
+     * 若是最大类，就将activeOrganization指向null,之后会在计算属性里，通过这个判断传入addDialog的id
+     * @initId 初始Id，最大类的父类Id
+     * @row 注意这里的row 若是按钮不传参数的话，会传入鼠标点击事件。
+     */
     showAddDialog(row) {
       if (row) {
         this.activeOrganization = row;
-        this.addDialogVisible = true;
         return;
       }
-      this.activeOrganization.id = this.initId;
+      this.addDialogVisible = true;
+      this.activeOrganization = null;
     },
     showEditDialog(row) {
       this.activeOrganization = row;
@@ -178,6 +191,7 @@ export default {
     },
     // 设置按钮loading,因为本身没有loading，所以需要使用this.$set
     setButtonLoading() {
+      if (!this.activeOrganization) return;
       this.$set(this.activeOrganization, 'loading', true);
     },
     // 页面逻辑
@@ -189,6 +203,7 @@ export default {
       this.tableLoading = true;
       const result = await this.getSchools(this.query.pageIndex, this.query.pageSize);
       this.tableLoading = false;
+      if (!result) return;
       this.data = result.content;
       this.data = this.setTreeParams(this.data, 0);
       this.pageTotal = result.total;
@@ -231,11 +246,12 @@ export default {
      * @treeParam 获取之前存取的关于tree的三个参数
      * @result 以tree.id 所获取子节点数据
      * @loading 结束按钮loading的状态
+     * @shouldLoadTree  是否应该进行节点懒加载。 若是新增最大父节点是不需要进行懒加载的
      */
-    async reloadOrganization() {
-      if (this.activeOrganization.level === 0) {
-        await this.load();
-      }
+    async reloadOrganization(isDelete) {
+      const shouldLoadTree = await this.shouldLoadTable(isDelete);
+      console.log(shouldLoadTree);
+      if (!shouldLoadTree) return;
       for (const x in this.tableState.lazyTreeNodeMap) {
         const treeParam = this.treeMap.get(x);
         if (!treeParam) break;
@@ -250,13 +266,36 @@ export default {
     },
     // 删除节点时，判断其父亲节点在删除了一个子节点后，是否还能展开，若不能展开就将其子节点设为空。 并在treeMap中删去被删除节点所存储的参数。最后进行reload
     async deleteReloadOrganization() {
+      if (this.data.length === 1) {
+        this.query.pageIndex--;
+      }
       const parentId = this.organization.parentId;
+      if (parentId === this.initId) {
+        this.load();
+        return;
+      }
       const length = this.$refs.table.store.states.lazyTreeNodeMap[parentId].length - 1;
       if (!length) {
         this.$set(this.$refs.table.store.states.lazyTreeNodeMap, parentId, []);
         this.treeMap.delete(this.organization.id);
       }
-      this.reloadOrganization();
+      this.reloadOrganization(true);
+    },
+    // 用以在reloadOrganization时判断是否要刷新表格
+    async shouldLoadTable(isDelete) {
+      console.log(this.activeOrganization);
+      if (!this.activeOrganization) {
+        await this.load();
+        return false;
+      }
+      if (this.activeOrganization.level === 0) {
+        await this.load();
+        return true;
+      }
+      if (isDelete && this.activeOrganization.level < 2) {
+        await this.load();
+        return true;
+      }
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
