@@ -43,7 +43,6 @@ export default {
     async editeOrganization(orgId, form) {
       try {
         const result = await editeOrganization(orgId, form);
-        console.log(result);
       } catch (error) {
         console.error(`edite organization ${error}`);
       }
@@ -66,15 +65,14 @@ export default {
       });
       if (!result) return;
       this.buttonDisable = true;
-      await this.editeOrganization(this.form);
+      this.$emit('before-submit');
+      await this.editeOrganization(this.organization.id, this.form);
       this.$emit('submit');
       this.cancel();
     },
     // 重置表单
     resetForm() {
-      for (const propName in this.form) {
-        this.form[propName] = null;
-      }
+      this.$refs['form'].resetFields();
     }
   }
 };

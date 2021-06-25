@@ -31,7 +31,7 @@ const deleteOrganization = (orgId) => {
 const editeOrganization = (orgId, form) => {
 	return request({
 		url: `organizations/${orgId}`,
-		form: form
+		data: form
 	}, 'patch')
 }
 

@@ -27,6 +27,7 @@ export default {
           type: 'success',
           message: `成功删除${this.organization.name}`
         });
+        return result ? true : false;
       } catch (error) {
         console.error(`delete organization error:${error}`);
       }
@@ -36,8 +37,8 @@ export default {
     },
     async comfirm() {
       this.$emit('before-comfirm');
-      await this.deleteOrganization(this.organization.id);
-      this.$emit('comfirm');
+      const result = await this.deleteOrganization(this.organization.id);
+      this.$emit('comfirm', result);
     }
   }
 };

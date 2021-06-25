@@ -54,7 +54,6 @@ export default {
     // 页面逻辑
     open() {
       this.buttonDisable = false;
-      console.log(this.parentId);
     },
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
