@@ -66,6 +66,14 @@ export function request(config, method) {
     }
     return response.data
   }, err => {
+    // console.log(err);
+    if (/timeout/.test(err)) {
+      Message({
+        type: 'error',
+        message: '请求超时'
+      })
+      return Promise.reject(`请求超时`);
+    }
     if (err.response != undefined) {
       Message({
         type: 'error',
@@ -88,7 +96,6 @@ export function request(config, method) {
           console.error('Internal Server Error');
           break;
         default:
-          console.log(err);
           break;
       }
     }
