@@ -69,6 +69,7 @@ export default {
       if (!result) return;
       this.buttonDisable = true;
       const form = this.filterForm(this.form);
+      this.$emit('before-submit');
       await this.postOrganization(form);
       this.$emit('submit');
       this.cancel();

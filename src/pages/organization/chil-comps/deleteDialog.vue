@@ -23,7 +23,6 @@ export default {
     async deleteOrganization(id) {
       try {
         const result = await deleteOrganization(id);
-        console.log(result);
         this.$message({
           type: 'success',
           message: `成功删除${this.organization.name}`
@@ -36,6 +35,7 @@ export default {
       this.$emit('cancel');
     },
     async comfirm() {
+      this.$emit('before-comfirm');
       await this.deleteOrganization(this.organization.id);
       this.$emit('comfirm');
     }

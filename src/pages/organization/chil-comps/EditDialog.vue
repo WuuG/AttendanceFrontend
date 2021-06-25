@@ -16,6 +16,7 @@
 
 <script>
 import { editeOrganization } from '../../../network/auth/organization';
+
 export default {
   data() {
     // value的表单验证。
@@ -35,24 +36,22 @@ export default {
   },
   props: {
     visible: Boolean,
-    parentId: String
+    organization: Object
   },
   methods: {
     // 网络方法
-    async postOrganization(OrgId, form) {
+    async editeOrganization(orgId, form) {
       try {
-        await postOrganization(OrgId, form);
-        this.$message({
-          type: 'success',
-          message: '成功添加组织!'
-        });
+        const result = await editeOrganization(orgId, form);
+        console.log(result);
       } catch (error) {
-        console.error(`post organizaiotn error:${error}`);
+        console.error(`edite organization ${error}`);
       }
     },
     // 页面逻辑
     open() {
       this.buttonDisable = false;
+      this.form.name = this.organization.name;
     },
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
@@ -67,8 +66,7 @@ export default {
       });
       if (!result) return;
       this.buttonDisable = true;
-      const form = this.filterForm(this.form);
-      await this.postOrganization(form);
+      await this.editeOrganization(this.form);
       this.$emit('submit');
       this.cancel();
     },
@@ -77,12 +75,6 @@ export default {
       for (const propName in this.form) {
         this.form[propName] = null;
       }
-    },
-    // 处理表单
-    filterForm(form) {
-      const filterdform = { ...form };
-      filterdform.parentId = this.parentId;
-      return filterdform;
     }
   }
 };
