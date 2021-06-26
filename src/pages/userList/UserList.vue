@@ -98,7 +98,6 @@ export default {
     avatarSrc() {
       return function (src) {
         const imgSrc = CONST.IMG_BASEURL + src;
-        console.log(imgSrc);
         return imgSrc;
       };
     }
@@ -114,7 +113,6 @@ export default {
     async getUsers(query) {
       try {
         const params = new UserQuery(query);
-        console.log(params);
         const result = await getUsers(params);
         if (result.status === 200) {
           return result.data;

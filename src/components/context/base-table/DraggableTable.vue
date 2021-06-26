@@ -23,7 +23,7 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tabelLoading">
+        <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tabelLoading" row-key="id">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="id" label="字典ID"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
@@ -59,12 +59,15 @@
 </template>
 
 <script>
+import Sortable from 'sortablejs';
+
 import InputDialog from 'components/context/InputDialog.vue';
 import HeaderBar from 'components/context/HeaderBar.vue';
 
 export default {
   name: 'DraggleTable',
   data() {
+    const _this = this;
     return {
       // 表格页面pagenation的参数
       query: {
@@ -105,14 +108,28 @@ export default {
       //活跃的子项
       activeName: '0',
       // 新增按钮对应的Dialog Visible
-      addNewDialogVsible: false
+      addNewDialogVsible: false,
+      sortableOptions: {
+        animation: 150,
+        onEnd({ newIndex, oldIndex }) {
+          const currRow = _this.data.splice(oldIndex, 1)[0];
+          _this.data.splice(newIndex, 0, currRow);
+        }
+      }
     };
   },
   components: {
     InputDialog,
     HeaderBar
   },
+  mounted() {
+    this.rowDrop();
+  },
   methods: {
+    rowDrop() {
+      const tbody = document.querySelector('.el-table__body-wrapper tbody');
+      Sortable.create(tbody, this.sortableOptions);
+    },
     dataSearch() {
       console.log('handle search');
     },
