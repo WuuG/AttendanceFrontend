@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
+    "e-icon-picker": "^1.1.1",
     "element-ui": "^2.11.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
