@@ -1,5 +1,5 @@
 <template emplate>
-  <div>
+  <div id="menu-control-content">
     <el-breadcrumb separator="/" class="crumbs">
       <el-breadcrumb-item>基础组件</el-breadcrumb-item>
       <el-breadcrumb-item>拖拽表格</el-breadcrumb-item>
@@ -8,164 +8,135 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="addNewDialogVsible = true">新增</el-button>
-          <el-button @click="deleteSelectedItem">删除</el-button>
+          <el-button type="success" plain @click="addTopMenu">新增顶层菜单</el-button>
         </template>
         <template #right-content>
-          <el-col>
-            <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
-          </el-col>
-          <el-button @click="dataSearch">搜索</el-button>
           <el-button>重置</el-button>
         </template>
       </header-bar>
 
-      <el-row class="table">
-        <el-table
-          :data="data"
-          empty-text="暂时没有数据"
-          @selection-change="selection"
-          v-loading="tabelLoading"
-          row-key="id"
-          :tree-props="{ children: 'subs' }"
-        >
-          >
-          <el-table-column prop="id" label="字典ID"> </el-table-column>
-          <el-table-column prop="name" label="字典名称"> </el-table-column>
-          <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="createTime" label="创建时间"> </el-table-column>
-          <el-table-column label="操作" width="150" align="center">
-            <template v-slot:default="scope">
-              <el-button size="mini" @click="onEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-row>
-
-      <el-row>
-        <el-col>
-          <div class="pagination">
-            <el-pagination
-              background
-              layout="total,-> ,prev, pager, next"
-              :current-page="query.pageIndex"
-              :page-size="query.pageSize"
-              :total="pageTotal"
-              @current-change="handlePageChange"
-            ></el-pagination>
-          </div>
+      <el-row class="custom-tree-node tree-head" type="flex" justify="flex">
+        <el-col :span="6">
+          <el-col :span="12" class="tree-info">菜单名</el-col>
+          <el-col :span="12" class="tree-info">路径名</el-col>
         </el-col>
+        <el-col :span="2">操作</el-col>
       </el-row>
-
-      <input-dialog title="新增项目" :visible="addNewDialogVsible" @cancel="addNewDialogVsible = false"></input-dialog>
+      <el-row>
+        <el-tree
+          :data="data"
+          :props="{ children: 'subs' }"
+          node-key="id"
+          @node-drag-end="handleDragEnd"
+          draggable
+          :allow-drop="allowDrop"
+          :allow-drag="allowDrag"
+        >
+          <template #default="{ node, data }">
+            <el-row type="flex" justify="space-between" class="custom-tree-node">
+              <el-col :span="6">
+                <el-col :span="12">
+                  {{ data.title }}
+                </el-col>
+                <el-col :span="12">
+                  {{ data.index }}
+                </el-col>
+              </el-col>
+              <el-col :span="4" class="tree-buttons">
+                <el-button size="mini" @click.stop="() => append(data)"> 编辑 </el-button>
+                <el-button size="mini" type="success" plain @click.stop="() => append(data)" v-if="node.level < 2"> 添加 </el-button>
+                <el-button size="mini" type="danger" @click.stop="() => remove(node, data)"> 删除 </el-button>
+              </el-col>
+            </el-row>
+          </template>
+        </el-tree>
+      </el-row>
     </el-main>
   </div>
 </template>
 
 <script>
-import Sortable from 'sortablejs';
+import { getMenus } from '../../network/auth/menuCtrl';
 
-import InputDialog from 'components/context/InputDialog.vue';
 import HeaderBar from 'components/context/HeaderBar.vue';
 
 export default {
   name: 'DraggleTable',
   data() {
-    const _this = this;
     return {
-      // 表格页面pagenation的参数
-      query: {
-        key: '',
-        pageIndex: 1,
-        pageSize: 10
-      },
-      pageTotal: 0,
-      data: [
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 1,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 2,
-          name: '东门大虚',
-          des: '这个是可是大家拉开觉得',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 3,
-          name: '没有什么难以',
-          des: '测试拖拽组件',
-          createTime: '2020-1-12 12:00:00',
-          subs: [
-            {
-              id: 4,
-              name: '没有什么难以',
-              des: '测试拖拽组件',
-              createTime: '2020-1-12 12:00:00'
-            }
-          ]
-        }
-      ],
-      tabelLoading: false,
-      //统一设置表单的宽度
-      labelWidth: '80px',
-      //活跃的子项
-      activeName: '0',
-      // 新增按钮对应的Dialog Visible
-      addNewDialogVsible: false,
-      sortableOptions: {
-        animation: 150,
-        onEnd(p) {
-          // const currRow = _this.data.splice(oldIndex, 1)[0];
-          // _this.data.splice(newIndex, 0, currRow);
-          console.log(p);
-          console.log(_this.data);
-        }
-      }
+      data: [],
+      activeTreeNode: null
     };
   },
   components: {
-    InputDialog,
     HeaderBar
   },
   mounted() {
-    this.rowDrop();
+    this.load();
   },
   methods: {
-    rowDrop() {
-      const tbody = document.querySelector('.el-table__body-wrapper tbody');
-      Sortable.create(tbody, this.sortableOptions);
+    // 网络请求
+    async getMenus() {
+      try {
+        const result = await getMenus();
+        if (result.status === 200) return result.data;
+        return false;
+      } catch (error) {
+        console.error(`get menus error:${error}`);
+      }
     },
-    dataSearch() {
-      console.log('handle search');
+    async load() {
+      const result = await this.getMenus();
+      console.log(result);
+      this.data = result;
     },
-    onEdit(index, row) {
-      console.log(index, row);
+    addNewTopMenu() {
+      this.activeTreeNode = null;
     },
-    onDelete(index, row) {
-      console.log(index, row);
+    append(data) {
+      console.log(data);
     },
-    //选择时，将被选择的表项记录下来。
-    selection(sel) {
-      console.log(sel);
+    remove(node, data) {
+      console.log(node, data);
     },
-    // 删除已选
-    deleteSelectedItem() {},
-    // 分页导航
-    handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+
+    handleDragEnd(draggingNode, dropNode, dropType, ev) {
+      console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+    },
+    allowDrop(draggingNode, dropNode, type) {
+      if (draggingNode.level === 1 && dropNode.level > 1) {
+        return false;
+      }
+      return true;
+    },
+    allowDrag(draggingNode) {
+      return true;
     }
   }
 };
 </script>
 <style lang="less" scoped>
+.tree-head {
+  margin: 10px 0 10px 0;
+  padding-left: 24px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #f5f7fa;
+  height: 40px;
+}
+.custom-tree-node {
+  flex: 1;
+  align-items: center;
+  font-size: 14px;
+  padding-right: 8px;
+  .tree-buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+</style>
+<style >
+#menu-control-content .el-tree-node__content {
+  height: 40px;
+}
 </style>
