@@ -16,7 +16,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI, {
     size: 'small'
 });
-//钩子函数，路由守卫，在每个页面进入时，进行权限的判断 每次都要判断是不是有点不合理
+
 router.beforeEach((to, from, next) => {
     //修改每次路由跳转前，要去页面的title值。
     document.title = `${to.meta.title} | 到云后台管理系统`;

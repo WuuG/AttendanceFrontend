@@ -9,6 +9,7 @@ const DictionaryAdd = () => import('../pages/dictionary/dictionary-add/DicAdd.vu
 const SystemParams = () => import('../pages/system-params/SystemParams.vue')
 const Organization = () => import('../pages/organization/Organization.vue')
 const UserList = () => import('../pages/userList/UserList.vue')
+const MenuCtrl = () => import('../pages/menu-ctrl/MenuCtrl.vue')
 
 Vue.use(Router);
 
@@ -106,12 +107,7 @@ export default new Router({
                     component: SystemParams,
                     meta: { title: '系统参数' }
                 },
-                {
-                    path: '/mybasetable',
-                    name: 'mybasetable',
-                    component: MyBaseTable,
-                    meta: { title: '基础表格' }
-                },
+                ,
                 {
                     path: '/auth/organization',
                     name: 'routeName',
@@ -125,18 +121,26 @@ export default new Router({
                     component: UserList
                 },
                 {
+                    path: '/auth/menuControl',
+                    name: 'menuControl',
+                    component: MenuCtrl,
+                    meta: { title: '菜单管理' }
+                },
+                {
                     path: '/draggableTable',
                     name: 'draggableTable',
                     meta: { title: '拖拽表格' },
                     component: DraggableTable
                 },
+                {
+                    path: '/mybasetable',
+                    name: 'mybasetable',
+                    component: MyBaseTable,
+                    meta: { title: '基础表格' }
+                }
             ]
         },
-        // {
-        //     path: '/login',
-        //     component: () => import(/* webpackChunkName: "login" */ 'pages/passport/login/Login.vue'),
-        //     meta: { title: '登录' },
-        // },
+
         {
             path: '/passport',
             component: () => import('pages/passport/Passport.vue'),

@@ -108,6 +108,10 @@ export default {
             {
               index: '/auth/userList',
               title: '用户列表'
+            },
+            {
+              index: '/auth/menuControl',
+              title: '菜单管理'
             }
           ]
         }

@@ -21,8 +21,15 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tabelLoading" row-key="id">
-          <el-table-column type="selection" align="center"></el-table-column>
+        <el-table
+          :data="data"
+          empty-text="暂时没有数据"
+          @selection-change="selection"
+          v-loading="tabelLoading"
+          row-key="id"
+          :tree-props="{ children: 'subs' }"
+        >
+          >
           <el-table-column prop="id" label="字典ID"> </el-table-column>
           <el-table-column prop="name" label="字典名称"> </el-table-column>
           <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
@@ -97,7 +104,15 @@ export default {
           id: 3,
           name: '没有什么难以',
           des: '测试拖拽组件',
-          createTime: '2020-1-12 12:00:00'
+          createTime: '2020-1-12 12:00:00',
+          subs: [
+            {
+              id: 4,
+              name: '没有什么难以',
+              des: '测试拖拽组件',
+              createTime: '2020-1-12 12:00:00'
+            }
+          ]
         }
       ],
       tabelLoading: false,
@@ -109,9 +124,11 @@ export default {
       addNewDialogVsible: false,
       sortableOptions: {
         animation: 150,
-        onEnd({ newIndex, oldIndex }) {
-          const currRow = _this.data.splice(oldIndex, 1)[0];
-          _this.data.splice(newIndex, 0, currRow);
+        onEnd(p) {
+          // const currRow = _this.data.splice(oldIndex, 1)[0];
+          // _this.data.splice(newIndex, 0, currRow);
+          console.log(p);
+          console.log(_this.data);
         }
       }
     };
