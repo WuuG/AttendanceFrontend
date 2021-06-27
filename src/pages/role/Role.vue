@@ -45,7 +45,8 @@
 
 <script>
 import Sortable from 'sortablejs';
-import { getRole } from '../../network/auth/role';
+import { getRole } from 'network/auth/role';
+import { setLocalStorge, KEY } from '../../utils/localStorge';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import AddDialog from './child-comps/AddDialog.vue';
@@ -111,6 +112,8 @@ export default {
       this.data = result;
     },
     moreOpera(row) {
+      console.log(row);
+      setLocalStorge(KEY.ROLE, row);
       this.$router.push({
         // 这里无法使用path传参,只能用name。 path只能用拼接id的方法
         // path: '/auth/role/users',
