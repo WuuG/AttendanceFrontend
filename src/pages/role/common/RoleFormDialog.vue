@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import { postRole } from '../../../network/auth/role';
 export default {
   data() {
     // value的表单验证。
@@ -38,28 +37,15 @@ export default {
         name: [{ required: true, message: '角色名称必填', trigger: 'blur' }],
         code: [{ required: true, message: '权限标识必填', trigger: 'blur' }]
       },
-
       buttonLoading: false
     };
   },
   props: {
-    visible: Boolean
+    visible: Boolean,
+    request: Function,
+		active:Object
   },
   methods: {
-    // 网络方法
-    async postRole(form) {
-      try {
-        const res = await postRole(form);
-        if (res.status !== 200) return false;
-        this.$message({
-          type: 'success',
-          message: '成功添加角色！'
-        });
-        return true;
-      } catch (error) {
-        console.error(`post role error: ${error}`);
-      }
-    },
     // 页面逻辑
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
@@ -74,7 +60,7 @@ export default {
       });
       if (!result) return;
       this.buttonLoading = true;
-      const res = await this.postRole(this.form);
+      const res = await this.request(this.form);
       if (!res) {
         this.buttonLoading = false;
       }
@@ -87,6 +73,10 @@ export default {
     },
     open() {
       this.buttonLoading = false;
+			if(!this.active) {
+				return 
+			}
+			this.form = this.active
     },
     closed() {
       this.buttonLoading = false;

@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="删除角色" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open" @closed="closed">
     <slot name="content">
-      <span>确认删除 {{ active.name }} 吗？</span>
+      <span>确认删除 {{ name }} 吗？</span>
     </slot>
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
@@ -21,6 +21,11 @@ export default {
   props: {
     visible: Boolean,
     active: Object
+  },
+  computed: {
+    name() {
+      return this.active ? this.active.name : '';
+    }
   },
   methods: {
     // 网络方法

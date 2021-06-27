@@ -8,7 +8,7 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="addDialogVisible = true" type="success" plain>新增</el-button>
+          <el-button @click="showAddDialog" type="success" plain>新增</el-button>
         </template>
         <template #right-content>
           <el-button @click="load">刷新</el-button>
@@ -33,7 +33,13 @@
         </el-table>
       </el-row>
     </el-main>
-    <add-dialog :visible="addDialogVisible" @cancel="addDialogVisible = false" @submit="load"></add-dialog>
+    <add-dialog
+      :visible="addDialogVisible"
+      @cancel="addDialogVisible = false"
+      @submit="load"
+      :request="postRole"
+      :active="activeData"
+    ></add-dialog>
     <delete-dialog
       :visible="deleteDialogVisible"
       @cancel="deleteDialogVisible = false"
@@ -45,11 +51,11 @@
 
 <script>
 import Sortable from 'sortablejs';
-import { getRole } from 'network/auth/role';
+import { getRole, postRole } from 'network/auth/role';
 import { setLocalStorge, KEY } from '../../utils/localStorge';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
-import AddDialog from './child-comps/AddDialog.vue';
+import AddDialog from './common/RoleFormDialog.vue';
 import DeleteDialog from './child-comps/DeleteDialog.vue';
 
 export default {
@@ -79,7 +85,7 @@ export default {
   },
   computed: {
     activeData() {
-      return this.active ? { ...this.active } : {};
+      return this.active ? { ...this.active } : null;
     }
   },
   mounted() {
@@ -99,6 +105,19 @@ export default {
         console.error(`get role error:${error}`);
       }
     },
+    async postRole(form) {
+      try {
+        const res = await postRole(form);
+        if (res.status !== 200) return false;
+        this.$message({
+          type: 'success',
+          message: '成功添加角色！'
+        });
+        return true;
+      } catch (error) {
+        console.error(`post role error: ${error}`);
+      }
+    },
     // 挂载拖拽组件
     rowDrop() {
       const tbody = document.querySelector('.el-table__body-wrapper tbody');
@@ -110,6 +129,10 @@ export default {
       this.tableLoading = false;
       if (!result) return;
       this.data = result;
+    },
+    showAddDialog() {
+      this.addDialogVisible = true;
+      this.active = null;
     },
     moreOpera(row) {
       console.log(row);
