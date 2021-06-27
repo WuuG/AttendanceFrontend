@@ -34,7 +34,11 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
+<<<<<<< HEAD
       <el-button type="primary" @click="submitForm('form')" :loading="buttonLoading">确 定</el-button>
+=======
+      <el-button type="primary" @click="submitForm('form')" :disabled="buttonLoading">确 定</el-button>
+>>>>>>> b9fa0afe080728db89c4fb24b738e3829328ae56
     </template>
   </el-dialog>
 </template>
