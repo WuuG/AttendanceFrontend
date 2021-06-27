@@ -125,6 +125,10 @@ export default {
             {
               index: '/auth/menuControl',
               title: '菜单管理'
+            },
+            {
+              index: '/auth/role',
+              title: '角色管理'
             }
           ]
         }

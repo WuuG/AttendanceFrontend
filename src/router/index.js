@@ -10,6 +10,7 @@ const SystemParams = () => import('../pages/system-params/SystemParams.vue')
 const Organization = () => import('../pages/organization/Organization.vue')
 const UserList = () => import('../pages/userList/UserList.vue')
 const MenuCtrl = () => import('../pages/menu-ctrl/MenuCtrl.vue')
+const Role = () => import('../pages/role/Role.vue')
 
 Vue.use(Router);
 
@@ -137,7 +138,13 @@ export default new Router({
                     name: 'mybasetable',
                     component: MyBaseTable,
                     meta: { title: '基础表格' }
-                }
+                },
+                {
+                    path: '/auth/role',
+                    name: 'role',
+                    component: Role,
+                    meta: { title: '角色管理' }
+                },
             ]
         },
 
