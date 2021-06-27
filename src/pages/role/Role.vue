@@ -8,7 +8,7 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="addDialogVisible = true">新增</el-button>
+          <el-button @click="addDialogVisible = true" type="success" plain>新增</el-button>
         </template>
         <template #right-content>
           <el-button @click="load">刷新</el-button>
@@ -26,14 +26,20 @@
           </el-table-column>
           <el-table-column label="操作" width="200" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" type="primary" plain @click="onEdit(scope.$index, scope.row)">更多操作</el-button>
-              <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" type="primary" plain @click="onEdit(scope.row)">更多操作</el-button>
+              <el-button size="mini" type="danger" @click="onDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-row>
     </el-main>
     <add-dialog :visible="addDialogVisible" @cancel="addDialogVisible = false" @submit="load"></add-dialog>
+    <delete-dialog
+      :visible="deleteDialogVisible"
+      @cancel="deleteDialogVisible = false"
+      @comfirm="load"
+      :active="activeData"
+    ></delete-dialog>
   </div>
 </template>
 
@@ -42,7 +48,8 @@ import Sortable from 'sortablejs';
 import { getRole } from '../../network/auth/role';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
-import AddDialog from './child-comps/AddRoleDialog.vue';
+import AddDialog from './child-comps/AddDialog.vue';
+import DeleteDialog from './child-comps/DeleteDialog.vue';
 
 export default {
   name: 'Role',
@@ -59,12 +66,20 @@ export default {
         }
       },
       //通信数据
-      addDialogVisible: false
+      active: null,
+      addDialogVisible: false,
+      deleteDialogVisible: false
     };
   },
   components: {
     HeaderBar,
-    AddDialog
+    AddDialog,
+    DeleteDialog
+  },
+  computed: {
+    activeData() {
+      return this.active ? { ...this.active } : {};
+    }
   },
   mounted() {
     this.load();
@@ -95,11 +110,10 @@ export default {
       if (!result) return;
       this.data = result;
     },
-    onEdit(index, row) {
-      console.log(index, row);
-    },
-    onDelete(index, row) {
-      console.log(index, row);
+    onEdit(row) {},
+    onDelete(row) {
+      this.active = row;
+      this.deleteDialogVisible = true;
     }
   }
 };

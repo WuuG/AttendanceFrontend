@@ -13,7 +13,13 @@ const postRole = (form) => {
 		}
 	}, 'post')
 }
+const deleteRole = (roleId) => {
+	return request({
+		url: `role/${roleId}`
+	}, 'delete')
+}
 export {
 	getRole,
-	postRole
+	postRole,
+	deleteRole
 }

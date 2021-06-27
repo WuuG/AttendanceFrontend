@@ -1,11 +1,11 @@
 <template>
-  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open">
+  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open" @closed="closed">
     <slot name="content">
       <span>暂时还没有做</span>
     </slot>
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="handleComfirm" :disabled="disable">确定</el-button>
+      <el-button type="primary" @click="handleComfirm" :loading="loading">确定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -14,7 +14,7 @@
 export default {
   data() {
     return {
-      disable: false
+      loading: false
     };
   },
   props: {
@@ -29,12 +29,15 @@ export default {
       this.$emit('cancel');
     },
     handleComfirm() {
-      this.disable = true;
+      this.loading = true;
       this.$emit('comfirm');
       this.handleClose();
     },
     open() {
-      this.disable = false;
+      this.loading = false;
+    },
+    closed() {
+      this.loading = false;
     }
   }
 };
