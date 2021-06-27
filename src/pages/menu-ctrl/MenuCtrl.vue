@@ -49,7 +49,7 @@
               </el-col>
               <el-col :span="4" class="tree-buttons">
                 <el-button size="mini" @click.stop="() => showEdiedialog(data, node)"> 编辑 </el-button>
-                <el-button size="mini" type="success" plain @click.stop="() => showAddDialog(data)" v-if="node.level < 2"> 添加 </el-button>
+                <el-button size="mini" type="success" plain @click.stop="() => showAddDialog(data)" v-if="node.level < 3"> 添加 </el-button>
                 <el-button size="mini" type="danger" @click.stop="() => showDeleteDialog(data)"> 删除 </el-button>
               </el-col>
             </el-row>

@@ -7,10 +7,14 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     userInfo: {},
+    menus: {}
   },
   mutations: {
     // deleteAccount(state) {
     //   delete state.userInfo
+    getMyMenus(state, menus) {
+      state.menus = menus
+    },
   },
   actions: {
     updateUserInfo(context, userInfo) {

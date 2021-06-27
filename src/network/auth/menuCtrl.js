@@ -30,9 +30,15 @@ const deleteMenu = (id) => {
 	}, 'delete')
 }
 
+const getMymenus = () => {
+	return request({
+		url: `menus/my`,
+	}, 'get')
+}
 export {
 	getMenus,
 	postMenu,
 	patchMenu,
-	deleteMenu
+	deleteMenu,
+	getMymenus
 }

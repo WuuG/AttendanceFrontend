@@ -12,7 +12,7 @@
     >
       <template v-for="item in items">
         <!-- 一级标签 -->
-        <template v-if="item.subs">
+        <template v-if="item.subs && item.subs.length > 0">
           <el-submenu :index="item.index" :key="item.index">
             <template slot="title">
               <i :class="item.icon"></i>
@@ -21,13 +21,25 @@
             </template>
             <template v-for="subItem in item.subs">
               <!-- 二级标签 -->
-              <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
+              <el-submenu v-if="subItem.subs && subItem.subs.length > 0" :index="subItem.index" :key="subItem.index">
                 <template slot="title">{{ subItem.title }}</template>
                 <!-- 有三级标签 -->
-                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">{{ threeItem.title }}</el-menu-item>
+                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">
+                  <template slot="title">
+                    <i :class="threeItem.icon"></i>
+                    <!-- 这里删除了 slot="title" 因为看上去没有用 -->
+                    <span>{{ threeItem.title }}</span>
+                  </template>
+                </el-menu-item>
               </el-submenu>
               <!-- 二级标签，无三级标签 -->
-              <el-menu-item v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
+              <el-menu-item v-else :index="subItem.index" :key="subItem.index">
+                <template slot="title">
+                  <i :class="subItem.icon"></i>
+                  <!-- 这里删除了 slot="title" 因为看上去没有用 -->
+                  <span>{{ subItem.title }}</span>
+                </template>
+              </el-menu-item>
             </template>
           </el-submenu>
         </template>
@@ -44,6 +56,7 @@
 </template>
 
 <script>
+import { getMymenus } from '../../network/auth/menuCtrl';
 import bus from '../common/bus';
 export default {
   data() {
@@ -148,12 +161,29 @@ export default {
       return this.$route.path;
     }
   },
-  created() {
+  async created() {
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏 通信总线啦
     bus.$on('collapse', (msg) => {
       this.collapse = msg;
       bus.$emit('collapse-content', msg);
     });
+    await this.getMyMenus();
+    this.items = this.$store.state.menus;
+  },
+  // mounted() {
+  // },
+  methods: {
+    // 网络方法
+    async getMyMenus() {
+      try {
+        const res = await getMymenus();
+        console.log(res);
+        if (res.status !== 200) return;
+        this.$store.commit('getMyMenus', res.data);
+      } catch (error) {
+        console.error(`sidebar get my menus error:${error}`);
+      }
+    }
   }
 };
 </script>
