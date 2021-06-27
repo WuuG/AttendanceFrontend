@@ -43,7 +43,7 @@ export default {
   props: {
     visible: Boolean,
     request: Function,
-		active:Object
+    active: Object
   },
   methods: {
     // 页面逻辑
@@ -64,7 +64,7 @@ export default {
       if (!res) {
         this.buttonLoading = false;
       }
-      this.$emit('submit');
+      this.$emit('submit', { ...this.form });
       this.cancel();
     },
     // 重置表单
@@ -73,10 +73,10 @@ export default {
     },
     open() {
       this.buttonLoading = false;
-			if(!this.active) {
-				return 
-			}
-			this.form = this.active
+      if (!this.active) {
+        return;
+      }
+      this.form = this.active;
     },
     closed() {
       this.buttonLoading = false;

@@ -18,8 +18,18 @@ const deleteRole = (roleId) => {
 		url: `role/${roleId}`
 	}, 'delete')
 }
+const patchRole = (form) => {
+	return request({
+		url: `role/${form.id}`,
+		data: {
+			...form
+		}
+	}, 'patch')
+}
+
 export {
 	getRole,
 	postRole,
-	deleteRole
+	deleteRole,
+	patchRole
 }

@@ -45,6 +45,7 @@ export default {
   },
   props: { id: String },
   methods: {
+    // 组件通信
     toRole() {
       this.$router.push({
         name: 'role'
