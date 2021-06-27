@@ -24,8 +24,15 @@ const patchMenu = (form) => {
 	}, 'patch')
 }
 
+const deleteMenu = (id) => {
+	return request({
+		url: `menus/${id}`,
+	}, 'delete')
+}
+
 export {
 	getMenus,
 	postMenu,
-	patchMenu
+	patchMenu,
+	deleteMenu
 }

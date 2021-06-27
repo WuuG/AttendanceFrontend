@@ -1,8 +1,8 @@
 <template emplate>
   <div id="menu-control-content">
     <el-breadcrumb separator="/" class="crumbs">
-      <el-breadcrumb-item>基础组件</el-breadcrumb-item>
-      <el-breadcrumb-item>拖拽表格</el-breadcrumb-item>
+      <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+      <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-main class="main-content">
@@ -32,6 +32,7 @@
           draggable
           :allow-drop="allowDrop"
           :allow-drag="allowDrag"
+          v-loading="treeLoading"
         >
           <template #default="{ node, data }">
             <el-row type="flex" justify="space-between" class="custom-tree-node">
@@ -49,7 +50,7 @@
               <el-col :span="4" class="tree-buttons">
                 <el-button size="mini" @click.stop="() => showEdiedialog(data, node)"> 编辑 </el-button>
                 <el-button size="mini" type="success" plain @click.stop="() => showAddDialog(data)" v-if="node.level < 2"> 添加 </el-button>
-                <el-button size="mini" type="danger" @click.stop="() => remove(node, data)"> 删除 </el-button>
+                <el-button size="mini" type="danger" @click.stop="() => showDeleteDialog(data)"> 删除 </el-button>
               </el-col>
             </el-row>
           </template>
@@ -57,13 +58,14 @@
       </el-row>
     </el-main>
 
-    <add-dialog :visible="addDialogVisible" @cancel="addDialogVisible = false" :parentId="activeMenuData.id" />
-    <edit-dialog
-      :visible="editDialogVisible"
-      @cancel="editDialogVisible = false"
+    <add-dialog :visible="addDialogVisible" @cancel="addDialogVisible = false" :parentId="activeMenuData.id" @submit="load" />
+    <edit-dialog :visible="editDialogVisible" @cancel="editDialogVisible = false" :activeMenu="activeMenuData" @submit="EditDialogSubmit" />
+    <delete-dialog
+      :visible="deleteDialogVisible"
       :activeMenu="activeMenuData"
-      @submit="EditDialogSubmit"
-    ></edit-dialog>
+      @cancel="deleteDialogVisible = false"
+      @comfirm="load"
+    ></delete-dialog>
   </div>
 </template>
 
@@ -73,6 +75,7 @@ import { getMenus } from '../../network/auth/menuCtrl';
 import HeaderBar from 'components/context/HeaderBar.vue';
 import AddDialog from './chil-comps/AddDialog.vue';
 import EditDialog from './chil-comps/EditDialog.vue';
+import DeleteDialog from './chil-comps/DeleteDialog.vue';
 
 export default {
   name: 'MenuCtrl',
@@ -82,13 +85,16 @@ export default {
       activeTreeNode: null,
       // 通信数据
       addDialogVisible: false,
-      editDialogVisible: false
+      editDialogVisible: false,
+      deleteDialogVisible: false,
+      treeLoading: false
     };
   },
   components: {
     HeaderBar,
     AddDialog,
-    EditDialog
+    EditDialog,
+    DeleteDialog
   },
   computed: {
     activeMenuData() {
@@ -129,16 +135,20 @@ export default {
         this.$set(this.activeTreeNode, x, data[x]);
       }
     },
+    showDeleteDialog(data) {
+      this.activeTreeNode = data;
+      this.deleteDialogVisible = true;
+    },
     // 页面逻辑
     async load() {
+      this.treeLoading = true;
       const result = await this.getMenus();
-      console.log(result);
+      this.treeLoading = false;
       this.data = result;
     },
     remove(node, data) {
       console.log(node, data);
     },
-
     handleDragEnd(draggingNode, dropNode, dropType, ev) {
       if (dropType === 'none') {
         this.$message({

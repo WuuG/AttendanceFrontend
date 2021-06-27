@@ -62,9 +62,11 @@ export default {
     // 网络请求
     async postMenu(form) {
       try {
-        console.log(form);
         const result = await postMenu(form);
-        console.log(result);
+        if (result.status !== 200) {
+          return false;
+        }
+        return true;
       } catch (error) {
         console.error(`post menu error:${error}`);
       }
