@@ -25,7 +25,8 @@ import bus from './bus';
 export default {
   data() {
     return {
-      tagsList: []
+      tagsList: [],
+      excludeList: [/\/auth\/role\/users/]
     };
   },
   methods: {
@@ -65,6 +66,12 @@ export default {
         return item.path === route.fullPath;
       });
       if (!isExist) {
+        // 排除在excludeList的页面,不会进入tagList且不会
+        for (const x of this.excludeList) {
+          if (x.test(route.fullPath)) {
+            return;
+          }
+        }
         if (this.tagsList.length >= 8) {
           this.tagsList.shift();
         }
