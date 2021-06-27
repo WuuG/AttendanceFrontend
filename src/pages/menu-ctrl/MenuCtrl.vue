@@ -11,17 +11,17 @@
           <el-button type="success" plain @click="addTopMenu">新增顶层菜单</el-button>
         </template>
         <template #right-content>
-          <el-button>重置</el-button>
+          <el-button @click="load">重置</el-button>
         </template>
       </header-bar>
 
       <el-row class="custom-tree-node tree-head" type="flex" justify="flex">
-        <el-col :span="10">
-          <el-col :span="8" class="tree-info">菜单名</el-col>
-          <el-col :span="8" class="tree-info">路径名</el-col>
-          <el-col :span="8" class="tree-info">菜单图标</el-col>
+        <el-col>
+          <el-col :span="itemSpan" v-for="title in titles" :key="title.id">
+            {{ title }}
+          </el-col>
         </el-col>
-        <el-col :span="2">操作</el-col>
+        <div class="tree-buttons">操作</div>
       </el-row>
       <el-row>
         <el-tree
@@ -36,22 +36,22 @@
         >
           <template #default="{ node, data }">
             <el-row type="flex" justify="space-between" class="custom-tree-node">
-              <el-col :span="10">
-                <el-col :span="8">
+              <el-col>
+                <el-col :span="itemSpan">
                   {{ data.title }}
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="itemSpan">
                   {{ data.index }}
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="itemSpan">
                   <i :class="data.icon"></i>
                 </el-col>
               </el-col>
-              <el-col :span="4" class="tree-buttons">
+              <div class="tree-buttons">
                 <el-button size="mini" @click.stop="() => showEdiedialog(data, node)"> 编辑 </el-button>
                 <el-button size="mini" type="success" plain @click.stop="() => showAddDialog(data)" v-if="node.level < 3"> 添加 </el-button>
                 <el-button size="mini" type="danger" @click.stop="() => showDeleteDialog(data)"> 删除 </el-button>
-              </el-col>
+              </div>
             </el-row>
           </template>
         </el-tree>
@@ -83,6 +83,8 @@ export default {
     return {
       data: [],
       activeTreeNode: null,
+      // 表头标题
+      titles: ['菜单名', '路径', '菜单图标'],
       // 通信数据
       addDialogVisible: false,
       editDialogVisible: false,
@@ -99,6 +101,10 @@ export default {
   computed: {
     activeMenuData() {
       return this.activeTreeNode ? { ...this.activeTreeNode } : { id: '0' };
+    },
+    // 需要显示的菜单项
+    itemSpan() {
+      return 24 / this.titles.length;
     }
   },
   mounted() {
@@ -146,9 +152,6 @@ export default {
       this.treeLoading = false;
       this.data = result;
     },
-    remove(node, data) {
-      console.log(node, data);
-    },
     handleDragEnd(draggingNode, dropNode, dropType, ev) {
       if (dropType === 'none') {
         this.$message({
@@ -186,10 +189,11 @@ export default {
   align-items: center;
   font-size: 14px;
   padding-right: 8px;
-  .tree-buttons {
-    display: flex;
-    justify-content: flex-end;
-  }
+}
+.tree-buttons {
+  flex: 0 0 200px;
+  // justify-content: flex-end;
+  text-align: center;
 }
 </style>
 <style >
