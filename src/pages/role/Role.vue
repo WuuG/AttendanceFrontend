@@ -26,7 +26,7 @@
           </el-table-column>
           <el-table-column label="操作" width="200" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" type="primary" plain @click="onEdit(scope.row)">更多操作</el-button>
+              <el-button size="mini" type="primary" plain @click="moreOpera(scope.row)">更多操作</el-button>
               <el-button size="mini" type="danger" @click="onDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -110,7 +110,14 @@ export default {
       if (!result) return;
       this.data = result;
     },
-    onEdit(row) {},
+    moreOpera(row) {
+      this.$router.push({
+        // 这里无法使用path传参,只能用name。 path只能用拼接id的方法
+        // path: '/auth/role/users',
+        name: 'roleUsers',
+        params: { id: row.id }
+      });
+    },
     onDelete(row) {
       this.active = row;
       this.deleteDialogVisible = true;

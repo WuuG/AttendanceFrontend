@@ -11,6 +11,7 @@ const Organization = () => import('../pages/organization/Organization.vue')
 const UserList = () => import('../pages/userList/UserList.vue')
 const MenuCtrl = () => import('../pages/menu-ctrl/MenuCtrl.vue')
 const Role = () => import('../pages/role/Role.vue')
+const RoleUsers = () => import('../pages/role/users/User.vue')
 
 Vue.use(Router);
 
@@ -145,6 +146,13 @@ export default new Router({
                     component: Role,
                     meta: { title: '角色管理' }
                 },
+                {
+                    path: '/auth/role/users/:id',
+                    name: 'roleUsers',
+                    component: RoleUsers,
+                    meta: { title: '角色用户列表' },
+                    props: true
+                },
             ]
         },
 
@@ -168,10 +176,10 @@ export default new Router({
             ]
 
         },
-        {
-            path: '*',
-            redirect: '/404'
-        }
+        // {
+        //     path: '*',
+        //     redirect: '/404'
+        // }
     ],
     //切换为history模式
     // mode:"history"
