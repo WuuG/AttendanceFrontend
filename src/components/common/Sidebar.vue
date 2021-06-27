@@ -156,7 +156,6 @@ export default {
     async getMyMenus() {
       try {
         const res = await getMymenus();
-        console.log(res);
         if (res.status !== 200) return;
         this.$store.commit('getMyMenus', res.data);
       } catch (error) {

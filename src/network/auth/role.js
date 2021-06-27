@@ -5,3 +5,15 @@ const getRole = () => {
 		url: 'role'
 	}, 'get')
 }
+const postRole = (form) => {
+	return request({
+		url: 'role',
+		data: {
+			...form
+		}
+	}, 'post')
+}
+export {
+	getRole,
+	postRole
+}
