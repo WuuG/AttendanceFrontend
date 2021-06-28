@@ -24,7 +24,7 @@
         <el-table-column prop="id" label="用户id" show-overflow-tooltip> </el-table-column>
         <el-table-column label="操作" width="80" align="center">
           <template v-slot:default="scope">
-            <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">移除</el-button>
+            <el-button size="mini" type="danger" @click="onDelete(scope.row)">移除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -45,6 +45,7 @@
       </el-col>
     </el-row>
     <add-dialog :visible.sync="addDialogVisible" :roleId="roleId" @submit="load"></add-dialog>
+    <delete-dialog :visible.sync="deleteDialogVisible" :active="activeData" @submit="load" :roleId="roleId"></delete-dialog>
   </div>
 </template>
 
@@ -53,7 +54,9 @@ import { getRoleUsers } from '../../../../network/auth/role';
 import { Query } from 'network/common';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
-import AddDialog from './AddDialog.vue';
+import AddDialog from './UserAddDialog.vue';
+import DeleteDialog from './UserDeleteDialog.vue';
+
 export default {
   name: 'UsersTable',
   data() {
@@ -68,15 +71,23 @@ export default {
       data: [],
       tableLoading: false,
       // 通信数据
-      addDialogVisible: false
+      addDialogVisible: false,
+      deleteDialogVisible: false,
+      active: null
     };
   },
   props: {
     roleId: String
   },
+  computed: {
+    activeData() {
+      return this.active ? { ...this.active } : {};
+    }
+  },
   components: {
     HeaderBar,
-    AddDialog
+    AddDialog,
+    DeleteDialog
   },
   created() {
     this.load();
@@ -105,8 +116,9 @@ export default {
       this.query.pageIndex = 1;
       this.load();
     },
-    onDelete(index, row) {
-      console.log(index, row);
+    onDelete(row) {
+      this.active = row;
+      this.deleteDialogVisible = true;
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {

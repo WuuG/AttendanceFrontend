@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open" @closed="closed">
+  <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open">
     <slot name="content">
       <span>暂时还没有做</span>
     </slot>
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     handleClose() {
-      this.$emit('cancel');
+      this.$emit('update:visibel', false);
     },
     handleComfirm() {
       this.loading = true;
@@ -34,9 +34,6 @@ export default {
       this.handleClose();
     },
     open() {
-      this.loading = false;
-    },
-    closed() {
       this.loading = false;
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @open="open" @closed="closed">
+  <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @open="open">
     <el-form :model="form" :rules="rules" ref="form">
       <el-form-item label="明细名称" :label-width="labelWidth">
         <el-col :span="20">
@@ -72,7 +72,8 @@ export default {
     // 页面逻辑
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
-      this.$emit('update', false);
+      this.$emit('update:visibel', false);
+      this.buttonLoading = false;
       this.resetForm();
     },
     // 表单验证，并发送submit事件参数为表单内容，并调用cancel()
@@ -91,9 +92,6 @@ export default {
       }
     },
     open() {
-      this.buttonLoading = false;
-    },
-    closed() {
       this.buttonLoading = false;
     }
   }
