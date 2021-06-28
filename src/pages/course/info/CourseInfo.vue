@@ -25,7 +25,7 @@
           <el-table-column prop="name" label="课程名称"> </el-table-column>
           <el-table-column prop="avatar" label="课程头像">
             <template #default="scope">
-              <el-avatar shape="square">
+              <el-avatar>
                 <el-image :src="scope.row.avatar ? scope.row.avatar : ''">
                   <template #error>
                     <i class="el-icon-picture-outline"></i>
@@ -119,6 +119,9 @@ export default {
     DeleteDialog
   },
   created() {
+    this.load();
+  },
+  activated() {
     this.load();
   },
   methods: {

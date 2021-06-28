@@ -38,9 +38,6 @@ export default {
     courseId: String,
     courseCode: String
   },
-  created() {
-    // this.load()
-  },
   methods: {
     // 通信方法
     toCourse() {

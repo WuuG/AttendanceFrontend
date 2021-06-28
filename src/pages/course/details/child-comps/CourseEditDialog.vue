@@ -55,7 +55,6 @@
 
 <script>
 import { getOrganization } from 'network/course/info';
-import CONST from 'utils/const';
 
 export default {
   data() {
@@ -126,7 +125,6 @@ export default {
         console.error(`get organization error: ${error}`);
       }
     },
-
     // 页面逻辑
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {

@@ -5,10 +5,9 @@
     </el-row>
     <el-row class="table">
       <el-table :data="studentInfo" empty-text="暂时没有数据" v-loading="tableLoading">
-        <el-table-column prop="realName" label="学生姓名" show-overflow-tooltip> </el-table-column>
-        <el-table-column prop="gender" label="学生性别" show-overflow-tooltip> </el-table-column>
-        <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
-        <el-table-column prop="schoolName" label="学生学院" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="stuId" label="学生Id" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="stuName" label="学生姓名" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="experience" label="课程经验" show-overflow-tooltip> </el-table-column>
         <el-table-column label="操作" width="150" align="center">
           <template v-slot:default="scope">
             <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除学生</el-button>
