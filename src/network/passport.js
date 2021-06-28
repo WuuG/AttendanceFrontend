@@ -46,7 +46,7 @@ export function vertifyCode(type, phone, code) {
 //判断账户是否唯一
 export function accountUnique(account) {
   return request({
-    url: '/account/unique/' + account,
+    url: '/accounts/unique/' + account,
 
   }, 'get')
 }

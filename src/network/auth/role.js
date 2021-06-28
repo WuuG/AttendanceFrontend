@@ -2,12 +2,12 @@ import { request } from '../request';
 
 const getRole = () => {
 	return request({
-		url: 'role'
+		url: 'roles'
 	}, 'get')
 }
 const postRole = (form) => {
 	return request({
-		url: 'role',
+		url: 'roles',
 		data: {
 			...form
 		}
@@ -15,12 +15,12 @@ const postRole = (form) => {
 }
 const deleteRole = (roleId) => {
 	return request({
-		url: `role/${roleId}`
+		url: `roles/${roleId}`
 	}, 'delete')
 }
 const patchRole = (form) => {
 	return request({
-		url: `role/${form.id}`,
+		url: `roles/${form.id}`,
 		data: {
 			...form
 		}
@@ -28,7 +28,7 @@ const patchRole = (form) => {
 }
 const getRoleUsers = (roleId, form) => {
 	return request({
-		url: `role/${roleId}/users`,
+		url: `roles/${roleId}/users`,
 		params: {
 			...form
 		}
@@ -36,7 +36,7 @@ const getRoleUsers = (roleId, form) => {
 }
 const postRoleUser = (form) => {
 	return request({
-		url: `role/users/${form.id}/${form.roleId}`,
+		url: `roles/users/${form.id}/${form.roleId}`,
 		form: {
 			...form
 		}
@@ -44,7 +44,7 @@ const postRoleUser = (form) => {
 }
 const deleteRoleUser = (form) => {
 	return request({
-		url: `role/users/${form.id}/${form.roleId}`,
+		url: `roles/users/${form.id}/${form.roleId}`,
 		form: {
 			...form
 		}
