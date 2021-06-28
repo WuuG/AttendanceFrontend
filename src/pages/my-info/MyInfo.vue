@@ -65,7 +65,7 @@
         </el-row>
       </el-form>
       <el-row :gutter="10" type="flex" justify="end">
-        <el-col :span="3">
+        <el-col :span="5">
           <el-button type="primary" @click="submitForm('form')" :loading="buttonLoading">确定修改</el-button>
         </el-col>
       </el-row>
@@ -76,8 +76,9 @@
 
 <script>
 import { getOrganization } from 'network/course/info';
-import { patchUser } from '../../network/auth/userList';
+import { patchUser, putUserAvatar } from '../../network/auth/userList';
 import { getLocalStorge, setLocalStorge, KEY } from '../../utils/localStorge';
+import CONST from '../../utils/const';
 
 export default {
   name: 'MyInfo',
@@ -107,7 +108,7 @@ export default {
         return this.src;
       }
       if (this.form.avatar) {
-        return this.form.avatar;
+        return CONST.IMG_BASEURL + this.form.avatar;
       }
       return false;
     }
@@ -117,6 +118,7 @@ export default {
   },
   methods: {
     // 网络方法
+    // 获取组织
     async getOrganization(orgId) {
       try {
         const result = await getOrganization(orgId);
@@ -125,10 +127,10 @@ export default {
         console.error(`get organization error: ${error}`);
       }
     },
+    // 修改个人信息
     async patchUser(form) {
       try {
         const res = await patchUser(form);
-        console.log(res);
         if (res.status !== 200) return null;
         this.$message({
           type: 'success',
@@ -139,6 +141,22 @@ export default {
         console.error(`patch user error ${error}`);
       }
     },
+    // 上传头像
+    async putUserAvatar(id, file) {
+      try {
+        const res = await putUserAvatar(id, file);
+        if (res.status !== 200) {
+          this.$message({
+            type: 'error',
+            message: '上传图片失败！'
+          });
+          return null;
+        }
+        return res.data;
+      } catch (error) {
+        console.error(`put user avatar error: ${error}`);
+      }
+    },
     // 页面逻辑
     // 表单验证
     submitForm(refName) {
@@ -146,8 +164,8 @@ export default {
         if (!valid) return;
         this.buttonLoading = true;
         const form = this.filterForm(this.form);
-        console.log(form);
         await this.handlePatchUser(form);
+        await this.uploadAvatar();
         this.buttonLoading = false;
       });
     },
@@ -156,6 +174,16 @@ export default {
       const result = await this.patchUser(form);
       if (!result) return;
       setLocalStorge(KEY.USERINFO, result);
+    },
+    // 上传头像
+    async uploadAvatar() {
+      if (!this.avatarFile) return;
+      const form = new FormData();
+      form.append('avatar', this.avatarFile);
+      const result = await this.putUserAvatar(this.form.id, form);
+      if (!result) return;
+      this.form.avatar = result;
+      setLocalStorge(KEY.USERINFO, this.form);
     },
     /**
      * 级联选择器获取组织方法

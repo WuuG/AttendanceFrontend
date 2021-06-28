@@ -8,14 +8,24 @@ const getUsers = (params) => {
 		},
 	}, 'get')
 }
-const patchUser = (form) => {
 
+const patchUser = (form) => {
 	return request({
 		url: `users/${form.id}`,
 		data: {
 			...form
 		}
 	}, 'patch')
+}
+
+const putUserAvatar = (id, form) => {
+	return request({
+		url: `users/${id}/avatar`,
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		},
+		data: form
+	}, 'put')
 }
 class UserQuery {
 	constructor(query) {
@@ -28,5 +38,6 @@ class UserQuery {
 export {
 	getUsers,
 	patchUser,
+	putUserAvatar,
 	UserQuery
 }
