@@ -23,7 +23,8 @@
         </div>
         <!-- 用户头像 -->
         <div class="user-avator">
-          <img src="~assets/img/img.jpeg" />
+          <img v-if="imgURL" :src="imgURL" alt="" />
+          <img v-else src="~assets/img/img.jpeg" />
         </div>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -48,13 +49,15 @@
 import bus from '../common/bus';
 import { getUserInfo } from 'network/userInfo';
 import { setLocalStorge, KEY } from '../../utils/localStorge';
+import CONST from '../../utils/const';
 export default {
   data() {
     return {
       collapse: false,
       fullscreen: false,
       defaultName: '这是默认名字，若看到就是bug',
-      message: 2
+      message: 2,
+      userInfo: null
     };
   },
   computed: {
@@ -64,6 +67,12 @@ export default {
       } else {
         return this.$store.state.userInfo.phone;
       }
+    },
+    imgURL() {
+      if (this.userInfo && this.userInfo.avatar) {
+        return CONST.IMG_BASEURL + this.userInfo.avatar;
+      }
+      return false;
     }
   },
   methods: {
@@ -118,6 +127,7 @@ export default {
       getUserInfo(uid)
         .then((res) => {
           this.$store.dispatch('updateUserInfo', res.data);
+          this.userInfo = res.data;
           setLocalStorge(KEY.USERINFO, res.data);
         })
         .catch((err) => console.log(err));
