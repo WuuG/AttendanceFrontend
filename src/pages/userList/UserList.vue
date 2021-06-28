@@ -28,7 +28,7 @@
           <el-table-column prop="avatar" label="用户头像" align="center">
             <template #default="scope">
               <template v-if="scope.row.avatar">
-                <el-avatar :size="40" :src="avatarSrc(scope.row.avatar)" @error="true">
+                <el-avatar :size="40" :src="scope.row.avatar" @error="true">
                   <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
                 </el-avatar>
               </template>
@@ -94,18 +94,7 @@ export default {
   components: {
     HeaderBar
   },
-  computed: {
-    avatarSrc() {
-      return function (src) {
-        const imgSrc = CONST.IMG_BASEURL + src;
-        return imgSrc;
-      };
-    }
-  },
   created() {
-    this.load();
-  },
-  activated() {
     this.load();
   },
   methods: {

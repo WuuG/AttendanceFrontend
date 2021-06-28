@@ -2,7 +2,7 @@ import { request } from '../request';
 
 const getUsers = (params) => {
 	return request({
-		url: 'http://172.17.169.27:8080/users',
+		url: 'users',
 		params: {
 			...params
 		},
