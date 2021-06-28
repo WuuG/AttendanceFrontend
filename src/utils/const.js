@@ -14,7 +14,7 @@ export default {
   },
   RE_TEXT: {
     PHONE_NUM: '请输入正确的手机号!',
-    PASSWORD: '仅支持字母，数字，!@#$%^&*()+{}|:"<>?,./;',
+    PASSWORD: '仅支持字母，数字与常见特殊符号',
     SMSCODE: '请输入4-6位验证码',
     ACCOUNT: '请输入正确的用户名、邮箱、手机号等',
   },

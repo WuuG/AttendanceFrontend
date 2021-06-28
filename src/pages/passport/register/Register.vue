@@ -26,13 +26,15 @@
           </el-form-item>
           <el-form-item prop="code">
             <el-input v-model="registerInfo.code" placeholder="请输入验证码" prefix-icon="el-icon-user" class="code-input"></el-input>
-            <el-button @click="sendSms('register', registerInfo.phone)" :disabled="countNum !== 0" class="code-button">
+            <el-button @click="sendSmsValidator" :disabled="countNum !== 0" class="code-button">
               {{ countNum !== 0 ? countNum + 's后重试' : '获取验证码' }}
             </el-button>
           </el-form-item>
-          <el-select v-model="registerInfo.role" placeholder="请选择身份">
-            <el-option v-for="item in roles" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-          </el-select>
+          <el-form-item prop="roles">
+            <el-select v-model="registerInfo.roles" placeholder="请选择身份" multiple filterable collapse-tags>
+              <el-option v-for="item in roles" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+            </el-select>
+          </el-form-item>
 
           <el-form-item class="register-button">
             <el-button type="text" style="float: left" @click="toLogin">登录到现有账号</el-button>
@@ -54,6 +56,7 @@ import { sms } from 'components/common/mixin';
 import CONST from 'utils/const';
 
 export default {
+  name: 'Register',
   data() {
     const checkPassword = (rule, value, callback) => {
       if (value != this.registerInfo.password) {
@@ -64,21 +67,20 @@ export default {
     const checkUserUnique = (rule, value, callback) => {
       accountUnique(value)
         .then((res) => {
-          // console.log(res);
-          return res.message == 'Account already exists.' ? callback(new Error('用户名已存在')) : callback();
+          callback();
         })
         .catch((err) => {
-          return callback();
+          callback(new Error('用户已存在'));
         });
     };
     const checkPhoneUnique = (rule, value, callback) => {
       accountUnique(value)
         .then((res) => {
-          // console.log(res);
-          return res.message == 'Account already exists.' ? callback(new Error('手机号已存在')) : callback();
+          // return res.message == 'Account already exists.' ? callback(new Error('手机号已存在')) : callback();
+          callback();
         })
         .catch((err) => {
-          return callback();
+          callback(new Error('手机号已存在'));
         });
     };
     return {
@@ -90,7 +92,8 @@ export default {
       countNum: 0,
       roles: [
         { label: '教师', value: 'teacher' },
-        { label: '管理员', value: 'admin' }
+        { label: '管理员', value: 'admin' },
+        { label: '学生', value: 'student' }
       ],
       //注册表单数据
       registerInfo: {
@@ -99,7 +102,7 @@ export default {
         rePassword: '',
         phone: '',
         code: '',
-        role: '',
+        roles: [],
         realName: '',
         email: ''
       },
@@ -111,7 +114,7 @@ export default {
             message: CONST.RE_TEXT.ACCOUNT,
             trigger: 'blur'
           },
-          { validator: checkUserUnique, trigger: 'change' }
+          { validator: checkUserUnique, trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -130,8 +133,10 @@ export default {
         code: [
           { required: true, message: '请输入6位验证码', trigger: 'blur' },
           { pattern: CONST.RE.SMSCODE, message: CONST.RE_TEXT.SMSCODE, trigger: 'blur' }
-        ]
-      }
+        ],
+        roles: [{ required: true, message: '必须需要选择至少一种身份', trigger: 'blur' }]
+      },
+      isSendSms: false
     };
   },
   mixins: [sms],
@@ -141,7 +146,6 @@ export default {
     },
     signup(formName) {
       const signupInfo = new SignupInfo(this.registerInfo);
-      console.log(signupInfo.smsCode);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.passFromValid(signupInfo);
@@ -155,34 +159,31 @@ export default {
     async passFromValid(signupInfo) {
       try {
         const res = await signup(signupInfo);
-        if (res.status == 400) {
-          this.$message({
-            message: res.message,
-            type: 'error'
-          });
-        } else {
-          this.$message({
-            type: 'success',
-            message: '注册成功，欢迎您！！'
-          });
-          if (res.data) {
-            window.localStorage.setItem('toKen', res.data.token);
-            window.localStorage.setItem('uid', res.data.uid);
-          }
-          this.$router.replace('/dashboard');
-          return true;
-        }
-      } catch (err) {
-        console.log(err);
         this.$message({
-          message: err.error,
-          type: 'warning'
+          type: 'success',
+          message: '注册成功，欢迎您！！'
         });
+        if (res.data) {
+          window.localStorage.setItem('toKen', res.data.token);
+          window.localStorage.setItem('uid', res.data.uid);
+        }
+        this.$router.replace('/dashboard');
+        return true;
+      } catch (err) {
+        console.error(`signup error: ${error}`);
       }
     },
     //修改密码是否显示
     modifyPassword() {
       this.passwordType = this.passwordType == 'password' ? 'text' : 'password';
+    },
+    // 验证是否可以发送验证码
+    sendSmsValidator() {
+      this.$refs['registerInfo'].validateField('phone', (str) => {
+        if (!str) {
+          this.sendSms('register', this.registerInfo.phone);
+        }
+      });
     }
   }
 };

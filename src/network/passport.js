@@ -23,7 +23,7 @@ export function authLoginByPhone(account, smsCode) {
 //注册表单上传
 export function signup(signupInfo) {
   return request({
-    url: '/users',
+    url: '/auth/register',
     data: signupInfo,
   }, 'post')
 }
@@ -62,7 +62,7 @@ export class SignupInfo {
     this.loginName = registerInfo.name
     // this.realName = registerInfo.realName
     this.phone = registerInfo.phone
-    this.roles = registerInfo.role
+    this.roles = registerInfo.roles
     this.password = registerInfo.password
     this.smsCode = registerInfo.code
   }
