@@ -72,7 +72,7 @@ export default {
     // 页面逻辑
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
-      this.$emit('update:visibel', false);
+      this.$emit('update:visible', false);
       this.buttonLoading = false;
       this.resetForm();
     },
