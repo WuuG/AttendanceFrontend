@@ -145,7 +145,7 @@ export default new Router({
                     path: '/auth/role',
                     name: 'role',
                     component: Role,
-                    meta: { title: '角色管理' }
+                    meta: { title: '角色权限管理' }
                 },
                 {
                     path: '/auth/role/users/:id',
