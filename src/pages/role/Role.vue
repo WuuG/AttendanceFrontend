@@ -88,6 +88,9 @@ export default {
       return this.active ? { ...this.active } : null;
     }
   },
+  activated() {
+    this.load();
+  },
   mounted() {
     this.load();
     this.rowDrop();
@@ -135,7 +138,6 @@ export default {
       this.active = null;
     },
     moreOpera(row) {
-      console.log(row);
       setLocalStorge(KEY.ROLE, row);
       this.$router.push({
         // 这里无法使用path传参,只能用name。 path只能用拼接id的方法

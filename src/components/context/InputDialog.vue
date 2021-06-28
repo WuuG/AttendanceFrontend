@@ -77,14 +77,12 @@ export default {
     },
     // 表单验证，并发送submit事件参数为表单内容，并调用cancel()
     submitForm(refName) {
-      let result = false;
       this.$refs[refName].validate((valid) => {
-        result = valid;
+        if (!valid) return;
+        this.buttonLoading = true;
+        this.$emit('submit', { ...this.form });
+        this.cancel();
       });
-      if (!result) return;
-      this.buttonLoading = true;
-      this.$emit('submit', { ...this.form });
-      this.cancel();
     },
     // 重置表单
     resetForm() {

@@ -53,19 +53,17 @@ export default {
       this.resetForm();
     },
     // 表单验证，并发送submit事件参数为表单内容，并调用cancel()
-    async submitForm(refName) {
-      let result = false;
-      this.$refs[refName].validate((valid) => {
-        result = valid;
+    submitForm(refName) {
+      this.$refs[refName].validate(async (valid) => {
+        if (!valid) return;
+        this.buttonLoading = true;
+        const res = await this.request(this.form);
+        if (!res) {
+          this.buttonLoading = false;
+        }
+        this.$emit('submit', { ...this.form });
+        this.cancel();
       });
-      if (!result) return;
-      this.buttonLoading = true;
-      const res = await this.request(this.form);
-      if (!res) {
-        this.buttonLoading = false;
-      }
-      this.$emit('submit', { ...this.form });
-      this.cancel();
     },
     // 重置表单
     resetForm() {
