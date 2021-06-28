@@ -35,7 +35,6 @@
               <el-option v-for="item in roles" :key="item.value" :label="item.label" :value="item.value"> </el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item class="register-button">
             <el-button type="text" style="float: left" @click="toLogin">登录到现有账号</el-button>
             <el-button type="primary" @click="signup('registerInfo')">注册</el-button>
@@ -52,6 +51,7 @@
 
 <script>
 import { signup, SignupInfo, accountUnique } from 'network/passport';
+import { getRole } from '../../../network/auth/role';
 import { sms } from 'components/common/mixin';
 import CONST from 'utils/const';
 
@@ -90,11 +90,7 @@ export default {
       //密码input类型的切换
       passwordType: 'password',
       countNum: 0,
-      roles: [
-        { label: '教师', value: 'teacher' },
-        { label: '管理员', value: 'admin' },
-        { label: '学生', value: 'student' }
-      ],
+      roles: [],
       //注册表单数据
       registerInfo: {
         name: '',
@@ -140,7 +136,23 @@ export default {
     };
   },
   mixins: [sms],
+  created() {
+    this.getRoleOptions();
+  },
   methods: {
+    // 网络方法
+    // 获取角色options
+    async getRole() {
+      try {
+        const res = await getRole();
+        if (res.status !== 200) {
+          return null;
+        }
+        return res.data;
+      } catch (error) {
+        console.error(`get role error:${error}`);
+      }
+    },
     toLogin() {
       this.$router.replace('/passport/login');
     },
@@ -183,6 +195,16 @@ export default {
         if (!str) {
           this.sendSms('register', this.registerInfo.phone);
         }
+      });
+    },
+    // 获取角色选择器的options
+    async getRoleOptions() {
+      const result = await this.getRole();
+      this.roles = result.map((x) => {
+        return {
+          value: x.code,
+          label: x.name
+        };
       });
     }
   }
