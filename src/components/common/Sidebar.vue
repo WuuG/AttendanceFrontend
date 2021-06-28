@@ -68,21 +68,7 @@ export default {
           index: '/dashboard',
           title: '系统首页'
         },
-        {
-          icon: 'el-icon-lx-cascades',
-          index: '4',
-          title: '基础组件',
-          subs: [
-            {
-              index: '/mybasetable',
-              title: '基础表格'
-            },
-            {
-              index: '/draggableTable',
-              title: '拖拽表格'
-            }
-          ]
-        },
+
         {
           icon: 'el-icon-lx-read',
           index: '1',
@@ -131,6 +117,21 @@ export default {
               title: '角色管理'
             }
           ]
+        },
+        {
+          icon: 'el-icon-lx-cascades',
+          index: '4',
+          title: '基础组件',
+          subs: [
+            {
+              index: '/mybasetable',
+              title: '基础表格'
+            },
+            {
+              index: '/draggableTable',
+              title: '拖拽表格'
+            }
+          ]
         }
       ]
     };
@@ -147,7 +148,7 @@ export default {
       bus.$emit('collapse-content', msg);
     });
     await this.getMyMenus();
-    // this.items = this.$store.state.menus;
+    this.items = this.$store.state.menus;
   },
   // mounted() {
   // },

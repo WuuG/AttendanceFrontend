@@ -33,6 +33,7 @@
           :allow-drop="allowDrop"
           :allow-drag="allowDrag"
           v-loading="treeLoading"
+          default-expand-all
         >
           <template #default="{ node, data }">
             <el-row type="flex" justify="space-between" class="custom-tree-node">
