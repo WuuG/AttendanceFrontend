@@ -111,7 +111,7 @@ export default {
         return this.src;
       }
       if (this.form.avatar) {
-        return CONST.IMG_BASEURL + this.form.avatar;
+        return this.form.avatar;
       }
       return false;
     }
