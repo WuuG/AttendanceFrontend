@@ -63,76 +63,90 @@ export default {
     return {
       collapse: false,
       items: [
-        {
-          icon: 'el-icon-lx-home',
-          index: '/dashboard',
-          title: '系统首页'
-        },
-
-        {
-          icon: 'el-icon-lx-read',
-          index: '1',
-          title: '课程管理',
-          subs: [
-            {
-              index: '/courseInfo',
-              title: '课程信息'
-            }
-          ]
-        },
-        {
-          icon: 'el-icon-s-tools',
-          index: '2',
-          title: '系统管理',
-          subs: [
-            {
-              index: '/systemParams',
-              title: '系统参数'
-            },
-            {
-              index: '/dataDictionary',
-              title: '数据字典'
-            }
-          ]
-        },
-        {
-          icon: 'el-icon-s-custom',
-          index: '3',
-          title: '角色权限管理',
-          subs: [
-            {
-              index: '/auth/organization',
-              title: '组织架构'
-            },
-            {
-              index: '/auth/userList',
-              title: '用户列表'
-            },
-            {
-              index: '/auth/menuControl',
-              title: '菜单管理'
-            },
-            {
-              index: '/auth/role',
-              title: '角色管理'
-            }
-          ]
-        },
-        {
-          icon: 'el-icon-lx-cascades',
-          index: '4',
-          title: '基础组件',
-          subs: [
-            {
-              index: '/mybasetable',
-              title: '基础表格'
-            },
-            {
-              index: '/draggableTable',
-              title: '拖拽表格'
-            }
-          ]
-        }
+        // {
+        //   icon: 'el-icon-lx-home',
+        //   index: '/dashboard',
+        //   title: '系统首页'
+        // },
+        // {
+        //   icon: 'el-icon-lx-read',
+        //   index: '1',
+        //   title: '课程管理',
+        //   subs: [
+        //     {
+        //       index: '/courseInfo',
+        //       title: '课程信息'
+        //     }
+        //   ]
+        // },
+        // {
+        //   icon: 'el-icon-s-tools',
+        //   index: '2',
+        //   title: '系统管理',
+        //   subs: [
+        //     {
+        //       index: '/systemParams',
+        //       title: '系统参数'
+        //     },
+        //     {
+        //       index: '/dataDictionary',
+        //       title: '数据字典'
+        //     }
+        //   ]
+        // },
+        // {
+        //   icon: 'el-icon-s-custom',
+        //   index: '3',
+        //   title: '角色权限管理',
+        //   subs: [
+        //     {
+        //       index: '/auth/organization',
+        //       title: '组织架构'
+        //     },
+        //     {
+        //       index: '/auth/userList',
+        //       title: '用户列表'
+        //     },
+        //     {
+        //       index: '/auth/menuControl',
+        //       title: '菜单管理'
+        //     },
+        //     {
+        //       index: '/auth/role',
+        //       title: '角色管理'
+        //     }
+        //   ]
+        // },
+        // {
+        //   icon: 'el-icon-lx-cascades',
+        //   index: '4',
+        //   title: '基础组件',
+        //   subs: [
+        //     {
+        //       index: '/mybasetable',
+        //       title: '基础表格'
+        //     },
+        //     {
+        //       index: '/draggableTable',
+        //       title: '拖拽表格'
+        //     }
+        //   ]
+        // },
+        // {
+        //   icon: 'el-icon-lx-read',
+        //   index: '5',
+        //   title: '异常页',
+        //   subs: [
+        //     {
+        //       index: '/403',
+        //       title: '403'
+        //     },
+        //     {
+        //       index: '/404',
+        //       title: '404'
+        //     }
+        //   ]
+        // }
       ]
     };
   },
