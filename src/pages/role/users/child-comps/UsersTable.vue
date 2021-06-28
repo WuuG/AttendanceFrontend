@@ -2,8 +2,9 @@
   <div>
     <header-bar>
       <template #left-content>
-        <el-button @click="addNewDialogVsible = true">新增</el-button>
-        <el-button @click="deleteSelectedItem">删除</el-button>
+        <div class="title">用户列表</div>
+        <el-button @click="addDialogVisible = true" type="success" plain>新增</el-button>
+        <el-button @click="deleteSelectedItem" type="danger">移除</el-button>
       </template>
       <template #right-content>
         <el-col>
@@ -43,14 +44,16 @@
         </div>
       </el-col>
     </el-row>
+    <add-dialog :visible.sync="addDialogVisible" :roleId="roleId" @submit="load"></add-dialog>
   </div>
 </template>
 
 <script>
 import { getRoleUsers } from '../../../../network/auth/role';
-import { Query } from '../../../../network/common';
+import { Query } from 'network/common';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
+import AddDialog from './AddDialog.vue';
 export default {
   name: 'UsersTable',
   data() {
@@ -62,28 +65,18 @@ export default {
         pageSize: 10
       },
       pageTotal: 0,
-      data: [
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        },
-        {
-          id: 0,
-          name: '性别',
-          des: '性别，用于表示男，女等。',
-          createTime: '2020-1-12 12:00:00'
-        }
-      ],
-      tableLoading: false
+      data: [],
+      tableLoading: false,
+      // 通信数据
+      addDialogVisible: false
     };
   },
   props: {
     roleId: String
   },
   components: {
-    HeaderBar
+    HeaderBar,
+    AddDialog
   },
   created() {
     this.load();
@@ -131,4 +124,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.title {
+  display: inline;
+  line-height: 32px;
+  padding-right: 10px;
+}
 </style>
