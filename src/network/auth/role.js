@@ -36,18 +36,15 @@ const getRoleUsers = (roleId, form) => {
 }
 const postRoleUser = (form) => {
 	return request({
-		url: `roles/users/${form.id}/${form.roleId}`,
-		form: {
+		url: `roles/${form.roleId}/users/${form.id}`,
+		data: {
 			...form
 		}
 	}, 'post')
 }
 const deleteRoleUser = (form) => {
 	return request({
-		url: `roles/users/${form.id}/${form.roleId}`,
-		form: {
-			...form
-		}
+		url: `roles/${form.roleId}/users/${form.id}`,
 	}, 'delete')
 }
 export {

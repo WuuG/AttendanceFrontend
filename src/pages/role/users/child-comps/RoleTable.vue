@@ -3,15 +3,16 @@
     <el-table :data="data" empty-text="暂时没有数据" v-loading="tableLoading" row-key="id">
       <el-table-column prop="name" label="角色名称"> </el-table-column>
       <el-table-column prop="code" label="权限标识" show-overflow-tooltip> </el-table-column>
-      <el-table-column label="操作" width="80" align="center">
+      <el-table-column label="操作" width="200" align="center">
         <template v-slot:default="scope">
+          <el-button size="mini" @click="onConfig(scope.row)">设置权限</el-button>
           <el-button size="mini" @click="onEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
     <edit-dialog
       :visible="editDialogVisible"
-      :active="active"
+      :active="activeData"
       @cancel="editDialogVisible = false"
       @submit="modifyRole"
       :request="patchRole"
@@ -39,6 +40,11 @@ export default {
   components: {
     EditDialog
   },
+  computed: {
+    activeData() {
+      return this.active ? { ...this.active } : null;
+    }
+  },
   created() {
     this.load();
   },
@@ -64,11 +70,14 @@ export default {
     },
     onEdit(row) {
       this.editDialogVisible = true;
-      this.active = { ...row };
+      this.active = row;
     },
     modifyRole(form) {
       setLocalStorge(KEY.ROLE, form);
       this.load();
+    },
+    onConfig(row) {
+      this.active = row;
     }
   }
 };

@@ -30,7 +30,7 @@
       </el-table>
     </el-row>
 
-    <el-row>
+    <!-- <el-row>
       <el-col>
         <div class="pagination">
           <el-pagination
@@ -43,7 +43,7 @@
           ></el-pagination>
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
     <add-dialog :visible.sync="addDialogVisible" :roleId="roleId" @submit="load"></add-dialog>
     <delete-dialog :visible.sync="deleteDialogVisible" :active="activeData" @submit="load" :roleId="roleId"></delete-dialog>
   </div>
@@ -125,12 +125,12 @@ export default {
       console.log(sel);
     },
     // 删除已选
-    deleteSelectedItem() {},
+    deleteSelectedItem() {}
     // 分页导航
-    handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
-      this.load();
-    }
+    // handlePageChange(val) {
+    //   this.$set(this.query, 'pageIndex', val);
+    //   this.load();
+    // }
   }
 };
 </script>
