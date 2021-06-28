@@ -58,7 +58,7 @@ import { getOrganization } from 'network/course/info';
 
 export default {
   data() {
-    let _self = this;
+    const _self = this;
     return {
       labelWidth: '90px',
       title: '修改课程',
@@ -79,7 +79,9 @@ export default {
         { value: '2020-2021-1', label: '2020-2021-1' },
         { value: '2020-2021-2', label: '2020-2021-2' }
       ],
+      // 级联选择器，院校的options
       schoolMajorOptions: [],
+      // 级联选择器，选项
       props: {
         lazy: true,
         lazyLoad: _self.getOrganizationOptions
@@ -133,14 +135,12 @@ export default {
     },
     // 表单验证，并发送submit事件参数为表单内容，并调用cancel()
     submitForm(refName) {
-      let result = false;
       this.$refs[refName].validate((valid) => {
-        result = valid;
+        if (!valid) return;
+        const form = this.filterForm(this.form);
+        this.$emit('submit', { ...form }, this.avatarFile);
+        this.cancel();
       });
-      if (!result) return;
-      const form = this.filterForm(this.form);
-      this.$emit('submit', { ...form }, this.avatarFile);
-      this.cancel();
     },
     // 重置表单
     resetForm() {
@@ -153,7 +153,12 @@ export default {
         this.avatar = null;
       }
     },
-    // 级联选择器获取组织方法
+    /**
+     * 级联选择器获取组织方法
+     * @value node节点的value值，这里为每个节点的id值
+     * @label 级联选择器显示的文本,对应org的name
+     * @leaf 是否到达叶子节点,通过org的childrenCount判断
+     */ // 级联选择器获取组织方法
     async getOrganizationOptions(node, resolve) {
       let { value: parentId } = node;
       if (!parentId) {
@@ -173,6 +178,11 @@ export default {
       this.avatarFile = file;
       return false;
     },
+    /**
+     * 处理最后需要上传的表单
+     * @avatar 将表单的avatar置为空，防止修改头像，因为修改图像使用另一个接口
+     * @schoolMajorID 选择器选择时获取的是数组，仅需要最后一个就好。但未修改，则是string。
+     */
     filterForm(form) {
       let filteredForm = {};
       form.avatar = null;
