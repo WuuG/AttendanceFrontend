@@ -8,7 +8,15 @@ const getUsers = (params) => {
 		},
 	}, 'get')
 }
+const patchUser = (form) => {
 
+	return request({
+		url: `users/${form.id}`,
+		data: {
+			...form
+		}
+	}, 'patch')
+}
 class UserQuery {
 	constructor(query) {
 		this.curPage = query.pageIndex
@@ -19,5 +27,6 @@ class UserQuery {
 
 export {
 	getUsers,
+	patchUser,
 	UserQuery
 }

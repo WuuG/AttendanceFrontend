@@ -12,6 +12,7 @@ const UserList = () => import('../pages/userList/UserList.vue')
 const MenuCtrl = () => import('../pages/menu-ctrl/MenuCtrl.vue')
 const Role = () => import('../pages/role/Role.vue')
 const RoleUsers = () => import('../pages/role/users/User.vue')
+const MyInfo = () => import('../pages/my-info/MyInfo.vue')
 
 Vue.use(Router);
 
@@ -81,7 +82,7 @@ export default new Router({
                 {
                     path: '/myInfo',
                     name: 'myInfo',
-                    component: () => import('../pages/MyInfo.vue'),
+                    component: MyInfo,
                     meta: { title: '我的信息' }
                 },
                 {
