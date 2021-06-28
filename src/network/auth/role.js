@@ -26,10 +26,19 @@ const patchRole = (form) => {
 		}
 	}, 'patch')
 }
+const getRoleUsers = (roleId, form) => {
+	return request({
+		url: `role/${roleId}/users`,
+		params: {
+			...form
+		}
+	}, 'get')
+}
 
 export {
 	getRole,
 	postRole,
 	deleteRole,
-	patchRole
+	patchRole,
+	getRoleUsers
 }

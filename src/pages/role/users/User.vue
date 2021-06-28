@@ -17,13 +17,14 @@
           <div></div>
         </template>
       </header-bar>
+
       <el-row class="role-table">
         <role-table></role-table>
       </el-row>
     </el-main>
 
     <el-main class="main-content">
-      <user-table></user-table>
+      <user-table :roleId="id"></user-table>
     </el-main>
   </div>
 </template>

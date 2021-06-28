@@ -6,21 +6,24 @@
         <el-button @click="deleteSelectedItem">删除</el-button>
       </template>
       <template #right-content>
-        <el-button>重置</el-button>
+        <el-col>
+          <el-input prefix-icon="el-icon-search" v-model="query.key"> </el-input>
+        </el-col>
+        <el-button @click="search">搜索</el-button>
+        <el-button @click="load">重置</el-button>
       </template>
     </header-bar>
 
     <el-row class="table">
       <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading">
         <el-table-column type="selection" align="center"></el-table-column>
-        <el-table-column prop="id" label="字典ID"> </el-table-column>
-        <el-table-column prop="name" label="字典名称"> </el-table-column>
-        <el-table-column prop="des" label="字典描述" show-overflow-tooltip> </el-table-column>
-        <el-table-column prop="createTime" label="创建时间"> </el-table-column>
-        <el-table-column label="操作" width="150" align="center">
+        <el-table-column prop="loginName" label="用户名" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="email" label="邮箱" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="id" label="用户id" show-overflow-tooltip> </el-table-column>
+        <el-table-column label="操作" width="80" align="center">
           <template v-slot:default="scope">
-            <el-button size="mini" @click="onEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">移除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,6 +47,9 @@
 </template>
 
 <script>
+import { getRoleUsers } from '../../../../network/auth/role';
+import { Query } from '../../../../network/common';
+
 import HeaderBar from 'components/context/HeaderBar.vue';
 export default {
   name: 'UsersTable',
@@ -73,12 +79,38 @@ export default {
       tableLoading: false
     };
   },
+  props: {
+    roleId: String
+  },
   components: {
     HeaderBar
   },
+  created() {
+    this.load();
+  },
   methods: {
-    onEdit(index, row) {
-      console.log(index, row);
+    // 网络方法
+    async getRoleUsers(id, form) {
+      try {
+        const res = await getRoleUsers(id, form);
+        if (res.status !== 200) return null;
+        return res.data;
+      } catch (error) {
+        console.error(`get role users error:${error}`);
+      }
+    },
+    // 页面逻辑
+    async load() {
+      const query = new Query(this.query);
+      this.tableLoading = true;
+      const result = await this.getRoleUsers(this.roleId, query);
+      this.tableLoading = false;
+      this.data = result.content;
+      this.pageTotal = result.total;
+    },
+    search() {
+      this.query.pageIndex = 1;
+      this.load();
     },
     onDelete(index, row) {
       console.log(index, row);
@@ -92,6 +124,7 @@ export default {
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
+      this.load();
     }
   }
 };
