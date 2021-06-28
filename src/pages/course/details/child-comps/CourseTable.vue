@@ -5,7 +5,7 @@
       <el-table-column prop="avatar" label="课程头像">
         <template #default="scope">
           <el-avatar shape="square">
-            <el-image :src="scope.row.avatar ? baseURL + scope.row.avatar : ''">
+            <el-image :src="scope.row.avatar ? scope.row.avatar : ''">
               <template #error>
                 <i class="el-icon-picture-outline"></i>
               </template>
