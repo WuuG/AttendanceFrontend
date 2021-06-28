@@ -34,11 +34,7 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-<<<<<<< HEAD
       <el-button type="primary" @click="submitForm('form')" :loading="buttonLoading">确 定</el-button>
-=======
-      <el-button type="primary" @click="submitForm('form')" :disabled="buttonLoading">确 定</el-button>
->>>>>>> b9fa0afe080728db89c4fb24b738e3829328ae56
     </template>
   </el-dialog>
 </template>
@@ -67,6 +63,7 @@ export default {
     };
   },
   props: {
+    // 通过.sync 处理
     visible: Boolean,
     // 获取活跃的明细，来防止判重时，和自己重而报错。
     active: Object
@@ -75,7 +72,7 @@ export default {
     // 页面逻辑
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
-      this.$emit('cancel');
+      this.$emit('update', false);
       this.resetForm();
     },
     // 表单验证，并发送submit事件参数为表单内容，并调用cancel()

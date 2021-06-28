@@ -51,7 +51,7 @@
         </el-col>
       </el-row>
 
-      <input-dialog title="新增项目" :visible="addNewDialogVsible" @cancel="addNewDialogVsible = false"></input-dialog>
+      <input-dialog title="新增项目" :visible.sync="addNewDialogVsible"></input-dialog>
     </el-main>
   </div>
 </template>
