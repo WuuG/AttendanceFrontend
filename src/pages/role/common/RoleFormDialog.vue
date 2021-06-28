@@ -1,13 +1,13 @@
 <template>
   <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @open="open" @closed="closed">
     <el-form :model="form" :rules="rules" ref="form">
-      <el-form-item label="明细名称" :label-width="labelWidth" prop="name">
+      <el-form-item label="角色名称" :label-width="labelWidth" prop="name">
         <el-col :span="20">
           <el-input v-model="form.name"> </el-input>
         </el-col>
       </el-form-item>
 
-      <el-form-item label="明细项值" :label-width="labelWidth" prop="code">
+      <el-form-item label="权限标识" :label-width="labelWidth" prop="code">
         <el-col :span="20">
           <el-input v-model="form.code"> </el-input>
         </el-col>
@@ -28,7 +28,7 @@ export default {
     // };
     return {
       labelWidth: '90px',
-      title: '新增项目',
+      title: '新增角色',
       form: {
         name: null,
         code: null
