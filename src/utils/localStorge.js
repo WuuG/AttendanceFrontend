@@ -8,7 +8,8 @@ const getLocalStorge = (key) => {
   return value
 }
 const KEY = {
-  ROLE: 'role'
+  ROLE: 'role',
+  USERINFO: 'userInfo',
 }
 
 export {

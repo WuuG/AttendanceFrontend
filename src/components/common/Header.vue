@@ -47,6 +47,7 @@
 <script>
 import bus from '../common/bus';
 import { getUserInfo } from 'network/userInfo';
+import { setLocalStorge, KEY } from '../../utils/localStorge';
 export default {
   data() {
     return {
@@ -74,7 +75,9 @@ export default {
         this.$store.dispatch('updateUserInfo', {});
         this.$router.push('/passport/login');
       } else if (command == 'modifyMyInfo') {
-        this.$router.push('MyInfo');
+        this.$router.push({
+          name: 'myInfo'
+        });
       }
     },
     // 侧边栏折叠
@@ -115,6 +118,7 @@ export default {
       getUserInfo(uid)
         .then((res) => {
           this.$store.dispatch('updateUserInfo', res.data);
+          setLocalStorge(KEY.USERINFO, res.data);
         })
         .catch((err) => console.log(err));
     }
