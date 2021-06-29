@@ -18,7 +18,7 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm('form')" :disabled="buttonDisable">确 定</el-button>
+      <el-button type="primary" @click="submitForm('form')" :loading="buttonLoading">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -44,7 +44,7 @@ export default {
         title: [{ required: true, message: '菜单名称不可为空', trigger: 'blur' }],
         index: [{ required: true, message: '菜单路径不可为空', trigger: 'blur' }]
       },
-      buttonDisable: false,
+      buttonLoading: false,
       options: {
         ElementUI: true
       }
@@ -85,14 +85,10 @@ export default {
         result = valid;
       });
       if (!result) return;
-      this.buttonDisable = true;
       console.log(this.form);
-      const reqRes = await this.patchMenu(this.form);
-      if (!reqRes) {
-        this.buttonDisable = false;
-      }
-      this.$emit('submit', { ...this.form });
-      this.cancel();
+      this.buttonLoading = true;
+      await this.submitEditForm();
+      this.buttonLoading = false;
     },
     // 重置表单
     resetForm() {
@@ -100,7 +96,13 @@ export default {
     },
     open() {
       this.form = { ...this.activeMenu };
-      this.buttonDisable = false;
+      this.buttonLoading = false;
+    },
+    async submitEditForm() {
+      const result = await this.patchMenu(this.form);
+      if (!result) return;
+      this.$emit('submit', { ...this.form });
+      this.cancel();
     }
   }
 };
