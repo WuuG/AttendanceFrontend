@@ -168,7 +168,7 @@ export default {
       this.$refs[refName].validate(async (valid) => {
         if (!valid) return;
         this.buttonLoading = true;
-        const form = this.filterForm(this.form);
+        const form = this.filterForm({ ...this.form });
         await this.handlePatchUser(form);
         await this.uploadAvatar();
         this.buttonLoading = false;
