@@ -1,19 +1,22 @@
 <template>
-  <comfirm-dialog :visible="visible" @cancel="handleClose" @comfirm="handleComfirm">
-    <template #content>
-      <span> 确认删除此系统参数吗？ </span>
+  <el-dialog title="删除系统参数" :visible.sync="visible" width="400px" @open="open" :before-close="handleClose">
+    <span>确定删除 {{ code }} 吗？</span>
+    <template #footer>
+      <el-button @click="handleClose">取消</el-button>
+      <el-button type="danger" @click="handleComfirm" :loading="loading">确定</el-button>
     </template>
-  </comfirm-dialog>
+  </el-dialog>
 </template>
 
 <script>
 import { deleteParam } from 'network/systemParams';
 
-import ComfirmDialog from 'components/context/ConfirmDialog.vue';
 export default {
   name: 'SystemDeleteDialog',
   data() {
-    return {};
+    return {
+      loading: false
+    };
   },
   props: {
     visible: Boolean,
@@ -22,15 +25,11 @@ export default {
       default: ''
     }
   },
-  components: {
-    ComfirmDialog
-  },
   methods: {
     //网络请求
     async deleteParam(code) {
       try {
         const result = await deleteParam(code);
-        console.log(result);
         switch (result.status) {
           case 200:
             this.$message({
@@ -44,17 +43,23 @@ export default {
         console.error(`deleteParam network request error ${error}`);
       }
     },
-
     //页面逻辑
     handleClose() {
-      this.$emit('cancel');
+      this.$emit('update:visible', false);
     },
     async handleComfirm() {
+      this.loading = true;
+      await this.submitDeleteParam();
+      this.loading = false;
+    },
+    open() {
+      this.loading = false;
+    },
+    async submitDeleteParam() {
       const result = await this.deleteParam(this.code);
+      if (!result) return;
       this.handleClose();
-      if (result) {
-        this.$emit('reset');
-      }
+      this.$emit('reset');
     }
   }
 };

@@ -35,7 +35,7 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+      <el-button type="primary" @click="submitForm('form')" :loading="buttonLoading">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -80,7 +80,8 @@ export default {
         ],
         name: [{ required: true, message: '配置名称必填', trigger: 'blur' }],
         value: [{ required: true, message: '配置参数必填', trigger: 'blur' }]
-      }
+      },
+      buttonLoading: false
     };
   },
   props: {
@@ -124,11 +125,13 @@ export default {
     submitForm(refName) {
       this.$refs[refName].validate(async (valid) => {
         if (!valid) return;
+        this.buttonLoading = true;
         if (this.isEdit) {
           await this.modifyParam(this.form);
         } else {
           await this.addNewParam(this.form);
         }
+        this.buttonLoading = false;
         this.cancel();
         this.$emit('reset');
       });
