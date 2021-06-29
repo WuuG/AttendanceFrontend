@@ -35,10 +35,23 @@ const getMymenus = () => {
 		url: `menus/my`,
 	}, 'get')
 }
+
+/** 
+ * 菜单排序
+ * @pid 父节点id
+ * @MenuArray 字节点所有菜单id的数组。
+*/
+const putMenuOrders = (pid, MenuArray) => {
+	return request({
+		url: `menus/${pid}/orders`,
+		data: MenuArray
+	}, 'put')
+}
 export {
 	getMenus,
 	postMenu,
 	patchMenu,
 	deleteMenu,
-	getMymenus
+	getMymenus,
+	putMenuOrders
 }

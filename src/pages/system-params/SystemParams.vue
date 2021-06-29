@@ -49,7 +49,7 @@
       </form-dialog>
 
       <delete-dialog
-        :visible.sync="deleteDialogVisible"
+        :visible.sy="deleteDialogVisible"
         @cancel="deleteDialogVisible = false"
         :code="activeSysParams ? activeSysParams.code : null"
         @reset="reset"

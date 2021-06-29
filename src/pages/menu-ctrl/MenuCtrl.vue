@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getMenus } from '../../network/auth/menuCtrl';
+import { getMenus, putMenuOrders } from '../../network/auth/menuCtrl';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import AddDialog from './chil-comps/AddDialog.vue';
@@ -108,8 +108,8 @@ export default {
       return 24 / this.titles.length;
     }
   },
-  mounted() {
-    this.load();
+  async mounted() {
+    await this.load();
   },
   methods: {
     // 网络请求
@@ -120,6 +120,15 @@ export default {
         return false;
       } catch (error) {
         console.error(`get menus error:${error}`);
+      }
+    },
+    async putMenuOrders(pid, MenuArray) {
+      try {
+        const res = await putMenuOrders(pid, MenuArray);
+        if (res.status === 200) return true;
+        return false;
+      } catch (error) {
+        console.error(`put menu orders error: ${error}`);
       }
     },
     // 组件通信
@@ -153,18 +162,29 @@ export default {
       this.treeLoading = false;
       this.data = result;
     },
-    handleDragEnd(draggingNode, dropNode, dropType, ev) {
+    /**
+     * 再拖拽结束后进行排序处理
+     * @dropType 判断同级排序
+     * @pid 获取其父亲节点id,若undefined，说明其父亲是顶层节点，也就是0
+     * @formArray 其父亲节点所有子节点的排序后的id数组
+     */
+    async handleDragEnd(draggingNode, dropNode, dropType, ev) {
       if (dropType === 'none') {
         this.$message({
           type: 'warning',
           message: '只能在同一级别内进行排序'
         });
+        return;
       }
-      console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+      const pid = dropNode.parent.key ? dropNode.parent.key : '0';
+      const MenuArray = dropNode.parent.childNodes;
+      const formArray = MenuArray.map((x) => x.key);
+      this.treeLoading = true;
+      await this.putMenuOrders(pid, formArray);
+      this.treeLoading = false;
     },
-    allowDrop(draggingNode, dropNode, type) {
+    allowDrop(draggingNode, dropNode, type, ev) {
       if (type === 'inner' || draggingNode.data.parentId !== dropNode.data.parentId) {
-        // console.log(draggingNode, dropNode, type);
         return false;
       }
       return true;
