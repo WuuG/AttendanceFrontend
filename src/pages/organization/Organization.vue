@@ -36,8 +36,7 @@
           <el-table-column prop="name" label="学校名称" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="childrenCount" label="子节点数量" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="level" label="节点层级" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="id" label="节点id" show-overflow-tooltip> </el-table-column>
-          <el-table-column label="操作" width="300" align="center">
+          <el-table-column label="操作" width="280" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="showEditDialog(scope.row)" :loading="scope.row.loading">编辑</el-button>
               <el-button
