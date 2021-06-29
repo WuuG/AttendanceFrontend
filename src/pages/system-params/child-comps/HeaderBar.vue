@@ -6,24 +6,20 @@
         <el-button @click="comfirmVisible = true">批量删除</el-button>
       </template>
       <template #right-content>
-        <el-col>
+        <!-- <el-col>
           <el-input prefix-icon="el-icon-search" v-model="queryName"> </el-input>
         </el-col>
-        <el-button @click="dataSearch">搜索</el-button>
+        <el-button @click="dataSearch">搜索</el-button> -->
         <el-button @click="load">重置</el-button>
       </template>
     </header-bar>
-    <comfirm-dialog :visible="comfirmVisible" @cancel="handleClose" @comfirm="handleComfirm">
-      <template #content>
-        <span> 确认删除此系统参数吗？ </span>
-      </template>
-    </comfirm-dialog>
+    <comfirm-dialog :visible.sync="comfirmVisible" @comfirm="handleComfirm"> </comfirm-dialog>
   </div>
 </template>
 
 <script>
 import HeaderBar from 'components/context/HeaderBar.vue';
-import ComfirmDialog from 'components/context/ConfirmDialog.vue';
+import ComfirmDialog from './HeaderDeleteDialog.vue';
 
 import { deleteParam } from 'network/systemParams';
 export default {
@@ -68,13 +64,9 @@ export default {
       this.$emit('add-new');
     },
     // 组件内方法
-    dataSearch() {},
-    handleClose() {
-      this.comfirmVisible = false;
-    },
+    // dataSearch() {},
     handleComfirm() {
       this.deleteParams();
-      this.handleClose();
     }
   }
 };
