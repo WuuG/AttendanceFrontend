@@ -23,7 +23,8 @@
       <el-row class="table">
         <el-table :data="usersData" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading">
           <el-table-column type="selection" align="center"></el-table-column>
-          <el-table-column prop="loginName" label="昵称"> </el-table-column>
+          <el-table-column prop="loginName" label="用户名"> </el-table-column>
+          <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="realName" label="真实姓名"> </el-table-column>
           <el-table-column prop="avatar" label="用户头像" align="center">
             <template #default="scope">
@@ -37,14 +38,20 @@
               </template>
             </template>
           </el-table-column>
+          <el-table-column prop="id" label="id"> </el-table-column>
           <el-table-column prop="gender" label="性别" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="email" label="邮箱" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
-          <el-table-column prop="schoolMajor" label="学校学院" show-overflow-tooltip> </el-table-column>
-          <el-table-column label="操作" width="150" align="center">
+          <!-- <el-table-column prop="email" label="邮箱" show-overflow-tooltip> </el-table-column> -->
+          <el-table-column prop="schoolMajorName" label="学校学院" show-overflow-tooltip> </el-table-column>
+          <el-table-column prop="roles" label="用户角色" show-overflow-tooltip>
+            <template #default="scope">
+              <span v-for="(role, index) in scope.row.roles" :key="index"> {{ role.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="250" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" @click="onEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" @click="onEdit(scope.row)">编辑</el-button>
+              <el-button size="mini" type="success" plain @click="onDistribute(scope.row)">分配角色</el-button>
+              <el-button size="mini" type="danger" @click="onDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -65,6 +72,7 @@
         </el-col>
       </el-row>
     </el-main>
+    <edit-dialog :visible.sync="editDialogVisible" :active="activeData" @submit="editSubmit"></edit-dialog>
   </div>
 </template>
 
@@ -73,6 +81,8 @@ import { getUsers, UserQuery } from '../../network/auth/userList';
 import CONST from '../../utils/const';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
+import AddDialog from './chil-comps/AddDialog.vue';
+import EditDialog from './chil-comps/EditDialog.vue';
 
 export default {
   name: 'UserList',
@@ -86,15 +96,23 @@ export default {
       },
       pageTotal: 0,
       usersData: [],
-      tableLoading: false
+      tableLoading: false,
+      active: null,
+      // 通信数据
+      editDialogVisible: false
     };
   },
   components: {
-    HeaderBar
+    HeaderBar,
+    AddDialog,
+    EditDialog
   },
   computed: {
     baseURL() {
       return CONST.IMG_BASEURL;
+    },
+    activeData() {
+      return this.active ? { ...this.active } : null;
     }
   },
   created() {
@@ -123,10 +141,19 @@ export default {
       this.usersData = result.content;
       this.pageTotal = result.total;
     },
-    onEdit(index, row) {
-      console.log(index, row);
+    // 组件通信方法
+    onDistribute(row) {
+      this.active = row;
     },
-    onDelete(index, row) {
+    onEdit(row) {
+      this.active = row;
+      this.editDialogVisible = true;
+    },
+    editSubmit() {
+      this.load();
+    },
+    onDelete(row) {
+      this.active = row;
       console.log(index, row);
     },
     //选择时，将被选择的表项记录下来。
@@ -141,7 +168,9 @@ export default {
     },
     searchUser() {
       this.query.pageIndex = 1;
+      this.load();
     },
+
     reset() {
       this.query.key = '';
       this.query.pageIndex = 1;
