@@ -1,6 +1,6 @@
 <template>
   <div class="course-add-dialog">
-    <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel">
+    <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @closed="src = null">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="课程名称" :label-width="labelWidth" placeholder="请输入课程名称">
           <el-col :span="20">
