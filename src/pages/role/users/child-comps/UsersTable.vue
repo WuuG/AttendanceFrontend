@@ -17,7 +17,7 @@
 
     <el-row class="table">
       <el-table :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading">
-        <el-table-column type="selection" align="center"></el-table-column>
+        <!-- <el-table-column type="selection" align="center"></el-table-column> -->
         <el-table-column prop="loginName" label="用户名" show-overflow-tooltip> </el-table-column>
         <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
         <el-table-column prop="email" label="邮箱" show-overflow-tooltip> </el-table-column>

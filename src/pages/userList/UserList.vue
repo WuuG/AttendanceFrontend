@@ -8,7 +8,7 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button type="success" plain @click="roleDialogVisible = true">新增</el-button>
+          <el-button type="success" plain @click="addDialogVisible = true">新增</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
         </template>
         <template #right-content>
@@ -22,7 +22,7 @@
 
       <el-row class="table">
         <el-table :data="usersData" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading">
-          <el-table-column type="selection" align="center"></el-table-column>
+          <!-- <el-table-column type="selection" align="center"></el-table-column> -->
           <el-table-column prop="loginName" label="用户名"> </el-table-column>
           <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="realName" label="真实姓名"> </el-table-column>
@@ -38,7 +38,7 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column prop="id" label="id"> </el-table-column>
+          <el-table-column prop="id" label="id" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="gender" label="性别" show-overflow-tooltip> </el-table-column>
           <!-- <el-table-column prop="email" label="邮箱" show-overflow-tooltip> </el-table-column> -->
           <el-table-column prop="schoolMajorName" label="学校学院" show-overflow-tooltip> </el-table-column>
@@ -74,6 +74,7 @@
     </el-main>
     <edit-dialog :visible.sync="editDialogVisible" :active="activeData" @submit="load"></edit-dialog>
     <role-dialog :visible.sync="roleDialogVisible" :active="activeData" @submit="load"></role-dialog>
+    <add-dialog :visible.sync="addDialogVisible" @submit="load"></add-dialog>
   </div>
 </template>
 
@@ -82,9 +83,9 @@ import { getUsers, UserQuery } from '../../network/auth/userList';
 import CONST from '../../utils/const';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
-import AddDialog from './chil-comps/AddDialog.vue';
-import EditDialog from './chil-comps/EditDialog.vue';
 import RoleDialog from './chil-comps/RoleDialog.vue';
+const AddDialog = () => import('./chil-comps/AddDialog.vue');
+const EditDialog = () => import('./chil-comps/EditDialog.vue');
 
 export default {
   name: 'UserList',
@@ -102,7 +103,8 @@ export default {
       active: null,
       // 通信数据
       editDialogVisible: false,
-      roleDialogVisible: false
+      roleDialogVisible: false,
+      addDialogVisible: false
     };
   },
   components: {

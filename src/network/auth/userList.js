@@ -27,6 +27,13 @@ const putUserAvatar = (id, form) => {
 		data: form
 	}, 'put')
 }
+
+const postUser = (form) => {
+	return request({
+		url: 'users',
+		data: form
+	}, 'post')
+}
 class UserQuery {
 	constructor(query) {
 		this.curPage = query.pageIndex
@@ -39,5 +46,6 @@ export {
 	getUsers,
 	patchUser,
 	putUserAvatar,
+	postUser,
 	UserQuery
 }
