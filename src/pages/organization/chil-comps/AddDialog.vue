@@ -10,7 +10,7 @@
     </el-form>
     <template #footer>
       <el-button @click="cancel">取 消</el-button>
-      <el-button type="primary" @click="submitForm('form')" :disabled="buttonDisable">确 定</el-button>
+      <el-button type="primary" @click="submitForm('form')" :loading="buttonLoading">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -31,7 +31,7 @@ export default {
       rules: {
         name: [{ required: true, message: '组织名称不可为空', trigger: 'blur' }]
       },
-      buttonDisable: false
+      buttonLoading: false
     };
   },
   props: {
@@ -54,7 +54,7 @@ export default {
     },
     // 页面逻辑
     open() {
-      this.buttonDisable = false;
+      this.buttonLoading = false;
     },
     // 发送关闭dialog事件，按钮处理和reset表单
     cancel(done) {
@@ -68,7 +68,7 @@ export default {
         result = valid;
       });
       if (!result) return;
-      this.buttonDisable = true;
+      this.buttonLoading = true;
       const form = this.filterForm(this.form);
       this.$emit('before-submit', true);
       const orgArr = await this.postOrganization(form);

@@ -86,7 +86,6 @@
       :visible="deleteDialogVisible"
       @cancel="deleteDialogVisible = false"
       :organization="organization"
-      @before-comfirm="setButtonLoading"
       @comfirm="deleteReloadOrganization"
     ></delete-dialog>
 
@@ -94,7 +93,6 @@
       :visible="editDialogVisible"
       :organization="organization"
       @cancel="editDialogVisible = false"
-      @before-submit="setButtonLoading"
       @submit="editeReloadOrganization"
     ></edit-dialog>
   </div>

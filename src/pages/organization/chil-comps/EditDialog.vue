@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @open="open">
+  <el-dialog :title="title" width="400px" :visible.sync="visible" @open="open">
     <el-form :model="form" :rules="rules" ref="form">
       <el-form-item label="组织名称" :label-width="labelWidth" prop="name">
         <el-col :span="20">
@@ -71,17 +71,18 @@ export default {
       });
       if (!result) return;
       this.buttonLoading = true;
-      this.$emit('before-submit', true);
-      const editResult = await this.editeOrganization(this.organization.id, this.form);
-      if (!editResult) {
-        this.$emit('before-submit', false);
-      }
-      this.$emit('submit', { ...this.form });
-      this.cancel();
+      await this.submitEditOrganization();
+      this.buttonLoading = false;
     },
     // 重置表单
     resetForm() {
       this.$refs['form'].resetFields();
+    },
+    async submitEditOrganization() {
+      const editResult = await this.editeOrganization(this.organization.id, this.form);
+      if (!editResult) return;
+      this.$emit('submit', { ...this.form });
+      this.cancel();
     }
   }
 };

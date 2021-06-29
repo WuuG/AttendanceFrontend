@@ -1,22 +1,32 @@
 <template>
-  <comfirm-dialog title="删除组织" @cancel="cancel" @comfirm="comfirm" :visible="visible">
-    <template #content>
-      <span>确认删除{{ organization.name }}吗</span>
+  <el-dialog title="删除组织" :visible.sync="visible" width="400px" @open="open">
+    <span>确定删除 {{ name }} 吗？</span>
+    <template #footer>
+      <el-button @click="cancel">取消</el-button>
+      <el-button type="danger" @click="comfirm" :loading="loading">确定</el-button>
     </template>
-  </comfirm-dialog>
+  </el-dialog>
 </template>
+
+
 
 <script>
 import { deleteOrganization } from 'network/auth/organization';
-import comfirmDialog from 'components/context/ConfirmDialog.vue';
 
 export default {
-  components: {
-    comfirmDialog
+  data() {
+    return {
+      loading: false
+    };
   },
   props: {
     organization: Object,
     visible: Boolean
+  },
+  computed: {
+    name() {
+      return this.organization ? this.organization.name : {};
+    }
   },
   methods: {
     // 网络方法
@@ -33,17 +43,22 @@ export default {
         console.error(`delete organization error:${error}`);
       }
     },
+    async comfirm() {
+      this.loading = true;
+      await this.submitDelteOrg();
+      this.loading = false;
+    },
+    async submitDelteOrg() {
+      const result = await this.deleteOrganization(this.organization.id);
+      if (!result) return;
+      this.$emit('comfirm');
+      this.cancel();
+    },
+    open() {
+      this.loading = false;
+    },
     cancel() {
       this.$emit('cancel');
-    },
-    async comfirm() {
-      this.$emit('before-comfirm', true);
-      const result = await this.deleteOrganization(this.organization.id);
-      if (!result) {
-        this.$emit('before-comfirm', false);
-        return;
-      }
-      this.$emit('comfirm');
     }
   }
 };
