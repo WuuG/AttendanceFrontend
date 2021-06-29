@@ -177,10 +177,10 @@ export default new Router({
             ]
 
         },
-        // {
-        //     path: '*',
-        //     redirect: '/404'
-        // }
+        {
+            path: '*',
+            redirect: '/404'
+        }
     ],
     //切换为history模式
     // mode:"history"
