@@ -2,12 +2,12 @@
   <div class="course-add-dialog">
     <el-dialog :title="title" width="400px" :visible.sync="visible" :before-close="cancel" @closed="src = null">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="课程名称" :label-width="labelWidth" placeholder="请输入课程名称">
+        <el-form-item label="课程名称" :label-width="labelWidth" placeholder="请输入课程名称" prop="name">
           <el-col :span="20">
             <el-input v-model="form.name"> </el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="课程状态" :label-width="labelWidth" prop="value">
+        <el-form-item label="课程状态" :label-width="labelWidth">
           <el-col :span="20">
             <el-select v-model="form.state" placeholder="请选择课程状态">
               <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
@@ -21,7 +21,7 @@
             </el-select>
           </el-col>
         </el-form-item>
-        <el-form-item label="开课院校" :label-width="labelWidth">
+        <el-form-item label="开课院校" :label-width="labelWidth" prop="schoolMajorID">
           <el-col :span="20">
             <el-cascader v-model="form.schoolMajorID" :props="props" :show-all-levels="false"> </el-cascader>
           </el-col>
@@ -86,7 +86,8 @@ export default {
         lazyLoad: _self.getOrganizationOptions
       },
       rules: {
-        // value: [{ validator: validateValue, trigger: 'blur' }]
+        name: [{ required: true, message: '课程名称不可为空', trigger: 'blur' }],
+        schoolMajorID: [{ required: true, message: '开课院校必选', trigger: 'blur' }]
       },
       src: null,
       avatarFile: null

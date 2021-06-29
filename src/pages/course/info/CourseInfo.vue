@@ -7,7 +7,7 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="addDialogVisible = true">新增</el-button>
+          <el-button type="success" plain @click="addDialogVisible = true">新增</el-button>
           <!-- <el-button @click="deleteSelectedItem">删除</el-button> -->
         </template>
         <template #right-content>
@@ -23,7 +23,7 @@
         <el-table :data="courseInfo" empty-text="暂时没有数据" @selection-change="selection" v-loading="courseTableLoading">
           <!-- <el-table-column type="selection" align="center"></el-table-column> -->
           <el-table-column prop="name" label="课程名称"> </el-table-column>
-          <el-table-column prop="avatar" label="课程头像">
+          <el-table-column prop="avatar" label="课程封面">
             <template #default="scope">
               <el-avatar>
                 <el-image :src="scope.row.avatar ? scope.row.avatar : ''">
@@ -67,7 +67,7 @@
       :visible="addDialogVisible"
       :buttonDisable="addDialogButtonDisable"
       @cancel="addDialogVisible = false"
-      @submit="addCourse"
+      @submit="submitCourse"
     ></add-dialog>
 
     <delete-dialog :visible.sync="deleteDialogVisible" @comfirm="afterDelete" :active="activeData"> </delete-dialog>
@@ -201,9 +201,13 @@ export default {
     async addCourse(form, file) {
       const course = await this.postCouese(form);
       if (!course) return;
+      if (!file) return;
       const avatar = new FormData();
       avatar.append('avatar', file);
       await putCourseAvatar(course.id, avatar);
+    },
+    async submitCourse(form, file) {
+      await this.addCourse(form, file);
       this.load();
     }
   }
