@@ -52,9 +52,8 @@ export default {
       this.loading = true;
       console.log({ ...this.active });
       const result = await deleteRoleUser({ ...this.active });
-      console.log('🚀 ~ file: UserDeleteDialog.vue ~ line 55 ~ handleComfirm ~ result', result);
+      this.loading = false;
       if (!result) {
-        this.loading = false;
         return;
       }
       this.$emit('comfirm');

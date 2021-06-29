@@ -57,12 +57,8 @@ export default {
       this.$refs[refName].validate(async (valid) => {
         if (!valid) return;
         this.buttonLoading = true;
-        const res = await this.request(this.form);
-        if (!res) {
-          this.buttonLoading = false;
-        }
-        this.$emit('submit', { ...this.form });
-        this.cancel();
+        await this.submitAddUserForm();
+        this.buttonLoading = false;
       });
     },
     // 重置表单
@@ -78,6 +74,12 @@ export default {
     },
     closed() {
       this.buttonLoading = false;
+    },
+    async submitAddUserForm() {
+      const res = await this.request(this.form);
+      if (!res) return;
+      this.$emit('submit', { ...this.form });
+      this.cancel();
     }
   }
 };

@@ -48,11 +48,12 @@ export default {
     },
     async handleComfirm() {
       this.loading = true;
+      await this.submitDeleteRole();
+      this.loading = false;
+    },
+    async submitDeleteRole() {
       const result = await deleteRole(this.active.id);
-      if (!result) {
-        this.loading = false;
-        return;
-      }
+      if (!result) return;
       this.$emit('comfirm');
       this.handleClose();
     },

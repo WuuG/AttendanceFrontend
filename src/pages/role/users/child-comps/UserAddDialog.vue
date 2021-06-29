@@ -105,8 +105,8 @@ export default {
         if (!valid) return;
         this.buttonLoading = true;
         const result = await this.postRoleUser(this.form);
+        this.buttonLoading = false;
         if (!result) {
-          this.buttonLoading = false;
           return;
         }
         this.$emit('submit');
