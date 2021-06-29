@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getDictionaryByCode } from '../../network/dictionary';
+import { getDictionaryByCode } from '../../../network/dictionary';
 export default {
   name: 'SexFormItem',
   data() {
