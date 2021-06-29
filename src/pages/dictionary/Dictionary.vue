@@ -139,12 +139,13 @@ export default {
     },
     async onDeleteDictionary() {
       this.comfirmButtonDisable = true;
+      this.loading = true;
       await this.deleteDictionary(this.activeObj.id);
+      this.comfirmButtonDisable = false;
       if (this.dicInfo.length < 2) {
         this.query.curPage--;
       }
       await this.load(this.query.curPage, this.query.pageSize);
-      this.comfirmButtonDisable = false;
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
@@ -157,11 +158,11 @@ export default {
     async load(curPage, pageSize = this.query.pageSize) {
       this.loading = true;
       const result = await this.getDictionaries(curPage, pageSize);
+      this.loading = false;
       if (!result) return;
       const { total, content } = result;
       this.pageTotal = total;
       this.dicInfo = content;
-      this.loading = false;
     }
   }
 };
