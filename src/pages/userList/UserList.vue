@@ -8,7 +8,7 @@
     <el-main class="main-content">
       <header-bar>
         <template #left-content>
-          <el-button @click="addNewDialogVsible = true">新增</el-button>
+          <el-button type="success" plain @click="roleDialogVisible = true">新增</el-button>
           <el-button @click="deleteSelectedItem">删除</el-button>
         </template>
         <template #right-content>
@@ -50,7 +50,7 @@
           <el-table-column label="操作" width="250" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="onEdit(scope.row)">编辑</el-button>
-              <el-button size="mini" type="success" plain @click="onDistribute(scope.row)">分配角色</el-button>
+              <el-button size="mini" type="primary" plain @click="onDistribute(scope.row)">分配角色</el-button>
               <el-button size="mini" type="danger" @click="onDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -72,7 +72,8 @@
         </el-col>
       </el-row>
     </el-main>
-    <edit-dialog :visible.sync="editDialogVisible" :active="activeData" @submit="editSubmit"></edit-dialog>
+    <edit-dialog :visible.sync="editDialogVisible" :active="activeData" @submit="load"></edit-dialog>
+    <role-dialog :visible.sync="roleDialogVisible" :active="activeData" @submit="load"></role-dialog>
   </div>
 </template>
 
@@ -83,6 +84,7 @@ import CONST from '../../utils/const';
 import HeaderBar from 'components/context/HeaderBar.vue';
 import AddDialog from './chil-comps/AddDialog.vue';
 import EditDialog from './chil-comps/EditDialog.vue';
+import RoleDialog from './chil-comps/RoleDialog.vue';
 
 export default {
   name: 'UserList',
@@ -99,13 +101,15 @@ export default {
       tableLoading: false,
       active: null,
       // 通信数据
-      editDialogVisible: false
+      editDialogVisible: false,
+      roleDialogVisible: false
     };
   },
   components: {
     HeaderBar,
     AddDialog,
-    EditDialog
+    EditDialog,
+    RoleDialog
   },
   computed: {
     baseURL() {
@@ -144,13 +148,11 @@ export default {
     // 组件通信方法
     onDistribute(row) {
       this.active = row;
+      this.roleDialogVisible = true;
     },
     onEdit(row) {
       this.active = row;
       this.editDialogVisible = true;
-    },
-    editSubmit() {
-      this.load();
     },
     onDelete(row) {
       this.active = row;

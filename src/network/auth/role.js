@@ -1,10 +1,12 @@
 import { request } from '../request';
 
+// 获取所有角色
 const getRole = () => {
 	return request({
 		url: 'roles'
 	}, 'get')
 }
+// 添加角色
 const postRole = (form) => {
 	return request({
 		url: 'roles',
@@ -13,11 +15,13 @@ const postRole = (form) => {
 		}
 	}, 'post')
 }
+// 删除角色
 const deleteRole = (roleId) => {
 	return request({
 		url: `roles/${roleId}`
 	}, 'delete')
 }
+// 修改角色信息
 const patchRole = (form) => {
 	return request({
 		url: `roles/${form.id}`,
@@ -26,6 +30,7 @@ const patchRole = (form) => {
 		}
 	}, 'patch')
 }
+// 获取角色用户列表
 const getRoleUsers = (roleId, form) => {
 	return request({
 		url: `roles/${roleId}/users`,
@@ -34,6 +39,7 @@ const getRoleUsers = (roleId, form) => {
 		}
 	}, 'get')
 }
+// 给用户设置角色
 const postRoleUser = (form) => {
 	return request({
 		url: `roles/${form.roleId}/users/${form.id}`,
@@ -42,10 +48,18 @@ const postRoleUser = (form) => {
 		}
 	}, 'post')
 }
+// 将用户从角色中删除
 const deleteRoleUser = (form) => {
 	return request({
 		url: `roles/${form.roleId}/users/${form.id}`,
 	}, 'delete')
+}
+// 给用户添加角色列表
+const putUserRoles = (uid, RoleArray) => {
+	return request({
+		url: `roles/users/${uid}`,
+		data: RoleArray
+	}, 'put')
 }
 export {
 	getRole,
@@ -54,5 +68,6 @@ export {
 	patchRole,
 	getRoleUsers,
 	postRoleUser,
-	deleteRoleUser
+	deleteRoleUser,
+	putUserRoles
 }
