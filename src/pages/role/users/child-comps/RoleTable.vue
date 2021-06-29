@@ -5,7 +5,7 @@
       <el-table-column prop="code" label="权限标识" show-overflow-tooltip> </el-table-column>
       <el-table-column label="操作" width="200" align="center">
         <template v-slot:default="scope">
-          <el-button size="mini" @click="onConfig(scope.row)">设置权限</el-button>
+          <el-button size="mini" type="primary" plain @click="menuCtrl(scope.row)">菜单权限</el-button>
           <el-button size="mini" @click="onEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
@@ -17,6 +17,7 @@
       @submit="modifyRole"
       :request="patchRole"
     ></edit-dialog>
+    <role-menu-dialog :visible.sync="roleMenuDialogVisible" :roleId="roleId"></role-menu-dialog>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { setLocalStorge, getLocalStorge, KEY } from 'utils/localStorge';
 import { patchRole } from 'network/auth/role';
 
 import EditDialog from '../../common/RoleFormDialog.vue';
+import RoleMenuDialog from './RoleMenuDialog.vue';
 
 export default {
   name: 'RoleTable',
@@ -33,16 +35,21 @@ export default {
       data: [],
       tableLoading: false,
       //通信数据
+      active: null,
       editDialogVisible: false,
-      active: null
+      roleMenuDialogVisible: false
     };
   },
   components: {
-    EditDialog
+    EditDialog,
+    RoleMenuDialog
   },
   computed: {
     activeData() {
       return this.active ? { ...this.active } : null;
+    },
+    roleId() {
+      return this.$route.params.id;
     }
   },
   created() {
@@ -76,8 +83,9 @@ export default {
       setLocalStorge(KEY.ROLE, form);
       this.load();
     },
-    onConfig(row) {
+    menuCtrl(row) {
       this.active = row;
+      this.roleMenuDialogVisible = true;
     }
   }
 };

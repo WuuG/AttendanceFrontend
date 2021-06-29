@@ -30,6 +30,7 @@ const patchRole = (form) => {
 		}
 	}, 'patch')
 }
+
 // 获取角色用户列表
 const getRoleUsers = (roleId, form) => {
 	return request({
@@ -61,13 +62,32 @@ const putUserRoles = (uid, RoleArray) => {
 		data: RoleArray
 	}, 'put')
 }
+
+// 获取用户菜单
+const getRoleMenus = (roleId) => {
+	return request({
+		url: `roles/${roleId}/menus`,
+	}, 'get')
+}
+// 修改角色可访问菜单项
+const postRoleMenus = (roleId, menuArray) => {
+	return request({
+		url: `roles/${roleId}/menus`,
+		data: menuArray
+	}, 'put')
+}
+
 export {
 	getRole,
 	postRole,
 	deleteRole,
 	patchRole,
+
 	getRoleUsers,
 	postRoleUser,
 	deleteRoleUser,
-	putUserRoles
+	putUserRoles,
+
+	getRoleMenus,
+	postRoleMenus
 }
