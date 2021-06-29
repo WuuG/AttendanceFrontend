@@ -32,7 +32,7 @@
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
           >
-          <el-table-column type="selection" align="center"></el-table-column>
+          <!-- <el-table-column type="selection" align="center"></el-table-column> -->
           <el-table-column prop="name" label="学校名称" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="childrenCount" label="子节点数量" show-overflow-tooltip> </el-table-column>
           <el-table-column prop="level" label="节点层级" show-overflow-tooltip> </el-table-column>

@@ -20,4 +20,6 @@ export default {
   },
   IMG_BASEURL: 'http://attendance.keepdev.top',
   // IMG_BASEURL: 'http://172.17.169.27:8080',
+  BASEURL: 'http://ad.keepdev.top:8080',
+  // BASEURL :'http://attendance.keepdev.top/api'
 }
