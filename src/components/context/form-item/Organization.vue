@@ -62,6 +62,7 @@ export default {
      * @schoolMajorID 选择器选择时获取的是数组，仅需要最后一个就好。但未修改，则是string。
      */
     filterOrgId(orgId) {
+      if (!orgId) return '';
       return orgId !== 'string' ? orgId.pop() : orgId;
     }
   }
