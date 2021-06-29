@@ -34,7 +34,7 @@ export default {
     // };
     return {
       labelWidth: '90px',
-      title: '添加菜单',
+      title: '编辑菜单',
       form: {
         title: null,
         index: null,
