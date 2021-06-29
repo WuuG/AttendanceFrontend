@@ -9,7 +9,7 @@
       <header-bar>
         <template #left-content>
           <el-button type="success" plain @click="addDialogVisible = true">新增</el-button>
-          <el-button @click="deleteSelectedItem">删除</el-button>
+          <!-- <el-button @click="deleteSelectedItem">删除</el-button> -->
         </template>
         <template #right-content>
           <el-col>
@@ -72,9 +72,11 @@
         </el-col>
       </el-row>
     </el-main>
+
     <edit-dialog :visible.sync="editDialogVisible" :active="activeData" @submit="load"></edit-dialog>
     <role-dialog :visible.sync="roleDialogVisible" :active="activeData" @submit="load"></role-dialog>
     <add-dialog :visible.sync="addDialogVisible" @submit="load"></add-dialog>
+    <delete-dialog :visible.sync="deleteDialogVisible" :active="activeData" @comfirm="afterDelete"></delete-dialog>
   </div>
 </template>
 
@@ -86,6 +88,7 @@ import HeaderBar from 'components/context/HeaderBar.vue';
 import RoleDialog from './chil-comps/RoleDialog.vue';
 const AddDialog = () => import('./chil-comps/AddDialog.vue');
 const EditDialog = () => import('./chil-comps/EditDialog.vue');
+const DeleteDialog = () => import('./chil-comps/DeleteDialog.vue');
 
 export default {
   name: 'UserList',
@@ -104,14 +107,16 @@ export default {
       // 通信数据
       editDialogVisible: false,
       roleDialogVisible: false,
-      addDialogVisible: false
+      addDialogVisible: false,
+      deleteDialogVisible: false
     };
   },
   components: {
     HeaderBar,
     AddDialog,
     EditDialog,
-    RoleDialog
+    RoleDialog,
+    DeleteDialog
   },
   computed: {
     baseURL() {
@@ -158,7 +163,13 @@ export default {
     },
     onDelete(row) {
       this.active = row;
-      console.log(index, row);
+      this.deleteDialogVisible = true;
+    },
+    afterDelete() {
+      if (this.usersData.length < 2) {
+        this.query.pageIndex--;
+      }
+      this.load();
     },
     //选择时，将被选择的表项记录下来。
     selection(sel) {
@@ -169,6 +180,7 @@ export default {
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
+      this.load();
     },
     searchUser() {
       this.query.pageIndex = 1;

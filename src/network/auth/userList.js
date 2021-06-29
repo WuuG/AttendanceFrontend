@@ -34,6 +34,11 @@ const postUser = (form) => {
 		data: form
 	}, 'post')
 }
+const deleteUser = (uid) => {
+	return request({
+		url: `users/${uid}`,
+	}, 'delete')
+}
 class UserQuery {
 	constructor(query) {
 		this.curPage = query.pageIndex
@@ -47,5 +52,6 @@ export {
 	patchUser,
 	putUserAvatar,
 	postUser,
+	deleteUser,
 	UserQuery
 }
