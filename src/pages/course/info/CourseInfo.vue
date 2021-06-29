@@ -8,20 +8,20 @@
       <header-bar>
         <template #left-content>
           <el-button @click="addDialogVisible = true">新增</el-button>
-          <el-button @click="deleteSelectedItem">删除</el-button>
+          <!-- <el-button @click="deleteSelectedItem">删除</el-button> -->
         </template>
         <template #right-content>
-          <el-col>
+          <!-- <el-col>
             <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
           </el-col>
-          <el-button @click="dataSearch">搜索</el-button>
-          <el-button @click="load">重置</el-button>
+          <el-button @click="dataSearch">搜索</el-button> -->
+          <el-button @click="load">刷新</el-button>
         </template>
       </header-bar>
 
       <el-row class="table">
         <el-table :data="courseInfo" empty-text="暂时没有数据" @selection-change="selection" v-loading="courseTableLoading">
-          <el-table-column type="selection" align="center"></el-table-column>
+          <!-- <el-table-column type="selection" align="center"></el-table-column> -->
           <el-table-column prop="name" label="课程名称"> </el-table-column>
           <el-table-column prop="avatar" label="课程头像">
             <template #default="scope">
@@ -40,7 +40,7 @@
           <el-table-column prop="teacherName" label="教师名字"> </el-table-column>
           <el-table-column label="操作" width="150" align="center">
             <template v-slot:default="scope">
-              <el-button size="mini" @click="toStudents(scope.row)">修改</el-button>
+              <el-button size="mini" @click="toStudents(scope.row)">详情</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -70,25 +70,17 @@
       @submit="addCourse"
     ></add-dialog>
 
-    <delete-dialog
-      :visible="deleteDialogVisible"
-      :disable="deleteButtonDisable"
-      title="删除课程"
-      @cancel="deleteDialogVisible = false"
-      @comfirm="ondeleteCourse"
-    >
-      <template #content> <span>确认删除课程吗？</span></template>
-    </delete-dialog>
+    <delete-dialog :visible.sync="deleteDialogVisible" @comfirm="afterDelete" :active="activeData"> </delete-dialog>
   </div>
 </template>
 
 <script>
-import { getCourse, postCourse, putCourseAvatar, deleteCourse } from '../../../network/course/info';
+import { getCourse, postCourse, putCourseAvatar } from '../../../network/course/info';
 import CONST from 'utils/const';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
-import DeleteDialog from 'components/context/ConfirmDialog.vue';
 import AddDialog from './child-comps/AddDialog.vue';
+const DeleteDialog = () => import('./child-comps/DeleteDialog.vue');
 
 export default {
   name: 'DataDictionary',
@@ -98,7 +90,7 @@ export default {
       query: {
         key: '',
         pageIndex: 1,
-        pageSize: 5
+        pageSize: 10
       },
       pageTotal: 0,
       courseInfo: [],
@@ -109,14 +101,18 @@ export default {
       activeCourse: null,
       addDialogVisible: false,
       addDialogButtonDisable: false,
-      deleteDialogVisible: false,
-      deleteButtonDisable: false
+      deleteDialogVisible: false
     };
   },
   components: {
     HeaderBar,
     AddDialog,
     DeleteDialog
+  },
+  computed: {
+    activeData() {
+      return this.activeCourse ? { ...this.activeCourse } : {};
+    }
   },
   created() {
     this.load();
@@ -158,20 +154,7 @@ export default {
         console.error(`put avatar error: ${error}`);
       }
     },
-    async deleteCourse(courseId) {
-      try {
-        const result = await deleteCourse(courseId);
-        if (result.status === 200) {
-          this.$message({
-            type: 'success',
-            message: '课程删除成功'
-          });
-          return;
-        }
-      } catch (error) {
-        console.error(`delete Course error:${error}`);
-      }
-    },
+
     // 组件通信
     toStudents(row) {
       this.$router.push({
@@ -186,6 +169,12 @@ export default {
       this.activeCourse = row;
       this.activeIndex = index;
       this.deleteDialogVisible = true;
+    },
+    afterDelete() {
+      if (this.courseInfo.length < 2) {
+        this.query.pageIndex--;
+      }
+      this.load();
     },
     // 页面逻辑
     async load() {
@@ -216,12 +205,6 @@ export default {
       avatar.append('avatar', file);
       await putCourseAvatar(course.id, avatar);
       this.load();
-    },
-    async ondeleteCourse() {
-      this.deleteButtonDisable = true;
-      await this.deleteCourse(this.activeCourse.id);
-      this.deleteButtonDisable = false;
-      await this.load();
     }
   }
 };
