@@ -9,7 +9,6 @@
       <header-bar>
         <template #left-content>
           <el-button @click="showAddDialog(false)">新增组织</el-button>
-          <el-button @click="tempDialogVisible = true">删除</el-button>
         </template>
         <template #right-content>
           <el-col>
@@ -70,8 +69,6 @@
           </div>
         </el-col>
       </el-row>
-
-      <temp-dialog :visible="tempDialogVisible" @cancel="tempDialogVisible = false"></temp-dialog>
     </el-main>
 
     <add-dialog
@@ -102,7 +99,6 @@
 import { getOrganization, getSchools, SearchParams } from '../../network/auth/organization';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
-import TempDialog from '../../components/context/ConfirmDialog.vue';
 import AddDialog from './chil-comps/AddDialog.vue';
 import DeleteDialog from './chil-comps/deleteDialog.vue';
 import EditDialog from './chil-comps/EditDialog.vue';
@@ -125,16 +121,14 @@ export default {
       //通信数据
       addDialogVisible: false,
       deleteDialogVisible: false,
-      editDialogVisible: false,
-      tempDialogVisible: false
+      editDialogVisible: false
     };
   },
   components: {
     HeaderBar,
     AddDialog,
     DeleteDialog,
-    EditDialog,
-    TempDialog
+    EditDialog
   },
   computed: {
     parentId() {
