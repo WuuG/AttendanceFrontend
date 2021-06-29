@@ -127,7 +127,7 @@ export default {
           { validator: checkPhoneUnique, trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入6位验证码', trigger: 'blur' },
+          { required: true, message: '验证码不可为空', trigger: 'blur' },
           { pattern: CONST.RE.SMSCODE, message: CONST.RE_TEXT.SMSCODE, trigger: 'blur' }
         ],
         roles: [{ required: true, message: '必须需要选择至少一种身份', trigger: 'blur' }]
