@@ -24,7 +24,7 @@
             </el-form-item>
             <el-form-item label="性别">
               <el-col :span="8">
-                <el-input v-model="form.gender"></el-input>
+                <sex-form-item v-model="form.genderValue"></sex-form-item>
               </el-col>
             </el-form-item>
             <el-form-item label="邮箱">
@@ -80,6 +80,8 @@ import { patchUser, putUserAvatar } from '../../network/auth/userList';
 import { getLocalStorge, setLocalStorge, KEY } from '../../utils/localStorge';
 import CONST from '../../utils/const';
 
+import SexFormItem from '../../components/context/form-item/Sex.vue';
+
 export default {
   name: 'MyInfo',
   data() {
@@ -112,6 +114,9 @@ export default {
       }
       return false;
     }
+  },
+  components: {
+    SexFormItem
   },
   created() {
     this.form = getLocalStorge(KEY.USERINFO);
