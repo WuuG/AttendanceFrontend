@@ -80,7 +80,7 @@ import CONST from 'utils/const';
 
 import HeaderBar from 'components/context/HeaderBar.vue';
 import AddDialog from './child-comps/AddDialog.vue';
-const DeleteDialog = () => import('./child-comps/DeleteDialog.vue');
+const DeleteDialog = () => import('./child-comps/deleteDialog.vue');
 
 export default {
   name: 'DataDictionary',
