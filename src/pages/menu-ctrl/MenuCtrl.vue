@@ -32,9 +32,10 @@
           draggable
           :allow-drop="allowDrop"
           :allow-drag="allowDrag"
-          v-loading="treeLoading"
           default-expand-all
+          v-loading="treeLoading"
         >
+
           <template #default="{ node, data }">
             <el-row type="flex" justify="space-between" class="custom-tree-node">
               <el-col>
@@ -220,5 +221,9 @@ export default {
 <style >
 #menu-control-content .el-tree-node__content {
   height: 40px;
+}
+.el-tree
+{
+  z-index: 0;
 }
 </style>
