@@ -4,8 +4,14 @@ function resolve(dir) {
     return path.join(__dirname, dir)//path.join(__dirname)设置绝对路径
 }
 
-LOCALURL = 'http://ad.keepdev.top:8080'
-REMOTEURL = 'http://attendance.keepdev.top/api'
+// LOCALURL = 'http://ad.keepdev.top:8080'
+// REMOTEURL = 'http://attendance.keepdev.top/api'
+
+
+REMOTEURL = "http://120.78.228.248:8080/";
+// REMOTEURL = "http://120.78.228.248:8080/api"; // buildUse
+
+
 module.exports = {
     // publicPath:'.'
     publicPath: './',
@@ -22,12 +28,10 @@ module.exports = {
     },
     devServer: {
         proxy: {  //配置跨域
+            // 将api修改为target url 也就是将 localhost:8080/api -> http://120.78.228:8080/
             '/api': {
-                target: LOCALURL,  //这里后台的地址模拟的;应该填写你们真实的后台接口
+                target: REMOTEURL,  //这里后台的地址模拟的;应该填写你们真实的后台接口
                 changOrigin: true,  //允许跨域 pathRewrite: {
-                /* 重写路径，当我们在浏览器中看到请求的地址为：http://localhost:8080/api/core/getData/userInfo 时
-                  实际上访问的地址是：http://121.121.67.254:8185/core/getData/userInfo,因为重写了 /api
-                 */
                 pathRewrite: {
                     '^/api': '/'
                 }
