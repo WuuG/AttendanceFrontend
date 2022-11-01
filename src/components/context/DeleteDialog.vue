@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="删除用户" :visible.sync="visible" width="400px" @open="open">
+  <el-dialog title="删除用户" :visible.sync="visible" width="400px">
     <span>确定删除 {{ name }} 吗？</span>
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
@@ -36,4 +36,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 </style>

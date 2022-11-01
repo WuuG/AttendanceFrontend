@@ -12,7 +12,7 @@
         </template>
         <template #right-content>
           <el-col>
-            <el-input prefix-icon="el-icon-search" v-model="query.key"> </el-input>
+            <el-input prefix-icon="el-icon-search" v-model="query.key" placeholder="输入组织名称查询"> </el-input>
           </el-col>
           <el-button @click="dataSearch">搜索</el-button>
           <el-button @click="reset">重置</el-button>
@@ -20,17 +20,8 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table
-          ref="table"
-          :data="data"
-          empty-text="暂时没有数据"
-          @selection-change="selection"
-          v-loading="tableLoading"
-          row-key="id"
-          lazy
-          :load="loadOrganization"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        >
+        <el-table ref="table" :data="data" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading"
+          row-key="id" lazy :load="loadOrganization" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           >
           <!-- <el-table-column type="selection" align="center"></el-table-column> -->
           <el-table-column prop="name" label="学校名称" show-overflow-tooltip> </el-table-column>
@@ -39,16 +30,10 @@
           <el-table-column label="操作" width="280" align="center">
             <template v-slot:default="scope">
               <el-button size="mini" @click="showEditDialog(scope.row)" :loading="scope.row.loading">编辑</el-button>
-              <el-button
-                size="mini"
-                :disabled="scope.row.level > 1"
-                :loading="scope.row.loading"
-                @click="showAddDialog(scope.row)"
-                type="success"
-                plain
-                >添加</el-button
-              >
-              <el-button size="mini" type="danger" @click="showDeleteDialog(scope.row)" :loading="scope.row.loading">删除</el-button>
+              <el-button size="mini" :disabled="scope.row.level > 1" :loading="scope.row.loading"
+                @click="showAddDialog(scope.row)" type="success" plain>添加</el-button>
+              <el-button size="mini" type="danger" @click="showDeleteDialog(scope.row)" :loading="scope.row.loading">删除
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -57,40 +42,21 @@
       <el-row>
         <el-col>
           <div class="pagination">
-            <el-pagination
-              background
-              layout="total,-> ,prev, pager, next"
-              :current-page="query.pageIndex"
-              :page-size="query.pageSize"
-              :total="pageTotal"
-              @current-change="handlePageChange"
-            ></el-pagination>
+            <el-pagination background layout="total,-> ,prev, pager, next" :current-page="query.pageIndex"
+              :page-size="query.pageSize" :total="pageTotal" @current-change="handlePageChange"></el-pagination>
           </div>
         </el-col>
       </el-row>
     </el-main>
 
-    <add-dialog
-      :visible="addDialogVisible"
-      @cancel="addDialogVisible = false"
-      :parentId="parentId"
-      @submit="addReloadOrganization"
-      @before-submit="setButtonLoading"
-    ></add-dialog>
+    <add-dialog :visible="addDialogVisible" @cancel="addDialogVisible = false" :parentId="parentId"
+      @submit="addReloadOrganization" @before-submit="setButtonLoading"></add-dialog>
 
-    <delete-dialog
-      :visible="deleteDialogVisible"
-      @cancel="deleteDialogVisible = false"
-      :organization="organization"
-      @comfirm="deleteReloadOrganization"
-    ></delete-dialog>
+    <delete-dialog :visible="deleteDialogVisible" @cancel="deleteDialogVisible = false" :organization="organization"
+      @comfirm="deleteReloadOrganization"></delete-dialog>
 
-    <edit-dialog
-      :visible="editDialogVisible"
-      :organization="organization"
-      @cancel="editDialogVisible = false"
-      @submit="editeReloadOrganization"
-    ></edit-dialog>
+    <edit-dialog :visible="editDialogVisible" :organization="organization" @cancel="editDialogVisible = false"
+      @submit="editeReloadOrganization"></edit-dialog>
   </div>
 </template>
 
@@ -318,7 +284,7 @@ export default {
       console.log(sel);
     },
     // 删除已选
-    deleteSelectedItem() {},
+    deleteSelectedItem() { },
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
@@ -337,4 +303,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+
 </style>

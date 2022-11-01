@@ -14,7 +14,16 @@ const getCourseById = (id) => {
 	}, 'get')
 }
 
+const postStudentToCourse = (uid, courseCode) => {
+	return request(
+		{
+			url: `courses/students/${uid}/${courseCode}`
+		},
+		"post")
+}
+
 export {
 	getStudents,
-	getCourseById
+	getCourseById,
+	postStudentToCourse
 }

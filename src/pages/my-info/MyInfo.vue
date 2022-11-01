@@ -52,7 +52,8 @@
             </el-form-item>
             <el-form-item label="所属学院">
               <el-col :span="20">
-                <el-cascader v-model="form.schoolMajorID" :props="props" :placeholder="form.schoolMajorName"> </el-cascader>
+                <el-cascader v-model="form.schoolMajorID" :props="props" :placeholder="form.schoolMajorName">
+                </el-cascader>
               </el-col>
             </el-form-item>
             <el-form-item label="上传头像">
@@ -136,6 +137,7 @@ export default {
     async patchUser(form) {
       try {
         const res = await patchUser(form);
+        console.log(form);
         if (res.status !== 200) return null;
         this.$message({
           type: 'success',
@@ -248,6 +250,7 @@ export default {
   margin: 0 auto;
   width: 80%;
   border-radius: 10px;
+
   .text-button {
     margin-left: 10px;
   }
@@ -263,9 +266,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -274,6 +279,7 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;

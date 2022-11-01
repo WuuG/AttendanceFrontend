@@ -9,13 +9,13 @@
       <el-row type="flex" :gutter="20" justify="space-between">
         <el-col :span="9" :xs="20" :sm="12" :md="9" :lg="10">
           <el-button @click="toAddDic">新增</el-button>
-          <el-button>批量删除</el-button>
+          <el-button disabled>批量删除</el-button>
         </el-col>
         <el-col class="search-bar hidden-xs-only" :md="8" :lg="10" :span="12">
           <el-col>
-            <el-input prefix-icon="el-icon-search" v-model="query.name"> </el-input>
+            <el-input prefix-icon="el-icon-search" v-model="query.name" placeholder="目前未实现该功能" disabled> </el-input>
           </el-col>
-          <el-button @click="dataDicSearch">搜索</el-button>
+          <el-button @click="dataDicSearch" disabled>搜索</el-button>
           <el-button @click="load(query.curPage, query.pageSize)">刷新</el-button>
         </el-col>
       </el-row>
@@ -38,22 +38,12 @@
         </el-table>
       </el-row>
 
-      <delete-dialog
-        :visible="comfirmDialogVisible"
-        :disable="comfirmButtonDisable"
-        @cancel="comfirmDialogVisible = false"
-        @comfirm="onDeleteDictionary"
-      ></delete-dialog>
+      <delete-dialog :visible="comfirmDialogVisible" :disable="comfirmButtonDisable"
+        @cancel="comfirmDialogVisible = false" @comfirm="onDeleteDictionary"></delete-dialog>
 
       <div class="pagination">
-        <el-pagination
-          background
-          layout="total,-> ,prev, pager, next"
-          :current-page="query.curPage"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination>
+        <el-pagination background layout="total,-> ,prev, pager, next" :current-page="query.curPage"
+          :page-size="query.pageSize" :total="pageTotal" @current-change="handlePageChange"></el-pagination>
       </div>
     </el-main>
   </div>
@@ -173,6 +163,7 @@ export default {
     display: flex;
     justify-content: flex-end;
   }
+
   .table {
     padding-top: 10px;
   }

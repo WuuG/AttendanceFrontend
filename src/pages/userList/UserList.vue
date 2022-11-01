@@ -13,7 +13,7 @@
         </template>
         <template #right-content>
           <el-col>
-            <el-input prefix-icon="el-icon-search" v-model="query.key"> </el-input>
+            <el-input prefix-icon="el-icon-search" v-model="query.key" disabled placeholder="该功能尚未实现"> </el-input>
           </el-col>
           <el-button @click="searchUser">搜索</el-button>
           <el-button @click="reset">重置</el-button>
@@ -21,7 +21,8 @@
       </header-bar>
 
       <el-row class="table">
-        <el-table :data="usersData" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading">
+        <el-table :data="usersData" empty-text="暂时没有数据" @selection-change="selection" v-loading="tableLoading"
+          :border="true">
           <!-- <el-table-column type="selection" align="center"></el-table-column> -->
           <el-table-column prop="loginName" label="用户名"> </el-table-column>
           <el-table-column prop="phone" label="手机号" show-overflow-tooltip> </el-table-column>
@@ -60,14 +61,8 @@
       <el-row>
         <el-col>
           <div class="pagination">
-            <el-pagination
-              background
-              layout="total,-> ,prev, pager, next"
-              :current-page="query.pageIndex"
-              :page-size="query.pageSize"
-              :total="pageTotal"
-              @current-change="handlePageChange"
-            ></el-pagination>
+            <el-pagination background layout="total,-> ,prev, pager, next" :current-page="query.pageIndex"
+              :page-size="query.pageSize" :total="pageTotal" @current-change="handlePageChange"></el-pagination>
           </div>
         </el-col>
       </el-row>
@@ -176,7 +171,7 @@ export default {
       console.log(sel);
     },
     // 删除已选
-    deleteSelectedItem() {},
+    deleteSelectedItem() { },
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
@@ -196,4 +191,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+
 </style>

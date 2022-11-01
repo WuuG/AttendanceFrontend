@@ -99,7 +99,7 @@ export function request(config, method) {
           break;
       }
     }
-    return Promise.reject('请求返回时发生了错误' + err);
+    return Promise.reject('请求返回时发生了错误: ' + err);
     // return Promise.reject(err.response.data);
   })
   return instance(config)

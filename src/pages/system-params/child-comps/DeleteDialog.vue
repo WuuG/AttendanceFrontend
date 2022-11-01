@@ -1,5 +1,6 @@
 <template>
-  <el-dialog title="删除系统参数" :visible.sync="visible" width="400px" @open="open" :before-close="handleClose">
+  <!-- <el-dialog title="删除系统参数" :visible.sync="visible" width="400px" @open="open" :before-close="handleClose"> -->
+  <el-dialog title="删除系统参数" :visible.sync="visible" width="400px" :before-close="handleClose">
     <span>确定删除 {{ code }} 吗？</span>
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
@@ -52,9 +53,9 @@ export default {
       await this.submitDeleteParam();
       this.loading = false;
     },
-    open() {
-      this.loading = false;
-    },
+    // open() {
+    //   this.loading = false;
+    // },
     async submitDeleteParam() {
       const result = await this.deleteParam(this.code);
       if (!result) return;
@@ -66,4 +67,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 </style>

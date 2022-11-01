@@ -38,7 +38,7 @@ export default {
       if (!value) {
         return callback(new Error('密码不可为空'));
       } else if (!patter.test(value)) {
-        return callback(new Error(CONST.RE_TEXT.PASSWOR));
+        return callback(new Error(CONST.RE_TEXT.PASSWORD));
       } else {
         return callback();
       }

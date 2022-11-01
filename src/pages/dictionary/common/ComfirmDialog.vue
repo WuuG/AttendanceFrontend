@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="删除字典明细" :visible.sync="visible" :before-close="handleClose" width="400px" @open="open">
+  <el-dialog title="删除字典明细" :visible.sync="visible" :before-close="handleClose" width="400px">
     <span>确认删除字典明细吗？</span>
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
@@ -28,4 +28,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 </style>
